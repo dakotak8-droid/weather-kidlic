@@ -498,7 +498,7 @@ export default function BirthWeatherStory() {
             <h2 className="font-serif italic font-extrabold text-3xl sm:text-4xl leading-tight text-[#3D2C2E] dark:text-[#FEFAF6]">
               What was the weather when your baby was born?
             </h2>
-            <p className="text-sm italic text-[#7A6363] dark:text-slate-400 font-serif mt-3 leading-relaxed">
+            <p className="text-[1.1rem] md:text-[1.15rem] italic text-[#7A6363] dark:text-slate-400 font-serif mt-3 leading-relaxed">
               Before the sleepless nights, snack negotiations, and mysterious sticky fingerprints, there was a single day. Discover the weather that welcomed your child into the world.
             </p>
           </div>
