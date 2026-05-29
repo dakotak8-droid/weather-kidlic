@@ -100,48 +100,42 @@ export default function BirthWeatherStory() {
     const isSnowy = [71, 73, 75, 77, 85, 86].includes(weatherCode);
     const isSunny = [0, 1].includes(weatherCode);
 
-    // Dynamic temperature commentary
-    let tempComment = "";
-    if (tempMax > 30) {
-      tempComment = ` On top of that, it was a blisteringly hot day (${Math.round(tempMax)}°C / ${Math.round((tempMax * 9)/5 + 32)}°F). You immediately launched your first official diapers/onesie protest against the heat, laying down a foundation for a lifetime of AC negotiations.`;
-    } else if (tempMax < 5) {
-      tempComment = ` It was also a freezing cold day (${Math.round(tempMax)}°C / ${Math.round((tempMax * 9)/5 + 32)}°F). You quickly concluded that tiny wool socks weren't just decorative accessories but essential tools of survival in an frosty world.`;
-    } else {
-      tempComment = ` With a perfectly mild climate averaging ${Math.round(tempMax)}°C (${Math.round((tempMax * 9)/5 + 32)}°F), you selected a beautifully balanced, cozy temperature to grace the earth with your presence.`;
-    }
+    // Weather description for context
+    const tempF = Math.round((tempMax * 9) / 5 + 32);
+    const tempC = Math.round(tempMax);
 
     if (isRainy) {
       return {
         theme: "The Cozy Storm Sanctuary",
-        quote: "Born into the soothing static of heavy clouds. Warm, safe, and loved beyond measure.",
-        story: `The day you were born, the clouds assembled for a spectacular drum-roll symphony. Rain drummed gently against the hospital windowpane, singing you into existence and washing the city clean just in time for your debut. While nurses sipped lukewarm coffee and your parents held their breath, you slid into a world of cozy hums. Outside, storm umbrellas were tested to their limits; inside, our absolute favorite direct descendant of pure golden sunshine had officially arrived.${tempComment}`,
-        metricLabel: "DIAPER SPLASH DISPLACEMENT",
-        metricValue: "94% (High Torrent)"
+        quote: "Rain outside. Endless love inside.",
+        story: `On the day you came into the world, a gentle rain fell over the city, drumming a soft lullaby against the hospital glass. Outside, the air was cool at ${tempC}°C (${tempF}°F), wrapping the streets in a glistening mist. While the storm hummed peacefully, a warm and quiet sanctuary unfolded indoors as we held you for the absolute first time. The skies washed the earth clean, turning a fresh new page for your beautiful debut. No matter how hard it pours, you are our perfect shelter.`,
+        metricLabel: "HEARTWARMING HARMONY",
+        metricValue: "Securely Anchored"
       };
     } else if (isSnowy) {
       return {
         theme: "The Frost-Bound Cradle",
-        quote: "The winter frost was thick on the glass, but you melted our hearts instantly.",
-        story: `The city was wrapped in a premium, quiet white silence. Snowflakes floated down in slow motion, transforming the neighborhood into a sleepy snowglobe. Inside, sweaters were stacked three layers deep. You made your grand debut as a legendary winter baby, completely custom-made for thick knitted hats and endless nursery huddles. Frost dominated the landscape, but your arrival brought the soft warm firelight of a brand new era.${tempComment}`,
-        metricLabel: "COCONUT COCOA DEMAND INDEX",
-        metricValue: "99% (Maximum cozy)"
+        quote: "One ordinary freezing day. One extraordinary arrival.",
+        story: `A quiet blanket of fresh winter snow carpeted the neighborhood on the day you arrived. Outside, crisp freezing air held steady around ${tempC}°C (${tempF}°F), silvering the windowpanes with beautiful ice crystals. But indoors, a gentle firelight warmed our hearts the second we met your gaze. You were custom-made for thick knitted hats, sweet nursery huddles, and cozy winter snuggles. Nature gave us a pristine white wonderland, but you gave us our entire world.`,
+        metricLabel: "HEARTWARMING HARMONY",
+        metricValue: "Glowingly Lit"
       };
     } else if (isSunny) {
       return {
         theme: "The Golden Daybreak",
-        quote: "The sun was bright, but you were the absolute main attraction.",
-        story: `The atmosphere was completely clear, showcasing a pristine blue sky as if your parents had pre-booked a VIP meteorological package. Flawless sunlight flooded the room, casting rich golden shapes over the floorboards. Not a single cloud had the courage to compete with you or steal your spotlight. The weather forecast was nothing short of a cosmic welcoming party, celebrating a bright, warm new life starting its earthly residency.${tempComment}`,
-        metricLabel: "SUNGLASSES DETACH RATE",
-        metricValue: "100% (Instant glare veto)"
+        quote: "A bright sky welcomed a life that would change everything.",
+        story: `On the clear and radiant morning you were born, the sky was completely flooded with brilliant, warm sunshine. Natural golden light poured through the frame at a pristine ${tempC}°C (${tempF}°F), lighting up the room as we held you for the absolute first time. Not a single cloud had the courage to compete with your glowing earthly debut. You arrived in a bright, inviting world, immediately becoming the central sun of our entire universe.`,
+        metricLabel: "HEARTWARMING HARMONY",
+        metricValue: "Prism of Pure Joy"
       };
     } else {
       // Overcast / Cloudy / Default
       return {
         theme: "The Velvet Blanket Skies",
-        quote: "Soft focus clouds outside, quiet sanctuary within. Modern, calm, and perfect.",
-        story: `A beautiful velvet cloud layer blanketed the town in a natural, cinematic, soft-focus light. It was the ultimate, eye-pleasing nap climate—meaning nature officially designed your birth day with deep, cozy sleep in mind. Wind chimes on the terrace played gentle folk melodies as you arrived, bringing a serene calm to a chaotic ward. You entered a quiet, moody world constructed perfectly for endless cuddle sessions under thick duvets.${tempComment}`,
-        metricLabel: "TRI-FOLD BLANKET FORT CAPABILITY",
-        metricValue: "88% (Secured)"
+        quote: "Soft clouds above. A brand-new chapter below.",
+        story: `On the quiet day you were born, a beautiful velvet cloud layer blanketed the town in a natural, soft-focus light. With mild, quiet air hovering right around ${tempC}°C (${tempF}°F), the atmosphere felt like a gentle embrace designed specifically for deep, peaceful rest. As you took your first breaths under those protective, dreamy skies, we held you close and realized that the absolute best chapter of our family story had officially begun.`,
+        metricLabel: "HEARTWARMING HARMONY",
+        metricValue: "Velvet Softness"
       };
     }
   };
@@ -433,25 +427,25 @@ export default function BirthWeatherStory() {
                 {/* Emotional / funny body text */}
                 <div className="space-y-3.5">
                   <span className="text-[9px] font-mono bg-[#E89E82] text-slate-900 px-2 py-0.5 rounded font-extrabold uppercase tracking-wider">
-                    THE SUNLIT STANDARD
+                    THE GOLDEN DAYBREAK
                   </span>
                   <p className="text-xs leading-relaxed text-slate-300 font-sans">
-                    The world held clear skies as if pre-ordered. Pristine autumn gold blanketed Austin on that morning of October 14th. While hospital cups clinked and nursery teams stood ready, you slid in under direct cinematic gold beams. Safe to say, not a single cloud had the audacity to steal your main-event spotlight.
+                    On the beautiful, sunlit morning you were born, the Austin skies were perfect, clear gold. As warm autumn light filled the room, our world changed forever. It felt as if the sun had cleared the clouds just for your arrival. We held you close under those warm October beams, realizing that the brightest light was now inside.
                   </p>
                 </div>
 
                 {/* Short bold Quote */}
                 <p className="text-sm font-serif italic text-white/95 border-l-2 border-[#E89E82] pl-3 py-1 bg-white/[0.02]">
-                  “Born under flawless golden beams, bringing an endless summer of parental love.”
+                  “A bright sky welcomed a life that would change everything.”
                 </p>
 
                 {/* Simulated Metadata footer details */}
                 <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[9px] font-mono text-slate-400">
                   <div className="flex items-center gap-1">
-                    <Heart size={10} className="text-rose-500 fill-rose-500" />
-                    <span>Nursery Memory Roll</span>
+                    <Heart size={10} className="text-[#E89E82] fill-[#E89E82]" />
+                    <span>Nursery Memory Keepsake</span>
                   </div>
-                  <span>CODE_SUNNY: 0</span>
+                  <span>Original Edition</span>
                 </div>
               </div>
             </div>
@@ -479,7 +473,7 @@ export default function BirthWeatherStory() {
           >
             <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F9F1EB] dark:bg-[#1E1415] border border-[#F0E4DA] dark:border-[#3B282A] px-5 py-1.5 rounded-full text-[10px] font-mono tracking-widest uppercase text-[#D48D71] dark:text-[#E89E82] font-extrabold flex items-center gap-1">
               <BookOpen size={12} />
-              <span>Your Authentic Weather Legend</span>
+              <span>Your Authentic Weather Keepsake</span>
             </div>
 
             <div className="max-w-xl mx-auto rounded-[36px] bg-[#0E1321] text-[#FEFAF6] p-8 shadow-2xl border border-slate-800 relative overflow-hidden">
@@ -491,20 +485,20 @@ export default function BirthWeatherStory() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-5 gap-4">
                   <div>
                     <span className="text-[9px] font-mono tracking-widest text-[#E89E82] uppercase bg-[#E89E82]/10 border border-[#E89E82]/20 px-2.5 py-0.5 rounded-full font-bold">
-                      Aesthetic Birth Registry
+                      Weather Keepsake Certificate
                     </span>
-                    <h3 className="font-serif italic font-extrabold text-2xl sm:text-3xl text-white mt-1.5">
+                    <h3 className="font-serif italic font-extrabold text-2xl sm:text-3xl text-white mt-1.5 font-sans leading-tight">
                       {revealResult.city}
                     </h3>
                     <p className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mt-1">
-                      {revealResult.country ? `${revealResult.country} • ` : ""}Coordinates resolved
+                      {revealResult.country ? `${revealResult.country} • ` : ""}Atmosphere and stars mapped
                     </p>
                   </div>
                   
                   {/* Meteorological snapshot snapshot */}
                   <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
                     <div className="text-right">
-                      <span className="text-xs font-mono font-bold text-slate-300 block">MAX OUTLOOK</span>
+                      <span className="text-xs font-mono font-bold text-slate-300 block">BIRTH TEMPERATURE</span>
                       <p className="font-serif font-bold text-lg text-white">
                         {Math.round(revealResult.tempMax)}°C / {Math.round((revealResult.tempMax * 9) / 5 + 32)}°F
                       </p>
@@ -530,7 +524,7 @@ export default function BirthWeatherStory() {
 
                 {/* Full-width Quote banner inside Card container */}
                 <div className="bg-white/[0.03] border-l-2 border-[#E89E82] p-4 rounded-r-xl">
-                  <p className="text-[10px] font-mono text-slate-400 uppercase tracking-widest font-bold mb-1.5">EMOTIONAL FOOTPRINT</p>
+                  <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">MEMORABLE OUTLOOK</p>
                   <p className="font-serif italic text-white text-md sm:text-lg leading-snug">
                     “{revealResult.story.quote}”
                   </p>
@@ -542,8 +536,8 @@ export default function BirthWeatherStory() {
                     <Sparkles size={11} className="text-[#E89E82]" />
                     <span>{revealResult.story.metricLabel}: <strong className="text-white">{revealResult.story.metricValue}</strong></span>
                   </div>
-                  <span className="text-slate-500 bg-white/5 px-2 py-0.5 rounded font-mono uppercase tracking-widest">
-                    ARCHIVE_KEY_WMO_{revealResult.weatherCode}
+                  <span className="text-slate-500 bg-white/5 px-2 py-0.5 rounded font-mono uppercase tracking-widest text-[9px]">
+                    Digital Milestone Edition
                   </span>
                 </div>
               </div>
