@@ -269,14 +269,6 @@ export default function BirthWeatherStory() {
         story: generatedStory
       });
 
-      // Smooth scroll down to reveal card below
-      setTimeout(() => {
-        const revealEl = document.getElementById("birth-story-reveal-card");
-        if (revealEl) {
-          revealEl.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      }, 300);
-
     } catch (err) {
       console.error(err);
       setErrorMessage("Open-Meteo archive is recovering state. Please check your network and retry in a few moments!");
@@ -493,12 +485,12 @@ export default function BirthWeatherStory() {
   };
 
   return (
-    <section className="max-w-4xl mx-auto px-4 py-12 select-none border-b border-[#F0E4DA] dark:border-[#3B282A]">
-      {/* Hero section inside birth-date layout container */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+    <section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-12 select-none border-b border-[#F0E4DA] dark:border-[#3B282A]">
+      {/* 50/50 split layout for Desktop/Tablet, stacked for Mobile */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start w-full">
         
-        {/* LEFT COLUMN: Input Form */}
-        <div className="md:col-span-7 space-y-6 text-center md:text-left">
+        {/* LEFT COLUMN: Input Form and Text info */}
+        <div className="space-y-6 text-center md:text-left w-full">
           <div>
             <span className="text-[10px] uppercase font-mono tracking-widest text-[#D48D71] dark:text-[#E89E82] font-extrabold block mb-1">
               Tiny Date. Big Memory.
@@ -625,176 +617,206 @@ export default function BirthWeatherStory() {
           </form>
         </div>
 
-        {/* RIGHT COLUMN: Static Premium Cozy Example Card */}
-        <div className="md:col-span-5 flex justify-center">
-          <div className="w-full max-w-sm relative">
-            {/* Ambient cozy background circles */}
-            <div className="absolute -top-4 -left-6 w-32 h-32 bg-[#D48D71]/10 rounded-full blur-2xl"></div>
-            <div className="absolute -bottom-4 -right-6 w-32 h-32 bg-[#FFD580]/10 rounded-full blur-3xl"></div>
+        {/* RIGHT COLUMN: Interactive Keepsake displays (Replaces Example with Real seamlessly) */}
+        <div className="w-full flex justify-center items-start lg:sticky lg:top-8">
+          <AnimatePresence mode="wait">
+            {!revealResult ? (
+              <motion.div
+                key="example-card"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3 }}
+                className="w-full max-w-xl relative"
+              >
+                {/* Ambient cozy background circles */}
+                <div className="absolute -top-4 -left-6 w-32 h-32 bg-[#D48D71]/10 rounded-full blur-2xl"></div>
+                <div className="absolute -bottom-4 -right-6 w-32 h-32 bg-[#FFD580]/10 rounded-full blur-3xl"></div>
 
-            {/* Example Reveal Card Style: Premium, rounded, dark navy, cozy, and shareable */}
-            <div className="w-full rounded-[32px] p-6 flex flex-col justify-between shadow-xl border border-slate-800 bg-[#121829] text-[#FEFAF6] relative overflow-hidden">
-              {/* Premium dark grid pattern decor overlay */}
-              <div className="absolute inset-0 bg-[radial-gradient(#1e2439_1px,transparent_1px)] [background-size:16px_16px] opacity-20 pointer-events-none"></div>
+                <div className="w-full rounded-[36px] p-8 flex flex-col justify-between shadow-xl border border-slate-800 bg-[#0E1321] text-[#FEFAF6] relative overflow-hidden">
+                  {/* Premium dark grid pattern decor overlay */}
+                  <div className="absolute inset-0 bg-[radial-gradient(#1e2439_1px,transparent_1px)] [background-size:16px_16px] opacity-20 pointer-events-none"></div>
 
-              <div className="relative z-10 space-y-6">
-                {/* Header structure */}
-                <div className="flex items-center justify-between border-b border-white/10 pb-3">
-                  <div>
-                    <h5 className="font-serif italic font-bold text-lg text-white">Austin, Texas</h5>
-                    <p className="text-[10px] uppercase font-mono tracking-widest text-[#E89E82]">Born on 10/14/2021</p>
-                  </div>
-                  <div className="p-2 bg-white/5 rounded-xl border border-white/10">
-                    <WeatherIcon code={0} size={26} />
+                  <div className="relative z-10 space-y-6">
+                    {/* Header: matched to real certificate for zero layout shift */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-5 gap-4">
+                      <div>
+                        <span className="text-[9px] font-mono tracking-widest text-[#E89E82] uppercase bg-[#E89E82]/10 border border-[#E89E82]/20 px-2.5 py-0.5 rounded-full font-bold">
+                          Weather Keepsake Certificate
+                        </span>
+                        <h3 className="font-serif italic font-extrabold text-2xl sm:text-3xl text-white mt-1.5 font-sans leading-tight">
+                          Austin, Texas
+                        </h3>
+                        <p className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mt-1">
+                          United States • Atmosphere and stars mapped
+                        </p>
+                      </div>
+                      
+                      <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
+                        <div className="text-right">
+                          <span className="text-xs font-mono font-bold text-slate-300 block">BIRTH TEMPERATURE</span>
+                          <p className="font-serif font-bold text-lg text-white">
+                            21°C / 70°F
+                          </p>
+                        </div>
+                        <div className="p-2 bg-white/5 rounded-xl border border-white/10 shrink-0">
+                          <WeatherIcon code={0} size={30} />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Theme bar & description layout to match real look */}
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono uppercase tracking-widest font-extrabold text-[#E89E82] bg-[#E89E82]/15 px-3 py-1 rounded-full border border-[#E89E82]/25">
+                          Theme: The Golden Daybreak
+                        </span>
+                        <span className="text-xs text-slate-500 font-mono">Date: 10/14/2021</span>
+                      </div>
+                      <p className="text-sm text-slate-300 font-sans leading-relaxed tracking-wide">
+                        On the beautiful, sunlit morning you were born, the Austin skies were perfect, clear gold. As warm autumn light filled the room, our world changed forever. It felt as if the sun had cleared the clouds just for your arrival. We held you close under those warm October beams, realizing that the brightest light was now inside.
+                      </p>
+                    </div>
+
+                    {/* Short bold Quote */}
+                    <div className="bg-white/[0.03] border-l-2 border-[#E89E82] p-4 rounded-r-xl">
+                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">MEMORABLE OUTLOOK</p>
+                      <p className="font-serif italic text-white text-md sm:text-lg leading-snug">
+                        “A bright sky welcomed a life that would change everything.”
+                      </p>
+                    </div>
+
+                    {/* Simulated Metadata footer details */}
+                    <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-[10px] font-mono text-slate-400 select-none">
+                      <div className="flex items-center gap-1.5">
+                        <Sparkles size={11} className="text-[#E89E82]" />
+                        <span>Nursery Memory: <strong className="text-white">Keepsake Record</strong></span>
+                      </div>
+                      <span className="text-slate-500 bg-white/5 px-2 py-0.5 rounded font-mono uppercase tracking-widest text-[9px]">
+                        Digital Milestone Edition
+                      </span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Emotional / funny body text */}
-                <div className="space-y-3.5">
-                  <span className="text-[9px] font-mono bg-[#E89E82] text-slate-900 px-2 py-0.5 rounded font-extrabold uppercase tracking-wider">
-                    THE GOLDEN DAYBREAK
-                  </span>
-                  <p className="text-xs leading-relaxed text-slate-300 font-sans">
-                    On the beautiful, sunlit morning you were born, the Austin skies were perfect, clear gold. As warm autumn light filled the room, our world changed forever. It felt as if the sun had cleared the clouds just for your arrival. We held you close under those warm October beams, realizing that the brightest light was now inside.
+                {/* Example Tag Badge hover overlay */}
+                <div className="absolute top-3 -right-3 rotate-6 bg-[#D48D71] text-xs font-mono font-bold text-white px-3 py-1.5 rounded-xl shadow-md border border-white/10 pointer-events-none z-20 flex items-center gap-1 uppercase tracking-wider scale-90">
+                  <Baby size={12} />
+                  <span>Reference Idea</span>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="real-card"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ type: "spring", damping: 25, stiffness: 120 }}
+                className="w-full max-w-xl relative"
+              >
+                {/* Your Authentic Weather Keepsake Badge overlay */}
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#F9F1EB] dark:bg-[#1E1415] border border-[#F0E4DA] dark:border-[#3B282A] px-5 py-1.5 rounded-full text-[10px] font-mono tracking-widest uppercase text-[#D48D71] dark:text-[#E89E82] font-extrabold flex items-center gap-1 z-30 shadow-sm">
+                  <BookOpen size={12} />
+                  <span>Your Authentic Weather Keepsake</span>
+                </div>
+
+                <div className="w-full rounded-[36px] bg-[#0E1321] text-[#FEFAF6] p-8 shadow-2xl border border-slate-800 relative overflow-hidden">
+                  {/* Premium cozy star/cloud grid graphic background overlay */}
+                  <div className="absolute inset-0 bg-[#161c2e]/20 [background-image:linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none"></div>
+
+                  <div className="relative z-10 space-y-6 text-left">
+                    {/* Header: Birth Info & Geolocation */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-5 gap-4">
+                      <div>
+                        <span className="text-[9px] font-mono tracking-widest text-[#E89E82] uppercase bg-[#E89E82]/10 border border-[#E89E82]/20 px-2.5 py-0.5 rounded-full font-bold">
+                          Weather Keepsake Certificate
+                        </span>
+                        <h3 className="font-serif italic font-extrabold text-2xl sm:text-3xl text-white mt-1.5 font-sans leading-tight">
+                          {revealResult.city}
+                        </h3>
+                        <p className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mt-1">
+                          {revealResult.country ? `${revealResult.country} • ` : ""}Atmosphere and stars mapped
+                        </p>
+                      </div>
+                      
+                      {/* Meteorological snapshot */}
+                      <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
+                        <div className="text-right">
+                          <span className="text-xs font-mono font-bold text-slate-300 block">BIRTH TEMPERATURE</span>
+                          <p className="font-serif font-bold text-lg text-white">
+                            {Math.round(revealResult.tempMax)}°C / {Math.round((revealResult.tempMax * 9) / 5 + 32)}°F
+                          </p>
+                        </div>
+                        <div className="p-2 bg-white/5 rounded-xl border border-white/10 shrink-0">
+                          <WeatherIcon code={revealResult.weatherCode} size={30} />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Weather Legend theme title & story copy */}
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-mono uppercase tracking-widest font-extrabold text-[#E89E82] bg-[#E89E82]/15 px-3 py-1 rounded-full border border-[#E89E82]/25">
+                          Theme: {revealResult.story.theme}
+                        </span>
+                        <span className="text-xs text-slate-500 font-mono">Date: {revealResult.date}</span>
+                      </div>
+                      <p className="text-sm md:text-base text-slate-300 font-sans leading-relaxed tracking-wide">
+                        {revealResult.story.story}
+                      </p>
+                    </div>
+
+                    {/* Full-width Quote banner inside Card container */}
+                    <div className="bg-white/[0.03] border-l-2 border-[#E89E82] p-4 rounded-r-xl">
+                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">MEMORABLE OUTLOOK</p>
+                      <p className="font-serif italic text-white text-md sm:text-lg leading-snug">
+                        “{revealResult.story.quote}”
+                      </p>
+                    </div>
+
+                    {/* Metric breakdown footer logs */}
+                    <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-[10px] font-mono text-slate-400 select-none">
+                      <div className="flex items-center gap-1.5">
+                        <Sparkles size={11} className="text-[#E89E82]" />
+                        <span>{revealResult.story.metricLabel}: <strong className="text-white">{revealResult.story.metricValue}</strong></span>
+                      </div>
+                      <span className="text-slate-500 bg-white/5 px-2 py-0.5 rounded font-mono uppercase tracking-widest text-[9px]">
+                        Digital Milestone Edition
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Premium Keepsake Download Controls below card */}
+                <div className="flex flex-col items-center gap-3 mt-8">
+                  <button
+                    type="button"
+                    disabled={isGeneratingImage}
+                    onClick={handleDownloadKeepsake}
+                    className="inline-flex items-center gap-2.5 bg-gradient-to-r from-[#D48D71] to-[#E89E82] hover:opacity-95 active:scale-[0.98] text-[#1E1415] font-mono text-xs uppercase tracking-widest font-extrabold px-10 py-4 rounded-2xl shadow-xl transition-all duration-200 cursor-pointer disabled:opacity-75"
+                  >
+                    {isGeneratingImage ? (
+                      <>
+                        <RefreshCw className="animate-spin text-[#1E1415]" size={14} />
+                        <span>Crafting Keepsake...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Download size={14} className="stroke-[2.5]" />
+                        <span>Download Keepsake</span>
+                      </>
+                    )}
+                  </button>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono tracking-wider uppercase text-center mt-1">
+                    Optimized for Instagram (4:5 vertical), Facebook, and baby memory albums
                   </p>
                 </div>
-
-                {/* Short bold Quote */}
-                <p className="text-sm font-serif italic text-white/95 border-l-2 border-[#E89E82] pl-3 py-1 bg-white/[0.02]">
-                  “A bright sky welcomed a life that would change everything.”
-                </p>
-
-                {/* Simulated Metadata footer details */}
-                <div className="pt-2 border-t border-white/10 flex items-center justify-between text-[9px] font-mono text-slate-400">
-                  <div className="flex items-center gap-1">
-                    <Heart size={10} className="text-[#E89E82] fill-[#E89E82]" />
-                    <span>Nursery Memory Keepsake</span>
-                  </div>
-                  <span>Original Edition</span>
-                </div>
-              </div>
-            </div>
-            
-            {/* Example Tag Badge hover overlay */}
-            <div className="absolute top-3 -right-3 rotate-6 bg-[#D48D71] text-xs font-mono font-bold text-white px-3 py-1.5 rounded-xl shadow-md border border-white/10 pointer-events-none z-20 flex items-center gap-1 uppercase tracking-wider scale-90">
-              <Baby size={12} />
-              <span>Reference Idea</span>
-            </div>
-          </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
       </div>
-
-      {/* DYNAMIC RESULT REVEAL SECTION BELOW BOTH COLUMNS */}
-      <AnimatePresence>
-        {revealResult && (
-          <motion.div
-            id="birth-story-reveal-card"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 30 }}
-            transition={{ type: "spring", damping: 25, stiffness: 120 }}
-            className="mt-14 pt-10 border-t border-dashed border-[#F0E4DA] dark:border-[#3B282A] relative"
-          >
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#F9F1EB] dark:bg-[#1E1415] border border-[#F0E4DA] dark:border-[#3B282A] px-5 py-1.5 rounded-full text-[10px] font-mono tracking-widest uppercase text-[#D48D71] dark:text-[#E89E82] font-extrabold flex items-center gap-1">
-              <BookOpen size={12} />
-              <span>Your Authentic Weather Keepsake</span>
-            </div>
-
-            <div className="max-w-xl mx-auto rounded-[36px] bg-[#0E1321] text-[#FEFAF6] p-8 shadow-2xl border border-slate-800 relative overflow-hidden">
-              {/* Premium cozy star/cloud grid graphic background overlay */}
-              <div className="absolute inset-0 bg-[#161c2e]/20 [background-image:linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] [background-size:20px_20px] pointer-events-none"></div>
-
-              <div className="relative z-10 space-y-6 text-left">
-                {/* Header: Birth Info & Geolocation */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-5 gap-4">
-                  <div>
-                    <span className="text-[9px] font-mono tracking-widest text-[#E89E82] uppercase bg-[#E89E82]/10 border border-[#E89E82]/20 px-2.5 py-0.5 rounded-full font-bold">
-                      Weather Keepsake Certificate
-                    </span>
-                    <h3 className="font-serif italic font-extrabold text-2xl sm:text-3xl text-white mt-1.5 font-sans leading-tight">
-                      {revealResult.city}
-                    </h3>
-                    <p className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mt-1">
-                      {revealResult.country ? `${revealResult.country} • ` : ""}Atmosphere and stars mapped
-                    </p>
-                  </div>
-                  
-                  {/* Meteorological snapshot snapshot */}
-                  <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
-                    <div className="text-right">
-                      <span className="text-xs font-mono font-bold text-slate-300 block">BIRTH TEMPERATURE</span>
-                      <p className="font-serif font-bold text-lg text-white">
-                        {Math.round(revealResult.tempMax)}°C / {Math.round((revealResult.tempMax * 9) / 5 + 32)}°F
-                      </p>
-                    </div>
-                    <div className="p-2 bg-white/5 rounded-xl border border-white/10 shrink-0">
-                      <WeatherIcon code={revealResult.weatherCode} size={30} />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Weather Legend theme title & story copy */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono uppercase tracking-widest font-extrabold text-[#E89E82] bg-[#E89E82]/15 px-3 py-1 rounded-full border border-[#E89E82]/25">
-                      Theme: {revealResult.story.theme}
-                    </span>
-                    <span className="text-xs text-slate-500 font-mono">Date: {revealResult.date}</span>
-                  </div>
-                  <p className="text-sm md:text-base text-slate-300 font-sans leading-relaxed tracking-wide">
-                    {revealResult.story.story}
-                  </p>
-                </div>
-
-                {/* Full-width Quote banner inside Card container */}
-                <div className="bg-white/[0.03] border-l-2 border-[#E89E82] p-4 rounded-r-xl">
-                  <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">MEMORABLE OUTLOOK</p>
-                  <p className="font-serif italic text-white text-md sm:text-lg leading-snug">
-                    “{revealResult.story.quote}”
-                  </p>
-                </div>
-
-                {/* Metric breakdown footer logs */}
-                <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-[10px] font-mono text-slate-400 select-none">
-                  <div className="flex items-center gap-1.5">
-                    <Sparkles size={11} className="text-[#E89E82]" />
-                    <span>{revealResult.story.metricLabel}: <strong className="text-white">{revealResult.story.metricValue}</strong></span>
-                  </div>
-                  <span className="text-slate-500 bg-white/5 px-2 py-0.5 rounded font-mono uppercase tracking-widest text-[9px]">
-                    Digital Milestone Edition
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Premium Keepsake Download Controls below card */}
-            <div className="flex flex-col items-center gap-3 mt-8">
-              <button
-                type="button"
-                disabled={isGeneratingImage}
-                onClick={handleDownloadKeepsake}
-                className="inline-flex items-center gap-2.5 bg-gradient-to-r from-[#D48D71] to-[#E89E82] hover:opacity-95 active:scale-[0.98] text-[#1E1415] font-mono text-xs uppercase tracking-widest font-extrabold px-10 py-4 rounded-2xl shadow-xl transition-all duration-200 cursor-pointer disabled:opacity-75"
-              >
-                {isGeneratingImage ? (
-                  <>
-                    <RefreshCw className="animate-spin text-[#1E1415]" size={14} />
-                    <span>Crafting Keepsake...</span>
-                  </>
-                ) : (
-                  <>
-                    <Download size={14} className="stroke-[2.5]" />
-                    <span>Download Keepsake</span>
-                  </>
-                )}
-              </button>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono tracking-wider uppercase text-center mt-1">
-                Optimized for Instagram (4:5 vertical), Facebook, and baby memory albums
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </section>
   );
 }
