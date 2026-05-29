@@ -12,4 +12,40 @@
   body {
     @apply font-sans antialiased text-[#3D2C2E] bg-[#FEFAF6] transition-colors duration-300 dark:text-[#FEFAF6] dark:bg-[#1E1415];
   }
+
+  /* Form and Input Layout Consistency Fixes */
+  .birth-form-field {
+    width: 100% !important;
+    display: block !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Ensure date input and text input match exactly */
+  input[type="date"],
+  input[type="text"],
+  .birth-form-field input,
+  .birth-form-field select,
+  .birth-form-field button {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    display: block !important;
+  }
+
+  /* Reset Date Picker webkit and browser idiosyncrasies */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="date"]::-webkit-inner-spin-button,
+  input[type="date"]::-webkit-clear-button {
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+  }
+
+  input[type="date"] {
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+  }
 }

@@ -514,7 +514,7 @@ export default function BirthWeatherStory() {
 
             <div className="space-y-4">
               {/* Birth Date Input */}
-              <div className="relative w-full block box-border space-y-1.5 focus-within:text-[#D48D71]">
+              <div className="birth-form-field space-y-1.5 focus-within:text-[#D48D71]">
                 <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-400 font-extrabold flex items-center gap-1.5">
                   <Calendar size={12} />
                   <span>Birth Date (MM/DD/YYYY)</span>
@@ -534,7 +534,7 @@ export default function BirthWeatherStory() {
               </div>
 
               {/* Birth City Autocomplete Input */}
-              <div ref={dropdownRef} className="relative w-full block box-border space-y-1.5 focus-within:text-[#D48D71]">
+              <div ref={dropdownRef} className="birth-form-field space-y-1.5 focus-within:text-[#D48D71]">
                 <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-400 font-extrabold flex items-center gap-1.5">
                   <Search size={12} />
                   <span>Birth City & Country</span>
