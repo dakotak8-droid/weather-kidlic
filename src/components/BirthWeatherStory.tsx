@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Search, Calendar, ChevronRight, Sparkles, RefreshCw, X, Heart, Baby, BookOpen } from "lucide-react";
+import { Search, Calendar, ChevronRight, Sparkles, RefreshCw, X, Heart, Baby, BookOpen, Download } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { GeocodingResult } from "../types";
 import WeatherIcon from "./WeatherIcon";
@@ -21,6 +21,7 @@ export default function BirthWeatherStory() {
   const [isSearchingCity, setIsSearchingCity] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLoadingStory, setIsLoadingStory] = useState(false);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -282,6 +283,213 @@ export default function BirthWeatherStory() {
     } finally {
       setIsLoadingStory(false);
     }
+  };
+
+  // High-resolution Instagram-safe Canvas download (1080x1350, 4:5 aspect ratio)
+  const handleDownloadKeepsake = () => {
+    if (!revealResult) return;
+    setIsGeneratingImage(true);
+
+    // Let React update the loading spinner state before starting heavy canvas matrix draw blocking
+    setTimeout(() => {
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = 1080;
+        canvas.height = 1350;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          setIsGeneratingImage(false);
+          return;
+        }
+
+        // Enable high-fidelity anti-aliasing configurations
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+
+        // 1. Cozy atmospheric background (Deep Slate Blue/Midnight gradient)
+        const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1350);
+        bgGrad.addColorStop(0, "#0E1321"); // premium slate-midnight
+        bgGrad.addColorStop(0.5, "#0A0D18"); // deep galaxy cosmic navy
+        bgGrad.addColorStop(1, "#05070B"); // solid bottom black
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, 1080, 1350);
+
+        // Draw glowing golden baby-light cosmic orb from upper right corner
+        const sunGlow = ctx.createRadialGradient(900, 160, 50, 900, 160, 500);
+        sunGlow.addColorStop(0, "rgba(232, 158, 130, 0.08)"); // cozy gold atmospheric mist
+        sunGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx.fillStyle = sunGlow;
+        ctx.fillRect(0, 0, 1080, 1350);
+
+        // Draw cool calming water-light cosmic orb from lower left corner
+        const oceanGlow = ctx.createRadialGradient(180, 1150, 40, 180, 1150, 450);
+        oceanGlow.addColorStop(0, "rgba(129, 140, 248, 0.05)"); // calming indigo mist
+        oceanGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
+        ctx.fillStyle = oceanGlow;
+        ctx.fillRect(0, 0, 1080, 1350);
+
+        // 2. Linear matrix dots overlay (Fine architectural starry lines)
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.015)";
+        ctx.lineWidth = 1;
+        for (let x = 80; x < 1000; x += 32) {
+          ctx.beginPath();
+          ctx.moveTo(x, 80);
+          ctx.lineTo(x, 1270);
+          ctx.stroke();
+        }
+        for (let y = 80; y < 1270; y += 32) {
+          ctx.beginPath();
+          ctx.moveTo(80, y);
+          ctx.lineTo(1000, y);
+          ctx.stroke();
+        }
+
+        // 3. Elegant double-bounding borders
+        // Outer glow path
+        ctx.strokeStyle = "rgba(232, 158, 130, 0.14)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        drawRoundRect(ctx, 60, 60, 960, 1230, 42);
+        ctx.stroke();
+
+        // Inner solid rule
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        drawRoundRect(ctx, 70, 70, 940, 1210, 36);
+        ctx.stroke();
+
+        // Celestial four-point corner star ornaments
+        drawFourPointStar(ctx, 84, 84, 10, "#E89E82");
+        drawFourPointStar(ctx, 996, 84, 10, "#E89E82");
+        drawFourPointStar(ctx, 84, 1266, 10, "#E89E82");
+        drawFourPointStar(ctx, 996, 1266, 10, "#E89E82");
+
+        // 4. Certificate Header Labels
+        drawFourPointStar(ctx, 132, 160, 12, "#E89E82");
+        ctx.fillStyle = "#E89E82";
+        ctx.font = "bold 18px 'JetBrains Mono', 'Courier New', monospace";
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
+        ctx.fillText("WEATHER KEEPSAKE CERTIFICATE", 160, 160);
+
+        // City Name Title (Georgia bold italic)
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "italic bold 64px 'Georgia', 'Times New Roman', serif";
+        ctx.fillText(revealResult.city, 130, 240);
+
+        // Subheader Atmosphere Text
+        ctx.fillStyle = "rgba(255, 255, 255, 0.55)";
+        ctx.font = "600 22px 'Inter', 'system-ui', sans-serif";
+        const coordDesc = revealResult.country ? `${revealResult.country} • Atmosphere and stars mapped` : "Atmosphere and stars mapped";
+        ctx.fillText(coordDesc, 130, 300);
+
+        // 5. BIRTH METEOROLOGICAL SNAPSHOT BOX (Upper-Right coordinates)
+        ctx.fillStyle = "rgba(255, 255, 255, 0.035)";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        drawRoundRect(ctx, 650, 120, 300, 150, 24);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
+        ctx.font = "bold 14px 'JetBrains Mono', 'Courier New', monospace";
+        ctx.fillText("BIRTH TEMPERATURE", 676, 160);
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "bold 30px 'Inter', 'system-ui', sans-serif";
+        const tempString = `${Math.round(revealResult.tempMax)}°C / ${Math.round((revealResult.tempMax * 9) / 5 + 32)}°F`;
+        ctx.fillText(tempString, 676, 210);
+
+        // High resolution programmatic custom weather icon drawing inside the snapshot box
+        drawCustomKeepsakeIcon(ctx, 884, 195, revealResult.weatherCode);
+
+        // 6. Pill Tag Registry (Theme badge & dynamic birthday date width)
+        ctx.fillStyle = "rgba(232, 158, 130, 0.12)";
+        ctx.strokeStyle = "rgba(232, 158, 130, 0.25)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        const themeText = `THEME: ${revealResult.story.theme.toUpperCase()}`;
+        ctx.font = "bold 18px 'JetBrains Mono', 'Courier New', monospace";
+        const themeWidth = ctx.measureText(themeText).width + 30;
+        drawRoundRect(ctx, 130, 350, themeWidth, 44, 22);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = "#E89E82";
+        ctx.fillText(themeText, 145, 372);
+
+        ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
+        ctx.font = "bold 20px 'JetBrains Mono', 'Courier New', monospace";
+        ctx.fillText(`DATE: ${revealResult.date}`, 130 + themeWidth + 24, 372);
+
+        // 7. STORY PARAGRAPH (Beautifully wrapped and staggered with premium line spacing)
+        ctx.fillStyle = "#E2E8F0";
+        ctx.font = "34px 'Inter', 'system-ui', sans-serif";
+        const startY = 460;
+        const finalY = wrapText(ctx, revealResult.story.story, 130, startY, 820, 56);
+
+        // 8. MEMORABLE QUOTE BANNER CONTAINER (Offset dynamically to avoid overlaps)
+        const quoteBoxY = finalY + 70;
+        ctx.fillStyle = "rgba(255, 255, 255, 0.02)";
+        ctx.beginPath();
+        drawRoundRect(ctx, 130, quoteBoxY, 820, 180, 20);
+        ctx.fill();
+
+        // Vertical premium left gold indicator line
+        ctx.fillStyle = "#E89E82";
+        ctx.fillRect(132, quoteBoxY + 20, 6, 140);
+
+        ctx.fillStyle = "#D48D71";
+        ctx.font = "bold 15px 'JetBrains Mono', 'Courier New', monospace";
+        ctx.fillText("MEMORABLE OUTLOOK", 160, quoteBoxY + 50);
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "italic 34px 'Georgia', 'Times New Roman', serif";
+        wrapText(ctx, `“${revealResult.story.quote}”`, 160, quoteBoxY + 110, 750, 46);
+
+        // 9. BOTTOM METADATA DIVIDER & FOOTER LABELS
+        const footerY = 1120;
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(130, footerY);
+        ctx.lineTo(950, footerY);
+        ctx.stroke();
+
+        // Vector Heart graphic representation
+        drawHeartIcon(ctx, 130, footerY + 36, 24, "#E89E82");
+
+        ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
+        ctx.font = "bold 20px 'JetBrains Mono', 'Courier New', monospace";
+        ctx.textBaseline = "middle";
+        ctx.fillText(`${revealResult.story.metricLabel}: `, 166, footerY + 46);
+
+        const metricLabelWidth = ctx.measureText(`${revealResult.story.metricLabel}: `).width;
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillText(revealResult.story.metricValue, 166 + metricLabelWidth, footerY + 46);
+
+        // Bottom Right: Branding footer
+        ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+        ctx.font = "bold 20px 'JetBrains Mono', 'Courier New', monospace";
+        ctx.textAlign = "right";
+        ctx.fillText("Weather When Born • Keepsake Edition", 950, footerY + 46);
+
+        // 10. TRIGGER PNG ANCHOR DOWNLOAD
+        const dataUrl = canvas.toDataURL("image/png");
+        const downloadLink = document.createElement("a");
+        const safeCity = revealResult.city.replace(/[^a-zA-Z0-9]/g, "_");
+        const safeDate = revealResult.date.replace(/\//g, "-");
+        downloadLink.download = `Keepsake_${safeCity}_${safeDate}.png`;
+        downloadLink.href = dataUrl;
+        downloadLink.click();
+      } catch (err) {
+        console.error("Keepsake high-resolution render failed:", err);
+      } finally {
+        setIsGeneratingImage(false);
+      }
+    }, 800);
   };
 
   return (
@@ -559,9 +767,203 @@ export default function BirthWeatherStory() {
                 </div>
               </div>
             </div>
+
+            {/* Premium Keepsake Download Controls below card */}
+            <div className="flex flex-col items-center gap-3 mt-8">
+              <button
+                type="button"
+                disabled={isGeneratingImage}
+                onClick={handleDownloadKeepsake}
+                className="inline-flex items-center gap-2.5 bg-gradient-to-r from-[#D48D71] to-[#E89E82] hover:opacity-95 active:scale-[0.98] text-[#1E1415] font-mono text-xs uppercase tracking-widest font-extrabold px-10 py-4 rounded-2xl shadow-xl transition-all duration-200 cursor-pointer disabled:opacity-75"
+              >
+                {isGeneratingImage ? (
+                  <>
+                    <RefreshCw className="animate-spin text-[#1E1415]" size={14} />
+                    <span>Crafting Keepsake...</span>
+                  </>
+                ) : (
+                  <>
+                    <Download size={14} className="stroke-[2.5]" />
+                    <span>Download Keepsake</span>
+                  </>
+                )}
+              </button>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono tracking-wider uppercase text-center mt-1">
+                Optimized for Instagram (4:5 vertical), Facebook, and baby memory albums
+              </p>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
     </section>
   );
+}
+
+// ==========================================
+// HIGH RESOLUTION CANVAS EXPORT GRAPHICS SETUP
+// ==========================================
+
+function drawRoundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number
+) {
+  if (typeof ctx.roundRect === "function") {
+    ctx.roundRect(x, y, width, height, radius);
+  } else {
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.lineTo(x + width - radius, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+    ctx.lineTo(x + width, y + height - radius);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+    ctx.lineTo(x, y + radius);
+    ctx.quadraticCurveTo(x, y, x + radius, y);
+    ctx.closePath();
+  }
+}
+
+function drawFourPointStar(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, color: string) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - r);
+  ctx.quadraticCurveTo(cx, cy, cx + r, cy);
+  ctx.quadraticCurveTo(cx, cy, cx, cy + r);
+  ctx.quadraticCurveTo(cx, cy, cx - r, cy);
+  ctx.quadraticCurveTo(cx, cy, cx, cy - r);
+  ctx.fill();
+}
+
+function drawHeartIcon(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  const d = size;
+  ctx.moveTo(x, y + d / 4);
+  ctx.quadraticCurveTo(x, y, x + d / 2, y);
+  ctx.quadraticCurveTo(x + d, y, x + d, y + d / 3);
+  ctx.quadraticCurveTo(x + d, y + (d * 5) / 8, x + d / 2, y + d);
+  ctx.quadraticCurveTo(x, y + (d * 5) / 8, x, y + d / 3);
+  ctx.quadraticCurveTo(x, y, x, y + d / 4);
+  ctx.fill();
+}
+
+function drawCustomKeepsakeIcon(ctx: CanvasRenderingContext2D, cx: number, cy: number, code: number) {
+  const isRainy = [51, 53, 55, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(code);
+  const isSnowy = [71, 73, 75, 77, 85, 86].includes(code);
+  const isSunny = [0, 1].includes(code);
+
+  if (isSunny) {
+    // Premium bright golden sun
+    ctx.beginPath();
+    const grad = ctx.createRadialGradient(cx, cy, 5, cx, cy, 24);
+    grad.addColorStop(0, "#FEF08A");
+    grad.addColorStop(1, "#F59E0B");
+    ctx.fillStyle = grad;
+    ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Golden sunburst rays
+    ctx.strokeStyle = "rgba(245, 158, 11, 0.75)";
+    ctx.lineWidth = 3;
+    for (let i = 0; i < 8; i++) {
+      const angle = (i * Math.PI) / 4;
+      const x1 = cx + Math.cos(angle) * 26;
+      const y1 = cy + Math.sin(angle) * 26;
+      const x2 = cx + Math.cos(angle) * 36;
+      const y2 = cy + Math.sin(angle) * 36;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+  } else if (isRainy) {
+    // Soft fluffy indigo raining cloud
+    drawSingleCloudShape(ctx, cx, cy - 8, "#E2E8F0");
+    
+    // Glowing diagonal rainfall drops
+    ctx.strokeStyle = "#818CF8";
+    ctx.lineWidth = 3;
+    const dropOffsets = [
+      { dx: -12, dy: 14 },
+      { dx: 0, dy: 20 },
+      { dx: 12, dy: 14 },
+    ];
+    dropOffsets.forEach(({ dx, dy }) => {
+      ctx.beginPath();
+      ctx.moveTo(cx + dx, cy + dy);
+      ctx.lineTo(cx + dx - 4, cy + dy + 10);
+      ctx.stroke();
+    });
+  } else if (isSnowy) {
+    // Beautiful winter snowy cloud
+    drawSingleCloudShape(ctx, cx, cy - 8, "#FFFFFF");
+
+    // Stellar ice stars
+    ctx.strokeStyle = "#93C5FD";
+    ctx.lineWidth = 2.5;
+    const flakeOffsets = [
+      { dx: -10, dy: 18, size: 6 },
+      { dx: 10, dy: 18, size: 6 },
+      { dx: 0, dy: 24, size: 8 }
+    ];
+    flakeOffsets.forEach(({ dx, dy, size }) => {
+      const scx = cx + dx;
+      const scy = cy + dy;
+      for (let i = 0; i < 4; i++) {
+        const rad = (i * Math.PI) / 2;
+        ctx.beginPath();
+        ctx.moveTo(scx - Math.cos(rad) * size, scy - Math.sin(rad) * size);
+        ctx.lineTo(scx + Math.cos(rad) * size, scy + Math.sin(rad) * size);
+        ctx.stroke();
+      }
+    });
+  } else {
+    // Soft overcast cloudy sky
+    drawSingleCloudShape(ctx, cx + 8, cy - 4, "rgba(255, 255, 255, 0.4)");
+    drawSingleCloudShape(ctx, cx - 6, cy + 4, "rgba(255, 255, 255, 0.95)");
+  }
+}
+
+function drawSingleCloudShape(ctx: CanvasRenderingContext2D, cx: number, cy: number, fillStyle: string) {
+  ctx.fillStyle = fillStyle;
+  ctx.beginPath();
+  ctx.arc(cx - 14, cy + 4, 12, 0, Math.PI * 2);
+  ctx.arc(cx, cy - 2, 16, 0, Math.PI * 2);
+  ctx.arc(cx + 14, cy + 4, 11, 0, Math.PI * 2);
+  ctx.rect(cx - 14, cy, 28, 16);
+  ctx.fill();
+}
+
+function wrapText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  startY: number,
+  maxWidth: number,
+  lineHeight: number
+): number {
+  const words = text.split(" ");
+  let line = "";
+  let y = startY;
+
+  for (let n = 0; n < words.length; n++) {
+    const testLine = line + words[n] + " ";
+    const metrics = ctx.measureText(testLine);
+    const testWidth = metrics.width;
+
+    if (testWidth > maxWidth && n > 0) {
+      ctx.fillText(line, x, y);
+      line = words[n] + " ";
+      y += lineHeight;
+    } else {
+      line = testLine;
+    }
+  }
+  ctx.fillText(line, x, y);
+  return y;
 }
