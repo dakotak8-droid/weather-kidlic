@@ -11,6 +11,7 @@ import { getParentHumorContext, getWeatherDescription, getMoodLabelForCode } fro
 
 // Import modules
 import HeroSection from "./components/HeroSection";
+import BirthWeatherStory from "./components/BirthWeatherStory";
 import DailyForecast from "./components/DailyForecast";
 import ParentSurvival from "./components/ParentSurvival";
 import WeeklyForecast from "./components/WeeklyForecast";
@@ -236,6 +237,9 @@ export default function App() {
         isLoading={isLoading}
         moodSentence={humor.moodSentence}
       />
+
+      {/* Newborn Legacy Birth Date Weather Story */}
+      <BirthWeatherStory />
 
       {/* Staggered Weather Components Display */}
       {weatherData && !isLoading && (
