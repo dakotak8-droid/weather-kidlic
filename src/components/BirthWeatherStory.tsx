@@ -519,15 +519,17 @@ export default function BirthWeatherStory() {
                   <Calendar size={12} />
                   <span>Birth Date (MM/DD/YYYY)</span>
                 </label>
-                <input
-                  type="date"
-                  max={new Date().toISOString().split("T")[0]}
-                  min="1940-01-01"
-                  required
-                  value={birthDate}
-                  onChange={(e) => setBirthDate(e.target.value)}
-                  className="w-full px-4 py-3 bg-[#F9F1EB] dark:bg-[#1E1415] rounded-xl text-sm border-none outline-none text-[#3D2C2E] dark:text-[#FEFAF6] placeholder:text-slate-400 transition"
-                />
+                <div className="relative">
+                  <input
+                    type="date"
+                    max={new Date().toISOString().split("T")[0]}
+                    min="1940-01-01"
+                    required
+                    value={birthDate}
+                    onChange={(e) => setBirthDate(e.target.value)}
+                    className="w-full px-4 py-3 bg-[#F9F1EB] dark:bg-[#1E1415] rounded-xl text-sm border-none outline-none text-[#3D2C2E] dark:text-[#FEFAF6] placeholder:text-slate-400 transition"
+                  />
+                </div>
               </div>
 
               {/* Birth City Autocomplete Input */}
