@@ -596,24 +596,30 @@ export default function BirthWeatherStory() {
               </div>
             </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isLoadingStory}
-              className="w-full bg-[#3D2C2E] hover:bg-[#261B1C] dark:bg-[#E89E82] dark:hover:bg-[#D48D71] text-white dark:text-[#2B1D1F] py-3.5 rounded-xl font-mono text-xs uppercase tracking-widest font-bold shadow-sm transition hover:shadow flex items-center justify-center gap-2 disabled:opacity-75 cursor-pointer"
-            >
-              {isLoadingStory ? (
-                <>
-                  <RefreshCw size={14} className="animate-spin text-[#D48D71] dark:text-[#2B1D1F]" />
-                  <span>Scanning the heavens...</span>
-                </>
-              ) : (
-                <>
-                  <ChevronRight size={14} />
-                  <span>Reveal the weather story</span>
-                </>
-              )}
-            </button>
+            {/* Submit Button & Trust Line */}
+            <div className="space-y-3 pt-1">
+              <button
+                type="submit"
+                disabled={isLoadingStory}
+                className="w-full bg-[#3D2C2E] hover:bg-[#261B1C] dark:bg-[#E89E82] dark:hover:bg-[#D48D71] text-white dark:text-[#2B1D1F] py-3.5 rounded-xl font-mono text-xs uppercase tracking-widest font-bold shadow-sm transition hover:shadow flex items-center justify-center gap-2 disabled:opacity-75 cursor-pointer"
+              >
+                {isLoadingStory ? (
+                  <>
+                    <RefreshCw size={14} className="animate-spin text-[#D48D71] dark:text-[#2B1D1F]" />
+                    <span>Scanning the heavens...</span>
+                  </>
+                ) : (
+                  <>
+                    <ChevronRight size={14} />
+                    <span>Reveal the weather story</span>
+                  </>
+                )}
+              </button>
+
+              <p className="text-[10.5px] text-center text-slate-400 dark:text-slate-500 font-sans tracking-wide">
+                Powered by historical weather archives and location data.
+              </p>
+            </div>
           </form>
         </div>
 
