@@ -514,12 +514,12 @@ export default function BirthWeatherStory() {
 
             <div className="space-y-4">
               {/* Birth Date Input */}
-              <div className="space-y-1.5 focus-within:text-[#D48D71]">
+              <div className="relative w-full block box-border space-y-1.5 focus-within:text-[#D48D71]">
                 <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-400 font-extrabold flex items-center gap-1.5">
                   <Calendar size={12} />
                   <span>Birth Date (MM/DD/YYYY)</span>
                 </label>
-                <div className="relative">
+                <div className="relative w-full block box-border">
                   <input
                     type="date"
                     max={new Date().toISOString().split("T")[0]}
@@ -527,18 +527,19 @@ export default function BirthWeatherStory() {
                     required
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)}
-                    className="w-full px-4 py-3 bg-[#F9F1EB] dark:bg-[#1E1415] rounded-xl text-sm border-none outline-none text-[#3D2C2E] dark:text-[#FEFAF6] placeholder:text-slate-400 transition"
+                    className="w-full block box-border px-4 py-3 bg-[#F9F1EB] dark:bg-[#1E1415] rounded-xl text-sm border-none outline-none text-[#3D2C2E] dark:text-[#FEFAF6] placeholder:text-slate-400 transition"
+                    style={{ width: "100%", boxSizing: "border-box" }}
                   />
                 </div>
               </div>
 
               {/* Birth City Autocomplete Input */}
-              <div ref={dropdownRef} className="relative space-y-1.5 focus-within:text-[#D48D71]">
+              <div ref={dropdownRef} className="relative w-full block box-border space-y-1.5 focus-within:text-[#D48D71]">
                 <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-400 font-extrabold flex items-center gap-1.5">
                   <Search size={12} />
                   <span>Birth City & Country</span>
                 </label>
-                <div className="relative">
+                <div className="relative w-full block box-border">
                   <input
                     type="text"
                     required
@@ -550,7 +551,8 @@ export default function BirthWeatherStory() {
                       if (selectedCity) setSelectedCity(null);
                     }}
                     onFocus={() => setShowDropdown(true)}
-                    className="w-full px-4 py-3 bg-[#F9F1EB] dark:bg-[#1E1415] rounded-xl text-sm border-none outline-none text-[#3D2C2E] dark:text-[#FEFAF6] placeholder:text-slate-400 transition"
+                    className="w-full block box-border px-4 py-3 bg-[#F9F1EB] dark:bg-[#1E1415] rounded-xl text-sm border-none outline-none text-[#3D2C2E] dark:text-[#FEFAF6] placeholder:text-slate-400 transition"
+                    style={{ width: "100%", boxSizing: "border-box" }}
                   />
                   {typedCity && (
                     <button
