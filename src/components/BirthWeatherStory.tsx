@@ -277,7 +277,7 @@ export default function BirthWeatherStory() {
     }
   };
 
-  // High-resolution Instagram-safe Canvas download (1080x1350, 4:5 aspect ratio)
+  // High-resolution Instagram-safe Canvas download (1080x1350, 4:5 aspect ratio or taller if height is exceeded)
   const handleDownloadKeepsake = () => {
     if (!revealResult) return;
     setIsGeneratingImage(true);
@@ -285,9 +285,54 @@ export default function BirthWeatherStory() {
     // Let React update the loading spinner state before starting heavy canvas matrix draw blocking
     setTimeout(() => {
       try {
+        // Create an offscreen canvas to perform precise text measurements and height calculations
+        const testCanvas = document.createElement("canvas");
+        const testCtx = testCanvas.getContext("2d");
+        if (!testCtx) {
+          setIsGeneratingImage(false);
+          return;
+        }
+
+        const width = 1080;
+        const baseHeight = 1350;
+
+        // 1. Calculate height of Story Paragraph
+        testCtx.font = "34px 'Inter', 'system-ui', sans-serif";
+        const storyLines = getWrappedLines(testCtx, revealResult.story.story, 820);
+        const storyLineHeight = 56;
+        const storyStartY = 460;
+        const storyEndY = storyStartY + (storyLines.length - 1) * storyLineHeight;
+
+        // 2. Calculate height of Memorable Quote Box
+        testCtx.font = "italic 34px 'Georgia', 'Times New Roman', serif";
+        const quoteLines = getWrappedLines(testCtx, `“${revealResult.story.quote}”`, 750);
+        const quoteLineHeight = 46;
+        const quoteTextHeight = quoteLines.length * quoteLineHeight;
+        
+        // Dynamic Quote container height (min height 180, otherwise top padding/headers + text height + bottom padding)
+        const minQuoteBoxHeight = 180;
+        const calculatedQuoteBoxHeight = 120 + quoteTextHeight + 40;
+        const finalQuoteBoxHeight = Math.max(minQuoteBoxHeight, calculatedQuoteBoxHeight);
+
+        // Position of Quote Box (70px spacing below Story Paragraph)
+        const quoteBoxY = storyEndY + 70;
+
+        // 3. Spacing between Quote Box and Footer row
+        // Minimum 32px is requested, we use 48px to leave a highly elegant, breathable gap
+        const quoteToFooterSpacing = 48;
+        const footerY = quoteBoxY + finalQuoteBoxHeight + quoteToFooterSpacing;
+
+        // 4. Reserve a protected footer zone (minimum 120px height)
+        // From footerY to bottom, we want a comfortable 130px zone
+        const totalRequiredHeight = footerY + 130;
+
+        // 5. Dynamic expansion rule: automatic increase card height if content overflows standard 1350px
+        const finalCanvasHeight = Math.max(baseHeight, totalRequiredHeight);
+
+        // Create the actual rendering canvas with calculated height
         const canvas = document.createElement("canvas");
-        canvas.width = 1080;
-        canvas.height = 1350;
+        canvas.width = width;
+        canvas.height = finalCanvasHeight;
         const ctx = canvas.getContext("2d");
         if (!ctx) {
           setIsGeneratingImage(false);
@@ -298,64 +343,64 @@ export default function BirthWeatherStory() {
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = "high";
 
-        // 1. Cozy atmospheric background (Deep Slate Blue/Midnight gradient)
-        const bgGrad = ctx.createLinearGradient(0, 0, 1080, 1350);
+        // 1. Cozy atmospheric background (Deep Slate Blue/Midnight gradient covering full height)
+        const bgGrad = ctx.createLinearGradient(0, 0, 1080, finalCanvasHeight);
         bgGrad.addColorStop(0, "#0E1321"); // premium slate-midnight
         bgGrad.addColorStop(0.5, "#0A0D18"); // deep galaxy cosmic navy
         bgGrad.addColorStop(1, "#05070B"); // solid bottom black
         ctx.fillStyle = bgGrad;
-        ctx.fillRect(0, 0, 1080, 1350);
+        ctx.fillRect(0, 0, 1080, finalCanvasHeight);
 
         // Draw glowing golden baby-light cosmic orb from upper right corner
         const sunGlow = ctx.createRadialGradient(900, 160, 50, 900, 160, 500);
         sunGlow.addColorStop(0, "rgba(232, 158, 130, 0.08)"); // cozy gold atmospheric mist
         sunGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
         ctx.fillStyle = sunGlow;
-        ctx.fillRect(0, 0, 1080, 1350);
+        ctx.fillRect(0, 0, 1080, finalCanvasHeight);
 
         // Draw cool calming water-light cosmic orb from lower left corner
-        const oceanGlow = ctx.createRadialGradient(180, 1150, 40, 180, 1150, 450);
+        const oceanGlow = ctx.createRadialGradient(180, finalCanvasHeight - 200, 40, 180, finalCanvasHeight - 200, 450);
         oceanGlow.addColorStop(0, "rgba(129, 140, 248, 0.05)"); // calming indigo mist
         oceanGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
         ctx.fillStyle = oceanGlow;
-        ctx.fillRect(0, 0, 1080, 1350);
+        ctx.fillRect(0, 0, 1080, finalCanvasHeight);
 
-        // 2. Linear matrix dots overlay (Fine architectural starry lines)
+        // 2. Linear matrix dots overlay styled for actual height
         ctx.strokeStyle = "rgba(255, 255, 255, 0.015)";
         ctx.lineWidth = 1;
         for (let x = 80; x < 1000; x += 32) {
           ctx.beginPath();
           ctx.moveTo(x, 80);
-          ctx.lineTo(x, 1270);
+          ctx.lineTo(x, finalCanvasHeight - 80);
           ctx.stroke();
         }
-        for (let y = 80; y < 1270; y += 32) {
+        for (let y = 80; y < finalCanvasHeight - 80; y += 32) {
           ctx.beginPath();
           ctx.moveTo(80, y);
           ctx.lineTo(1000, y);
           ctx.stroke();
         }
 
-        // 3. Elegant double-bounding borders
+        // 3. Elegant double-bounding borders mapping dynamically to actual scale
         // Outer glow path
         ctx.strokeStyle = "rgba(232, 158, 130, 0.14)";
         ctx.lineWidth = 1.5;
         ctx.beginPath();
-        drawRoundRect(ctx, 60, 60, 960, 1230, 42);
+        drawRoundRect(ctx, 60, 60, 960, finalCanvasHeight - 120, 42);
         ctx.stroke();
 
         // Inner solid rule
         ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        drawRoundRect(ctx, 70, 70, 940, 1210, 36);
+        drawRoundRect(ctx, 70, 70, 940, finalCanvasHeight - 140, 36);
         ctx.stroke();
 
-        // Celestial four-point corner star ornaments
+        // Celestial four-point corner star ornaments positioned at dynamic boundaries
         drawFourPointStar(ctx, 84, 84, 10, "#E89E82");
         drawFourPointStar(ctx, 996, 84, 10, "#E89E82");
-        drawFourPointStar(ctx, 84, 1266, 10, "#E89E82");
-        drawFourPointStar(ctx, 996, 1266, 10, "#E89E82");
+        drawFourPointStar(ctx, 84, finalCanvasHeight - 84, 10, "#E89E82");
+        drawFourPointStar(ctx, 996, finalCanvasHeight - 84, 10, "#E89E82");
 
         // 4. Certificate Header Labels
         drawFourPointStar(ctx, 132, 160, 12, "#E89E82");
@@ -419,19 +464,17 @@ export default function BirthWeatherStory() {
         // 7. STORY PARAGRAPH (Beautifully wrapped and staggered with premium line spacing)
         ctx.fillStyle = "#E2E8F0";
         ctx.font = "34px 'Inter', 'system-ui', sans-serif";
-        const startY = 460;
-        const finalY = wrapText(ctx, revealResult.story.story, 130, startY, 820, 56);
+        wrapText(ctx, revealResult.story.story, 130, storyStartY, 820, storyLineHeight);
 
-        // 8. MEMORABLE QUOTE BANNER CONTAINER (Offset dynamically to avoid overlaps)
-        const quoteBoxY = finalY + 70;
+        // 8. MEMORABLE QUOTE BANNER CONTAINER (Offset dynamically to completely avoid overlaps)
         ctx.fillStyle = "rgba(255, 255, 255, 0.02)";
         ctx.beginPath();
-        drawRoundRect(ctx, 130, quoteBoxY, 820, 180, 20);
+        drawRoundRect(ctx, 130, quoteBoxY, 820, finalQuoteBoxHeight, 20);
         ctx.fill();
 
-        // Vertical premium left gold indicator line
+        // Vertical premium left gold indicator line scaling with quote card
         ctx.fillStyle = "#E89E82";
-        ctx.fillRect(132, quoteBoxY + 20, 6, 140);
+        ctx.fillRect(132, quoteBoxY + 20, 6, finalQuoteBoxHeight - 40);
 
         ctx.fillStyle = "#D48D71";
         ctx.font = "bold 15px 'JetBrains Mono', 'Courier New', monospace";
@@ -439,10 +482,9 @@ export default function BirthWeatherStory() {
 
         ctx.fillStyle = "#FFFFFF";
         ctx.font = "italic 34px 'Georgia', 'Times New Roman', serif";
-        wrapText(ctx, `“${revealResult.story.quote}”`, 160, quoteBoxY + 110, 750, 46);
+        wrapText(ctx, `“${revealResult.story.quote}”`, 160, quoteBoxY + 110, 750, quoteLineHeight);
 
-        // 9. BOTTOM METADATA DIVIDER & FOOTER LABELS
-        const footerY = 1120;
+        // 9. BOTTOM METADATA DIVIDER & FOOTER LABELS (Guaranteed non-overlapping safe space)
         ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -998,4 +1040,29 @@ function wrapText(
   }
   ctx.fillText(line, x, y);
   return y;
+}
+
+function getWrappedLines(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  maxWidth: number
+): string[] {
+  const words = text.split(" ");
+  const lines: string[] = [];
+  let currentLine = "";
+
+  for (let n = 0; n < words.length; n++) {
+    const testLine = currentLine + words[n] + " ";
+    const metrics = ctx.measureText(testLine);
+    const testWidth = metrics.width;
+
+    if (testWidth > maxWidth && n > 0) {
+      lines.push(currentLine.trim());
+      currentLine = words[n] + " ";
+    } else {
+      currentLine = testLine;
+    }
+  }
+  lines.push(currentLine.trim());
+  return lines;
 }
