@@ -150,21 +150,38 @@ export default function BirthWeatherStory() {
       return;
     }
 
-    // Parse date elements
-    const selectedDate = new Date(birthDate);
-    const today = new Date();
-    
-    if (isNaN(selectedDate.getTime())) {
+    // Direct string extraction to avoid JavaScript local timezone offset shifts
+    const segments = birthDate.split("-");
+    if (segments.length !== 3) {
+      setErrorMessage("Please select a valid birth date.");
+      return;
+    }
+
+    const yearNum = parseInt(segments[0], 10);
+    const monthNum = parseInt(segments[1], 10);
+    const dayNum = parseInt(segments[2], 10);
+
+    if (isNaN(yearNum) || isNaN(monthNum) || isNaN(dayNum)) {
       setErrorMessage("Please enter a valid birth date.");
       return;
     }
 
-    if (selectedDate > today) {
+    // Compare with today's local date boundaries in a timezone-robust way
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth() + 1;
+    const currentDay = today.getDate();
+
+    if (
+      yearNum > currentYear ||
+      (yearNum === currentYear && monthNum > currentMonth) ||
+      (yearNum === currentYear && monthNum === currentMonth && dayNum > currentDay)
+    ) {
       setErrorMessage("Are they a time traveler? The birth date cannot be in the future!");
       return;
     }
 
-    if (selectedDate.getFullYear() < 1940) {
+    if (yearNum < 1940) {
       setErrorMessage("Alas! Historical weather archives are only available back to 1940. Please enter a birth date from 1940 onwards.");
       return;
     }
@@ -207,11 +224,11 @@ export default function BirthWeatherStory() {
         return;
       }
 
-      // Convert to YYYY-MM-DD
-      const year = selectedDate.getFullYear();
-      const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
-      const day = String(selectedDate.getDate()).padStart(2, "0");
-      const dateStr = `${year}-${month}-${day}`;
+      // Format pieces cleanly without timezone shifts
+      const yearStr = String(yearNum);
+      const monthStr = String(monthNum).padStart(2, "0");
+      const dayStr = String(dayNum).padStart(2, "0");
+      const dateStr = `${yearStr}-${monthStr}-${dayStr}`;
 
       // Call Open-Meteo Archive public API
       const archiveUrl = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${dateStr}&end_date=${dateStr}&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum&timezone=auto`;
@@ -238,7 +255,7 @@ export default function BirthWeatherStory() {
       const generatedStory = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0);
 
       // Save formatted MM/DD/YYYY representation
-      const formattedDate = `${month}/${day}/${year}`;
+      const formattedDate = `${monthStr}/${dayStr}/${yearStr}`;
 
       setRevealResult({
         city: cityName,
