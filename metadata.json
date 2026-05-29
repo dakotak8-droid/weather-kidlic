@@ -1,0 +1,6 @@
+{
+  "name": "Parent Weather Forecast",
+  "description": "A modern, warm, and humorous weather app that translates meteorology into daily parenting reality.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
