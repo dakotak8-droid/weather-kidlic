@@ -4,6 +4,11 @@ import { motion, AnimatePresence } from "motion/react";
 import { GeocodingResult } from "../types";
 import WeatherIcon from "./WeatherIcon";
 
+const MONTHS_ABBR = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+
 interface HistoricalStory {
   theme: string;
   story: string;
@@ -255,8 +260,8 @@ export default function BirthWeatherStory() {
 
       const generatedStory = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0);
 
-      // Save formatted MM/DD/YYYY representation
-      const formattedDate = `${monthStr}/${dayStr}/${yearStr}`;
+      // Save formatted readable representation (e.g. Sep 2, 2026) instead of numeric representation
+      const formattedDate = `${MONTHS_ABBR[monthNum - 1]} ${dayNum}, ${yearStr}`;
 
       setRevealResult({
         city: cityName,
@@ -301,30 +306,34 @@ export default function BirthWeatherStory() {
         const storyLines = getWrappedLines(testCtx, revealResult.story.story, 820);
         const storyLineHeight = 56;
         const storyStartY = 460;
-        const storyEndY = storyStartY + (storyLines.length - 1) * storyLineHeight;
+        const storyEndY = storyStartY + (storyLines.length * storyLineHeight);
 
-        // 2. Calculate height of Memorable Quote Box
+        // 2. Calculate height and position of Memorable Quote Box
         testCtx.font = "italic 34px 'Georgia', 'Times New Roman', serif";
         const quoteLines = getWrappedLines(testCtx, `“${revealResult.story.quote}”`, 750);
         const quoteLineHeight = 46;
-        const quoteTextHeight = quoteLines.length * quoteLineHeight;
         
-        // Dynamic Quote container height (min height 180, otherwise top padding/headers + text height + bottom padding)
-        const minQuoteBoxHeight = 180;
-        const calculatedQuoteBoxHeight = 120 + quoteTextHeight + 40;
-        const finalQuoteBoxHeight = Math.max(minQuoteBoxHeight, calculatedQuoteBoxHeight);
+        // Inside the quote box we draw "MEMORABLE OUTLOOK" header at quoteBoxY + 50,
+        // and the quote text lines start writing at quoteBoxY + 110.
+        // The bottom of drawn text is quoteBoxY + 110 + (quoteLines.length * 46) + 50 (for bottom padding).
+        const finalQuoteBoxHeight = 110 + (quoteLines.length * quoteLineHeight) + 50;
 
-        // Position of Quote Box (70px spacing below Story Paragraph)
-        const quoteBoxY = storyEndY + 70;
+        // Position of Quote Box (60px of spacing below Story Paragraph)
+        const quoteBoxY = storyEndY + 60;
+        const quoteBoxEndY = quoteBoxY + finalQuoteBoxHeight;
 
-        // 3. Spacing between Quote Box and Footer row
-        // Minimum 32px is requested, we use 48px to leave a highly elegant, breathable gap
-        const quoteToFooterSpacing = 48;
-        const footerY = quoteBoxY + finalQuoteBoxHeight + quoteToFooterSpacing;
+        // 3. Spacing between Quote Box and Footer row (Must be at least 36px, we use 55px for elegance)
+        const quoteToFooterSpacing = 55;
 
-        // 4. Reserve a protected footer zone (minimum 120px height)
-        // From footerY to bottom, we want a comfortable 130px zone
-        const totalRequiredHeight = footerY + 130;
+        // Anchor the footer divider. It should be at least at Y=1120 on a standard 1350px height,
+        // but pushes down dynamically if the quote elements extend further.
+        const dividerY = Math.max(1120, quoteBoxEndY + quoteToFooterSpacing);
+
+        // 4. Reserve a protected footer zone (minimum 120px height) & add domain address
+        const footerY = dividerY; // Divider line position
+        const domainY = dividerY + 96; // Centered website domain below the rating footer
+
+        const totalRequiredHeight = domainY + 60; // 60px bottom padding from domain to the edge
 
         // 5. Dynamic expansion rule: automatic increase card height if content overflows standard 1350px
         const finalCanvasHeight = Math.max(baseHeight, totalRequiredHeight);
@@ -510,11 +519,18 @@ export default function BirthWeatherStory() {
         ctx.textAlign = "right";
         ctx.fillText("Weather When Born • Keepsake Edition", 950, footerY + 46);
 
+        // 9.5 Centered dynamic vercel domain address (subtle muted peach)
+        ctx.fillStyle = "rgba(232, 158, 130, 0.45)";
+        ctx.font = "bold 15px 'JetBrains Mono', 'Courier New', monospace";
+        ctx.textAlign = "center";
+        ctx.fillText("weather-kidlic.vercel.app", 540, domainY);
+        ctx.textAlign = "left"; // Restore standard alignment default
+
         // 10. TRIGGER PNG ANCHOR DOWNLOAD
         const dataUrl = canvas.toDataURL("image/png");
         const downloadLink = document.createElement("a");
         const safeCity = revealResult.city.replace(/[^a-zA-Z0-9]/g, "_");
-        const safeDate = revealResult.date.replace(/\//g, "-");
+        const safeDate = revealResult.date.replace(/[^a-zA-Z0-9-]/g, "_");
         downloadLink.download = `Keepsake_${safeCity}_${safeDate}.png`;
         downloadLink.href = dataUrl;
         downloadLink.click();
@@ -723,7 +739,7 @@ export default function BirthWeatherStory() {
                         <span className="text-[10px] font-mono uppercase tracking-widest font-extrabold text-[#E89E82] bg-[#E89E82]/15 px-3 py-1 rounded-full border border-[#E89E82]/25">
                           Theme: The Golden Daybreak
                         </span>
-                        <span className="text-xs text-slate-500 font-mono">Date: 10/14/2021</span>
+                        <span className="text-xs text-slate-500 font-mono">Date: Oct 14, 2021</span>
                       </div>
                       <p className="text-sm text-slate-300 font-sans leading-relaxed tracking-wide">
                         On the beautiful, sunlit morning you were born, the Austin skies were perfect, clear gold. As warm autumn light filled the room, our world changed forever. It felt as if the sun had cleared the clouds just for your arrival. We held you close under those warm October beams, realizing that the brightest light was now inside.
