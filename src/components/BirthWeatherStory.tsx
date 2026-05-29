@@ -322,20 +322,19 @@ export default function BirthWeatherStory() {
         const quoteBoxY = storyEndY + 60;
         const quoteBoxEndY = quoteBoxY + finalQuoteBoxHeight;
 
-        // 3. Spacing between Quote Box and Footer row (Must be at least 36px, we use 55px for elegance)
-        const quoteToFooterSpacing = 55;
+        // 3. Spacing between Quote Box and the Footer row (Must be at least 36px, we use 60px for premium elegance)
+        const quoteToFooterSpacing = 60;
 
-        // Anchor the footer divider. It should be at least at Y=1120 on a standard 1350px height,
+        // Position of the centered website domain name 'domainY'.
+        // It should be at least at Y=1180 on a standard 1350px height,
         // but pushes down dynamically if the quote elements extend further.
-        const dividerY = Math.max(1120, quoteBoxEndY + quoteToFooterSpacing);
+        const domainY = Math.max(1180, quoteBoxEndY + quoteToFooterSpacing);
 
-        // 4. Reserve a protected footer zone (minimum 120px height) & add domain address
-        const footerY = dividerY; // Divider line position
-        const domainY = dividerY + 96; // Centered website domain below the rating footer
+        // Ensure we have an elegant buffer at the bottom (140px from domain text to the outer canvas bottom edge)
+        // Which translates to 140 - 70 = 70px padding from the domain text to the inner borders.
+        const totalRequiredHeight = domainY + 140;
 
-        const totalRequiredHeight = domainY + 60; // 60px bottom padding from domain to the edge
-
-        // 5. Dynamic expansion rule: automatic increase card height if content overflows standard 1350px
+        // 4. Dynamic expansion rule: automatic increase card height if content overflows standard 1350px
         const finalCanvasHeight = Math.max(baseHeight, totalRequiredHeight);
 
         // Create the actual rendering canvas with calculated height
@@ -493,38 +492,12 @@ export default function BirthWeatherStory() {
         ctx.font = "italic 34px 'Georgia', 'Times New Roman', serif";
         wrapText(ctx, `“${revealResult.story.quote}”`, 160, quoteBoxY + 110, 750, quoteLineHeight);
 
-        // 9. BOTTOM METADATA DIVIDER & FOOTER LABELS (Guaranteed non-overlapping safe space)
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(130, footerY);
-        ctx.lineTo(950, footerY);
-        ctx.stroke();
-
-        // Vector Heart graphic representation
-        drawHeartIcon(ctx, 130, footerY + 36, 24, "#E89E82");
-
-        ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
-        ctx.font = "bold 20px 'JetBrains Mono', 'Courier New', monospace";
-        ctx.textBaseline = "middle";
-        ctx.fillText(`${revealResult.story.metricLabel}: `, 166, footerY + 46);
-
-        const metricLabelWidth = ctx.measureText(`${revealResult.story.metricLabel}: `).width;
-        ctx.fillStyle = "#FFFFFF";
-        ctx.fillText(revealResult.story.metricValue, 166 + metricLabelWidth, footerY + 46);
-
-        // Bottom Right: Branding footer
-        ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
-        ctx.font = "bold 20px 'JetBrains Mono', 'Courier New', monospace";
-        ctx.textAlign = "right";
-        ctx.fillText("Weather When Born • Keepsake Edition", 950, footerY + 46);
-
-        // 9.5 Centered dynamic vercel domain address (subtle muted peach)
-        ctx.fillStyle = "rgba(232, 158, 130, 0.45)";
-        ctx.font = "bold 15px 'JetBrains Mono', 'Courier New', monospace";
+        // 9. BOTTOM BRANDING ONLY (Clean, centered website domain name, subtle muted peach, with generous padding)
+        ctx.fillStyle = "rgba(232, 158, 130, 0.55)";
+        ctx.font = "bold 16px 'JetBrains Mono', 'Courier New', monospace";
         ctx.textAlign = "center";
         ctx.fillText("weather-kidlic.vercel.app", 540, domainY);
-        ctx.textAlign = "left"; // Restore standard alignment default
+        ctx.textAlign = "left"; // Restore standard alignment default to prevent side effects
 
         // 10. TRIGGER PNG ANCHOR DOWNLOAD
         const dataUrl = canvas.toDataURL("image/png");
