@@ -485,9 +485,9 @@ export default function BirthWeatherStory() {
   };
 
   return (
-    <section className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-12 select-none border-b border-[#F0E4DA] dark:border-[#3B282A]">
+    <section className="max-w-[1280px] mx-auto px-6 sm:px-8 md:px-12 py-12 select-none border-b border-[#F0E4DA] dark:border-[#3B282A]">
       {/* 50/50 split layout for Desktop/Tablet, stacked for Mobile */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-start w-full">
         
         {/* LEFT COLUMN: Input Form and Text info */}
         <div className="space-y-6 text-center md:text-left w-full">
