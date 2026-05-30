@@ -168,15 +168,27 @@ export default function BirthWeatherStory() {
     const isSnowy = [71, 73, 75, 77, 85, 86].includes(weatherCode);
     const isSunny = [0, 1].includes(weatherCode);
 
-    const tempF = Math.round((tempMax * 9) / 5 + 32);
-    const tempC = Math.round(tempMax);
-    const landmarks = getCityLandmarks(city, country);
-    const landmark = landmarks.length > 0 ? landmarks[0] : "";
+    const cLower = city.toLowerCase();
+    const isNY = cLower.includes("new york") || cLower.includes("nyc") || cLower.includes("brooklyn");
+    const isChicago = cLower.includes("chicago");
+    const isWarsaw = cLower.includes("warsaw") || cLower.includes("warszawa");
+    const isToronto = cLower.includes("toronto");
 
     if (isRainy) {
-      const storyText = landmark
-        ? `As a quiet rain fell over ${city} that morning, drifting across ${landmark}, the world outside went about its usual damp routine. The air was cool at ${tempC}°C (${tempF}°F), matching the quiet hush of those early hours. But inside, our hearts were racing with anticipation until the moment we finally held you close, wrapped in a warm blanket. The cool weather of that day has faded into the background, but the absolute warmth of holding you for the very first time will never leave us.`
-        : `As a quiet rain fell over ${city} that morning, the streets outside went about their usual damp routine, completely unaware of the beauty about to unfold. The air was cool at ${tempC}°C (${tempF}°F), matching the quiet hush of those early hours. Inside, our hearts were racing with anticipation until the moment we finally held you close, wrapped in a warm blanket. The cool weather of that day has faded into the background, but the absolute warmth of holding you for the very first time will never leave us.`;
+      let storyText = "";
+      if (isNY) {
+        storyText = `Light rain was falling across New York that morning. In the busy streets, people were commuting and starting their workday, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry and saw the skyline in the distance. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+      } else if (isChicago) {
+        storyText = `Light rain was falling across Chicago that morning. People moved through their daily routine near Lake Michigan under cool winds, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+      } else if (isWarsaw) {
+        storyText = `Light rain was falling across Warsaw that morning. Near the Vistula River, families were beginning their day, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+      } else if (isToronto) {
+        storyText = `Light rain was falling across Toronto that morning. Along the busy waterfront of Lake Ontario, everyday city life went on as usual, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+      } else {
+        const landmarks = getCityLandmarks(city, country);
+        const landmarkRef = landmarks.length > 0 ? `near ${landmarks[0]}` : "on the streets outside";
+        storyText = `Light rain was falling across ${city} that morning. People went about their day ${landmarkRef}, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+      }
 
       return {
         theme: "Rain of Blessings",
@@ -186,9 +198,20 @@ export default function BirthWeatherStory() {
         metricValue: ""
       };
     } else if (isSnowy) {
-      const storyText = landmark
-        ? `As a quiet, steady snow fell across ${city} that winter morning, dusting ${landmark}, the world outside felt completely still. The outdoor temperature was a frosty ${tempC}°C (${tempF}°F), bringing a crisp, silent calm to the neighborhoods. We held you close in the warm room, listening to your steady breathing and realizing our lives had changed forever. The winter cold outside quickly faded from our minds as we looked down at you, realizing we had everything we ever wanted right here.`
-        : `As a quiet, steady snow fell across ${city} that winter morning, covering the streets in thin white, the world outside felt completely still. The outdoor temperature was a frosty ${tempC}°C (${tempF}°F), bringing a crisp, silent calm to the neighborhoods. We held you close in the warm room, listening to your steady breathing and realizing our lives had changed forever. The winter cold outside quickly faded from our minds as we looked down at you, realizing we had everything we ever wanted right here.`;
+      let storyText = "";
+      if (isNY) {
+        storyText = `A light snow was falling across New York that morning. In the busy streets, people were commuting and starting their workday, unaware that our lives were changing forever. We barely noticed the cold once we heard your first cry and saw the skyline in the distance. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+      } else if (isChicago) {
+        storyText = `A light snow was falling across Chicago that morning. People moved through their daily routine near Lake Michigan under cool winds, unaware that our lives were changing forever. We barely noticed the cold once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+      } else if (isWarsaw) {
+        storyText = `A light snow was falling across Warsaw that morning. Near the Vistula River, families were beginning their day, unaware that our lives were changing forever. We barely noticed the cold once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+      } else if (isToronto) {
+        storyText = `A light snow was falling across Toronto that morning. Along the busy waterfront of Lake Ontario, everyday city life went on as usual, unaware that our lives were changing forever. We barely noticed the cold once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+      } else {
+        const landmarks = getCityLandmarks(city, country);
+        const landmarkRef = landmarks.length > 0 ? `near ${landmarks[0]}` : "on the streets outside";
+        storyText = `A light snow was falling across ${city} that morning. People went about their day ${landmarkRef}, unaware that our lives were changing forever. We barely noticed the cold once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+      }
 
       return {
         theme: "Silver Skies",
@@ -198,9 +221,20 @@ export default function BirthWeatherStory() {
         metricValue: ""
       };
     } else if (isSunny) {
-      const storyText = landmark
-        ? `As bright, warm sunshine spread across ${city} that afternoon, reaching ${landmark}, the day had a simple, clear beauty. The air was exceptionally pleasant at ${tempC}°C (${tempF}°F), wrapping the whole afternoon in a peaceful, quiet calm. Inside, our eyes were only on you as we cradled you in our arms, listening to your very first soft yawns. Among the quiet streets and the natural light outside, you instantly became the bright center of our lives, changing everything we knew about love.`
-        : `As bright, warm sunshine spread across ${city} that afternoon, lighting up the neighborhood, the day had a simple, clear beauty. The air was exceptionally pleasant at ${tempC}°C (${tempF}°F), wrapping the whole afternoon in a peaceful, quiet calm. Inside, our eyes were only on you as we cradled you in our arms, listening to your very first soft yawns. Among the quiet streets and the natural light outside, you instantly became the bright center of our lives, changing everything we knew about love.`;
+      let storyText = "";
+      if (isNY) {
+        storyText = `Warm sunshine was spreading across New York that morning. In the busy streets, people were commuting and starting their workday, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry and saw the skyline in the distance. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+      } else if (isChicago) {
+        storyText = `Warm sunshine was spreading across Chicago that morning. People moved through their daily routine near Lake Michigan under cool winds, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+      } else if (isWarsaw) {
+        storyText = `Warm sunshine was spreading across Warsaw that morning. Near the Vistula River, families were beginning their day, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+      } else if (isToronto) {
+        storyText = `Warm sunshine was spreading across Toronto that morning. Along the busy waterfront of Lake Ontario, everyday city life went on as usual, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+      } else {
+        const landmarks = getCityLandmarks(city, country);
+        const landmarkRef = landmarks.length > 0 ? `near ${landmarks[0]}` : "on the streets outside";
+        storyText = `Warm sunshine was spreading across ${city} that morning. People went about their day ${landmarkRef}, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+      }
 
       return {
         theme: "Wrapped in Warmth",
@@ -210,9 +244,20 @@ export default function BirthWeatherStory() {
         metricValue: ""
       };
     } else {
-      const storyText = landmark
-        ? `As a gentle, pale gray sky hung over ${city} that morning, framing ${landmark}, the city moved through a quiet, steady day. The air was mild at ${tempC}°C (${tempF}°F), keeping the outdoor world remarkably peaceful and still. Inside, everything became extraordinarily bright the moment you opened your eyes and we held you for the first time. The simple weather outside was soon forgotten, but the peace of that first welcome will stay with us for the rest of our days.`
-        : `As a gentle, pale gray sky hung over ${city} that morning, the streets below went about their usual quiet routine under a calm atmosphere. The air was mild at ${tempC}°C (${tempF}°F), keeping the outdoor world remarkably peaceful and still. Inside, everything became extraordinarily bright the moment you opened your eyes and we held you for the first time. The simple weather outside was soon forgotten, but the peace of that first welcome will stay with us for the rest of our days.`;
+      let storyText = "";
+      if (isNY) {
+        storyText = `A cloudy sky hung over New York that morning. In the busy streets, people were commuting and starting their workday, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry and saw the skyline in the distance. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+      } else if (isChicago) {
+        storyText = `A cloudy sky hung over Chicago that morning. People moved through their daily routine near Lake Michigan under cool winds, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+      } else if (isWarsaw) {
+        storyText = `A cloudy sky hung over Warsaw that morning. Near the Vistula River, families were beginning their day, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+      } else if (isToronto) {
+        storyText = `A cloudy sky hung over Toronto that morning. Along the busy waterfront of Lake Ontario, everyday city life went on as usual, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+      } else {
+        const landmarks = getCityLandmarks(city, country);
+        const landmarkRef = landmarks.length > 0 ? `near ${landmarks[0]}` : "on the streets outside";
+        storyText = `A cloudy sky hung over ${city} that morning. People went about their day ${landmarkRef}, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+      }
 
       return {
         theme: "A Gentle Beginning",
