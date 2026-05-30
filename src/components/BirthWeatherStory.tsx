@@ -9,63 +9,32 @@ const MONTHS_ABBR = [
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
-const getCityLandmark = (city: string, country?: string): string => {
+const getCityLandmarks = (city: string, country?: string): string[] => {
   const cLower = city.toLowerCase();
   
-  if (cLower.includes("london")) return "the banks of the Thames and the historic, cobblestone streets";
-  if (cLower.includes("paris")) return "the romantic curves of the Seine";
-  if (cLower.includes("new york") || cLower.includes("nyc") || cLower.includes("brooklyn")) return "the grand, soaring skyline";
-  if (cLower.includes("tokyo")) return "the vibrant, glittering avenues";
-  if (cLower.includes("sydney")) return "the ocean-swept harbor";
-  if (cLower.includes("chicago")) return "the shores of Lake Michigan and the magnificent lakeshore skyline";
-  if (cLower.includes("los angeles") || cLower.includes("la ")) return "the golden sun-bathed hills";
-  if (cLower.includes("san francisco")) return "the mist-kissed bay bridges";
-  if (cLower.includes("toronto")) return "the shores of Lake Ontario and the scenic, bustling waterfront";
-  if (cLower.includes("vancouver")) return "the majestic snow-capped peaks";
-  if (cLower.includes("rome")) return "the timeless, ancient hills";
-  if (cLower.includes("berlin")) return "the wide, historic avenues";
-  if (cLower.includes("amsterdam")) return "the quiet, historic canal rings";
-  if (cLower.includes("cairo")) return "the golden Nile river bend";
-  if (cLower.includes("austin")) return "the warm limestone ridges and green water paths";
-  if (cLower.includes("melbourne")) return "the artistic curves of the Yarra River";
-  if (cLower.includes("mumbai")) return "the endless sweeping Arabian Sea shores";
-  if (cLower.includes("cape town")) return "the shadow of the towering Table Mountain";
-  if (cLower.includes("singapore")) return "the lush, marine-scented harbor";
-  if (cLower.includes("beijing")) return "the sprawling, historic city gates";
-  if (cLower.includes("rio de janeiro") || cLower.includes("rio ")) return "the iconic peaks above the Atlantic blue";
-  if (cLower.includes("barcelona")) return "the sun-soaked Mediterranean coast";
-  if (cLower.includes("dublin")) return "the lush, green banks of the Liffey";
-  if (cLower.includes("seattle")) return "the evergreen shores of Puget Sound";
-  if (cLower.includes("miami")) return "the white sand shoreline and dynamic bay breeze";
-  if (cLower.includes("denver")) return "the magnificent backdrop of the Rocky Mountains";
-  if (cLower.includes("seoul")) return "the beautiful Han river banks and towering peaks";
-  if (cLower.includes("dubai")) return "the warm sands of the Arabian desert";
-  if (cLower.includes("athens")) return "the sacred slopes of the olive tree hills";
-  if (cLower.includes("cincinnati")) return "the hills looking down upon the Ohio River";
-  if (cLower.includes("pittsburgh")) return "the beautiful meeting point of three great rivers";
-  if (cLower.includes("warsaw") || cLower.includes("warszawa")) return "the lazy curves of the Vistula River, the historic Old Town, and the Royal Route";
-  
-  const features = [
-    "the quiet, tree-lined streets of the neighborhood",
-    "the sweeping valley that cradles the town",
-    "the gentle hills rising on the horizon",
-    "the peaceful waterways that trace the town's edge",
-    "the majestic mountain silhouettes standing guard",
-    "the whispering trees and open horizons",
-    "the gentle coastal breeze that sweeps the region",
-    "the historic center where pathways meet",
-    "the warm, sun-kissed ridges surrounding the county",
-    "the winding river banks weaving through town",
-    "the beautiful canopy of green parks",
-    "the historic avenues under endless skies"
-  ];
-  
-  let hash = 0;
-  for (let i = 0; i < city.length; i++) {
-    hash = city.charCodeAt(i) + ((hash << 5) - hash);
+  if (cLower.includes("new york") || cLower.includes("nyc") || cLower.includes("brooklyn")) {
+    return ["Manhattan skyline", "New York Harbor", "Central Park"];
   }
-  const index = Math.abs(hash) % features.length;
-  return features[index];
+  if (cLower.includes("chicago")) {
+    return ["Lake Michigan", "the Chicago skyline"];
+  }
+  if (cLower.includes("warsaw") || cLower.includes("warszawa")) {
+    return ["the Vistula River", "Old Town", "the Royal Route"];
+  }
+  if (cLower.includes("london")) {
+    return ["the River Thames", "historic London streets"];
+  }
+  if (cLower.includes("toronto")) {
+    return ["Lake Ontario", "the Toronto waterfront"];
+  }
+  if (cLower.includes("paris")) {
+    return ["the River Seine", "the Eiffel Tower gardens"];
+  }
+  if (cLower.includes("tokyo")) {
+    return ["Mount Fuji in the distance", "Shibuya streets"];
+  }
+  
+  return [];
 };
 
 const getWeatherConditionText = (code: number): string => {
@@ -201,39 +170,56 @@ export default function BirthWeatherStory() {
 
     const tempF = Math.round((tempMax * 9) / 5 + 32);
     const tempC = Math.round(tempMax);
-    const landmark = getCityLandmark(city, country);
+    const landmarks = getCityLandmarks(city, country);
+    const landmark = landmarks.length > 0 ? landmarks[0] : "";
 
     if (isRainy) {
+      const storyText = landmark
+        ? `As a quiet rain fell over ${city} that morning, drifting across ${landmark}, the world outside went about its usual damp routine. The air was cool at ${tempC}°C (${tempF}°F), matching the quiet hush of those early hours. But inside, our hearts were racing with anticipation until the moment we finally held you close, wrapped in a warm blanket. The cool weather of that day has faded into the background, but the absolute warmth of holding you for the very first time will never leave us.`
+        : `As a quiet rain fell over ${city} that morning, the streets outside went about their usual damp routine, completely unaware of the beauty about to unfold. The air was cool at ${tempC}°C (${tempF}°F), matching the quiet hush of those early hours. Inside, our hearts were racing with anticipation until the moment we finally held you close, wrapped in a warm blanket. The cool weather of that day has faded into the background, but the absolute warmth of holding you for the very first time will never leave us.`;
+
       return {
         theme: "Rain of Blessings",
         quote: "No storm could compete with the warmth of holding you for the very first time.",
-        story: `On the day of your arrival in ${city}, a cleansing rain washed over ${landmark}, playing a peaceful lullaby against the glass. The air held a cozy chill of ${tempC}°C (${tempF}°F). As the storm cleared the sky, we cradled you for the very first time, knowing that you were our perfect shelter. A brand new story had begun.`,
-        metricLabel: "ATMOSPHERIC HARMONY",
-        metricValue: "Whispering Rain"
+        story: storyText,
+        metricLabel: "",
+        metricValue: ""
       };
     } else if (isSnowy) {
+      const storyText = landmark
+        ? `As a quiet, steady snow fell across ${city} that winter morning, dusting ${landmark}, the world outside felt completely still. The outdoor temperature was a frosty ${tempC}°C (${tempF}°F), bringing a crisp, silent calm to the neighborhoods. We held you close in the warm room, listening to your steady breathing and realizing our lives had changed forever. The winter cold outside quickly faded from our minds as we looked down at you, realizing we had everything we ever wanted right here.`
+        : `As a quiet, steady snow fell across ${city} that winter morning, covering the streets in thin white, the world outside felt completely still. The outdoor temperature was a frosty ${tempC}°C (${tempF}°F), bringing a crisp, silent calm to the neighborhoods. We held you close in the warm room, listening to your steady breathing and realizing our lives had changed forever. The winter cold outside quickly faded from our minds as we looked down at you, realizing we had everything we ever wanted right here.`;
+
       return {
         theme: "Silver Skies",
-        quote: "A quiet, pristine winter day made beautiful forever by your sweet arrival.",
-        story: `A quiet blanket of crystalline snow swept over ${city} as you made your entrance. Near ${landmark}, crisp, silver air held steady at ${tempC}°C (${tempF}°F). Outside, the world fell into a soft, sacred hush; indoors, we held you close and felt a fireside warmth that would last a lifetime. Our modern world stood still, welcoming its sweetest miracle.`,
-        metricLabel: "ATMOSPHERIC HARMONY",
-        metricValue: "Pristine Snowfall"
+        quote: "The weather faded into memory. Holding you never will.",
+        story: storyText,
+        metricLabel: "",
+        metricValue: ""
       };
     } else if (isSunny) {
+      const storyText = landmark
+        ? `As bright, warm sunshine spread across ${city} that afternoon, reaching ${landmark}, the day had a simple, clear beauty. The air was exceptionally pleasant at ${tempC}°C (${tempF}°F), wrapping the whole afternoon in a peaceful, quiet calm. Inside, our eyes were only on you as we cradled you in our arms, listening to your very first soft yawns. Among the quiet streets and the natural light outside, you instantly became the bright center of our lives, changing everything we knew about love.`
+        : `As bright, warm sunshine spread across ${city} that afternoon, lighting up the neighborhood, the day had a simple, clear beauty. The air was exceptionally pleasant at ${tempC}°C (${tempF}°F), wrapping the whole afternoon in a peaceful, quiet calm. Inside, our eyes were only on you as we cradled you in our arms, listening to your very first soft yawns. Among the quiet streets and the natural light outside, you instantly became the bright center of our lives, changing everything we knew about love.`;
+
       return {
         theme: "Wrapped in Warmth",
-        quote: "The sun cleared the morning mist, shining a spotlight on our greatest miracle.",
-        story: `On the radiant day you were born in ${city}, ${landmark} was flooded with pure, warm sunshine. Natural light filled the room at a bright ${tempC}°C (${tempF}°F), matching the glowing happiness of your family. You arrived into a world of promise, instantly becoming the bright sun around which our entire lives revolve.`,
-        metricLabel: "ATMOSPHERIC HARMONY",
-        metricValue: "Solar Radiance"
+        quote: "Among clouds, rain, and sunlight, you were always the brightest part of the day.",
+        story: storyText,
+        metricLabel: "",
+        metricValue: ""
       };
     } else {
+      const storyText = landmark
+        ? `As a gentle, pale gray sky hung over ${city} that morning, framing ${landmark}, the city moved through a quiet, steady day. The air was mild at ${tempC}°C (${tempF}°F), keeping the outdoor world remarkably peaceful and still. Inside, everything became extraordinarily bright the moment you opened your eyes and we held you for the first time. The simple weather outside was soon forgotten, but the peace of that first welcome will stay with us for the rest of our days.`
+        : `As a gentle, pale gray sky hung over ${city} that morning, the streets below went about their usual quiet routine under a calm atmosphere. The air was mild at ${tempC}°C (${tempF}°F), keeping the outdoor world remarkably peaceful and still. Inside, everything became extraordinarily bright the moment you opened your eyes and we held you for the first time. The simple weather outside was soon forgotten, but the peace of that first welcome will stay with us for the rest of our days.`;
+
       return {
         theme: "A Gentle Beginning",
-        quote: "The earth lay calm and still under protective skies, welcoming you home.",
-        story: `A peaceful, velvet-soft sky hovered over ${city} on the day you took your first breath. Near ${landmark}, the mild atmosphere held around a gentle ${tempC}°C (${tempF}°F), wrapping the town in a safe, dreamlike focus. Under these quiet skies, we wrapped you close, celebrating the beautiful calm of a journey that would redefine our entire world.`,
-        metricLabel: "ATMOSPHERIC HARMONY",
-        metricValue: "Velvet Skyway"
+        quote: "The sky had its story, but our eyes were only on you.",
+        story: storyText,
+        metricLabel: "",
+        metricValue: ""
       };
     }
   };
@@ -875,7 +861,7 @@ export default function BirthWeatherStory() {
                       
                       <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
                         <div className="text-right">
-                          <span className="text-xs font-mono font-bold text-slate-300 block">WELCOME TEMPERATURE</span>
+                          <span className="text-xs font-mono font-bold text-slate-300 block">WEATHER ON YOUR ARRIVAL</span>
                           <p className="font-serif font-extrabold text-xl sm:text-2xl text-white">
                             21°C / 70°F
                           </p>
@@ -918,12 +904,12 @@ export default function BirthWeatherStory() {
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-mono uppercase tracking-widest font-extrabold text-[#E89E82] bg-[#E89E82]/15 px-3 py-1 rounded-full border border-[#E89E82]/25">
-                          Theme: The Golden Daybreak
+                          Theme: Wrapped in Warmth
                         </span>
                         <span className="text-xs text-slate-500 font-mono">Date: Oct 14, 2021</span>
                       </div>
                       <p className="text-sm text-slate-300 font-sans leading-relaxed tracking-wide">
-                        On the beautiful, sunlit morning you were born, the Austin skies were perfect, clear gold. As warm autumn light filled the room, our world changed forever. It felt as if the sun had cleared the clouds just for your arrival. We held you close under those warm October beams, realizing that the brightest light was now inside.
+                        As bright, warm sunshine spread across Austin that afternoon, reaching the quiet paths of Central Park, the day had a simple, clear beauty. The air was exceptionally pleasant at 21°C (70°F), wrapping the whole afternoon in a peaceful, quiet calm. Inside, our eyes were only on you as we cradled you in our arms, listening to your very first soft yawns. Among the quiet streets and the natural light outside, you instantly became the bright center of our lives, changing everything we knew about love.
                       </p>
                     </div>
 
@@ -931,16 +917,8 @@ export default function BirthWeatherStory() {
                     <div className="bg-white/[0.03] border-l-2 border-[#E89E82] p-4 rounded-r-xl">
                       <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">THE SKY'S WELCOME</p>
                       <p className="font-serif italic text-white text-md sm:text-lg leading-snug">
-                        “A bright sky welcomed a life that would change everything.”
+                        “Among clouds, rain, and sunlight, you were always the brightest part of the day.”
                       </p>
-                    </div>
-
-                    {/* Simulated Metadata footer details */}
-                    <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-[10px] font-mono text-slate-400 select-none">
-                      <div className="flex items-center gap-1.5">
-                        <Sparkles size={11} className="text-[#E89E82]" />
-                        <span>Nursery Memory: <strong className="text-white">Keepsake Record</strong></span>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -988,7 +966,7 @@ export default function BirthWeatherStory() {
                       {/* Meteorological snapshot */}
                       <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
                         <div className="text-right">
-                          <span className="text-xs font-mono font-bold text-slate-300 block">WELCOME TEMPERATURE</span>
+                          <span className="text-xs font-mono font-bold text-slate-300 block">WEATHER ON YOUR ARRIVAL</span>
                           <p className="font-serif font-extrabold text-xl sm:text-2xl text-white">
                             {Math.round(revealResult.tempMax)}°C / {Math.round((revealResult.tempMax * 9) / 5 + 32)}°F
                           </p>
@@ -1046,14 +1024,6 @@ export default function BirthWeatherStory() {
                       <p className="font-serif italic text-white text-md sm:text-lg leading-snug">
                         “{revealResult.story.quote}”
                       </p>
-                    </div>
-
-                    {/* Metric breakdown footer logs */}
-                    <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-[10px] font-mono text-slate-400 select-none">
-                      <div className="flex items-center gap-1.5">
-                        <Sparkles size={11} className="text-[#E89E82]" />
-                        <span>Nursery Memory: <strong className="text-white">Keepsake Record</strong></span>
-                      </div>
                     </div>
                   </div>
                 </div>
