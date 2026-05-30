@@ -173,21 +173,24 @@ export default function BirthWeatherStory() {
     const isChicago = cLower.includes("chicago");
     const isWarsaw = cLower.includes("warsaw") || cLower.includes("warszawa");
     const isToronto = cLower.includes("toronto");
+    const isLondon = cLower.includes("london");
 
     if (isRainy) {
       let storyText = "";
       if (isNY) {
-        storyText = `Light rain was falling across New York that morning. In the busy streets, people were commuting and starting their workday, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry and saw the skyline in the distance. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+        storyText = `Yellow cabs splattered through street puddles while subway grates hissed with hot steam. Early morning commuters pressed forward under a dark canopy of umbrellas, rushing through a city that never stops. But inside our hospital room, the hectic New York rush vanished. The moment we first cradled you, the Manhattan skyline in the window seemed to merge into the background. The cold city wind and rain did not matter at all. Our own small family was finally complete, and you were the center of our whole universe.`;
       } else if (isChicago) {
-        storyText = `Light rain was falling across Chicago that morning. People moved through their daily routine near Lake Michigan under cool winds, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
-      } else if (isWarsaw) {
-        storyText = `Light rain was falling across Warsaw that morning. Near the Vistula River, families were beginning their day, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+        storyText = `A chilly wind swept off Lake Michigan, driving a heavy rain across the downtown streets where crowds rushed between brick buildings. The city's resilient character was in full view as people pulled their raincoats tight. Yet indoors, we were entirely shielded, waiting only to meet you. The instant we held you in our arms, the noisy Chicago wind became nothing but a whisper. You brought a profound warmth into our lives that no cold lake storm could ever diminish.`;
       } else if (isToronto) {
-        storyText = `Light rain was falling across Toronto that morning. Along the busy waterfront of Lake Ontario, everyday city life went on as usual, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+        storyText = `A cool rain fell over the neighborhoods, tapping against the glass of quiet brick homes. Down along the Lake Ontario waterfront, the city moved with a relaxed, friendlier pace. Our minds were completely focused on a single room where we waited to meet you. When we finally held you in our arms, the lakeside rain outside only made our first embrace feel warmer. Your arrival brought a sweet sense of comfort, making that damp afternoon the most treasured memory of our lives.`;
+      } else if (isWarsaw) {
+        storyText = `Rain fell softly onto the historic cobblestones of the Old Town, trickling down toward the banks of the Vistula River. It was a day of quiet heritage, where families walked close together, keeping their deep traditions alive in the autumn air. In our room, a much newer story was beginning. The moment you arrived and we held you close, the centuries of history outside faded. We held you, knowing you were the start of our own family's most sacred legacy.`;
+      } else if (isLondon) {
+        storyText = `A heavy drizzle fell over London, slicking the tarmac of the historic streets and sending commuters scurrying toward the underground. Rain swept across the River Thames, wrapping the old city in a familiar damp mist. Inside our warm room, none of that rain mattered. The raw emotion of holding you for the first time was all we could feel. The vast history outside seemed to bow to this single, timeless moment. You were here, and our own history had just begun.`;
       } else {
         const landmarks = getCityLandmarks(city, country);
         const landmarkRef = landmarks.length > 0 ? `near ${landmarks[0]}` : "on the streets outside";
-        storyText = `Light rain was falling across ${city} that morning. People went about their day ${landmarkRef}, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+        storyText = `A steady rain fell across ${city} that morning, washing the paving stones and slicking the streets. While some were hurried under umbrellas ${landmarkRef}, our minds were focused entirely on the warm room where we waited to meet you. The moment we finally held you in our arms, the sound of the rain outside seemed to fade into a distant whisper. You brought a sudden, beautiful clarity to our lives, making that damp day the most cherished page of our family story.`;
       }
 
       return {
@@ -200,17 +203,19 @@ export default function BirthWeatherStory() {
     } else if (isSnowy) {
       let storyText = "";
       if (isNY) {
-        storyText = `A light snow was falling across New York that morning. In the busy streets, people were commuting and starting their workday, unaware that our lives were changing forever. We barely noticed the cold once we heard your first cry and saw the skyline in the distance. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+        storyText = `Flakes drifted over concrete skyscrapers, coating the fire escapes and muffling the endless hum of traffic. The city that never sleeps paused for just a brief heartbeat as commuters trudged through the fresh snow under the towering Manhattan skyline. In our warm hospital room, we waited for your arrival. When we finally cradled you and felt the heat of your newborn skin, the vast metropolis simply faded. Outside, the city was covered in a deep winter freeze, but your first breath brought the warmth of spring into our lives.`;
       } else if (isChicago) {
-        storyText = `A light snow was falling across Chicago that morning. People moved through their daily routine near Lake Michigan under cool winds, unaware that our lives were changing forever. We barely noticed the cold once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
-      } else if (isWarsaw) {
-        storyText = `A light snow was falling across Warsaw that morning. Near the Vistula River, families were beginning their day, unaware that our lives were changing forever. We barely noticed the cold once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+        storyText = `Chilly winds swept off Lake Michigan, swirling fresh snow around the skyscrapers and empty plazas of downtown Chicago. Commuters pulled their heavy coats tight, navigating the frosty streets with that classic midwestern resilience. Indoors, our world was warm and intensely private. The second we held you against our skin, the freezing winter lost its power. Chicago's cold gale became a distant memory as we cradled you, knowing we were holding everything we would ever need to protect.`;
       } else if (isToronto) {
-        storyText = `A light snow was falling across Toronto that morning. Along the busy waterfront of Lake Ontario, everyday city life went on as usual, unaware that our lives were changing forever. We barely noticed the cold once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+        storyText = `A soft, heavy snow dusted the trees in the parks and lined the shores of Lake Ontario with white. The surrounding neighborhoods felt cozy and quiet, reflecting Toronto's neighborly warmth. Inside, our hearts were full of nervous excitement. The very moment you arrived, all the cold of the winter afternoon disappeared. We held you close to our chests, watching you sleep. The snow continued to fall along the waterfront, but we were basking in the sweetest, warmest moment we had ever known.`;
+      } else if (isWarsaw) {
+        storyText = `Winter frost clung to the ancient walls of the Old Town as a fresh snow settled along the banks of the Vistula River. The city was quiet, wrapped in the cozy silence of a Polish winter. Indoors, our family gathered to welcome you. The second your voice echoed in the warmth of the room, our legacy felt complete. We held you tight, looking down at your tiny face and feeling a deep, solid connection to those who came before us. Outer winter had no power over our joy.`;
+      } else if (isLondon) {
+        storyText = `A rare winter snow dusted the red double-decker buses and cold monuments along the historic streets of London. Slush gathered near the banks of the River Thames, and the old city grew deeply quiet. Our world was focused on the warmth of your room. The second we held you against our chests, the chilly winter vanished. We looked down at your tiny fingers, realizing that this grand, ancient city had never witnessed a moment more beautiful or important than the arrival of our precious baby.`;
       } else {
         const landmarks = getCityLandmarks(city, country);
         const landmarkRef = landmarks.length > 0 ? `near ${landmarks[0]}` : "on the streets outside";
-        storyText = `A light snow was falling across ${city} that morning. People went about their day ${landmarkRef}, unaware that our lives were changing forever. We barely noticed the cold once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+        storyText = `Winter snow fell softly over ${city} that morning, dusting the rooftops and silencing the typical noise of the streets. While people bundled up against the chill ${landmarkRef}, we were cozy and warm, waiting to welcome you to the world. The second we held you against our skin and looked into your tiny face, the outer cold was completely forgotten. You brought an incredible, heartwarming light into our lives, turning a cold winter morning into our family's sweetest memory.`;
       }
 
       return {
@@ -223,17 +228,19 @@ export default function BirthWeatherStory() {
     } else if (isSunny) {
       let storyText = "";
       if (isNY) {
-        storyText = `Warm sunshine was spreading across New York that morning. In the busy streets, people were commuting and starting their workday, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry and saw the skyline in the distance. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+        storyText = `Early morning light hit the glass towers of the Manhattan skyline, turning the busy avenue below into a gold-lit river of yellow cabs and rushing commuters. New York was moving at its usual relentless pace, but in our room, the clock seemed to stop. When you arrived on that bright, sun-warmed afternoon, the city's infinite bustle became mere background noise. Holding you for the first time, we looked out at the sunlit streets and realized that the greatest story in this city was right here in our arms.`;
       } else if (isChicago) {
-        storyText = `Warm sunshine was spreading across Chicago that morning. People moved through their daily routine near Lake Michigan under cool winds, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
-      } else if (isWarsaw) {
-        storyText = `Warm sunshine was spreading across Warsaw that morning. Near the Vistula River, families were beginning their day, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+        storyText = `Clear, crisp air swept off Lake Michigan, and bright afternoon sun gleamed off the metallic towers of downtown Chicago. The busy streets below were filled with shoppers and professionals, but our minds were entirely elsewhere. The moment you arrived, the vast lakeside city seemed to shrink down to the size of our hands. We held you close, feeling your soft warmth, while the sunlit towers of downtown Chicago watched from the window. You became our anchor, our resilient hope, and the beautiful sun in our sky.`;
       } else if (isToronto) {
-        storyText = `Warm sunshine was spreading across Toronto that morning. Along the busy waterfront of Lake Ontario, everyday city life went on as usual, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+        storyText = `Bright sunshine sparkled on Lake Ontario, lighting up the tree-lined neighborhood parks where kids played and neighbors chatted. The city enjoyed a beautiful, warm afternoon, but our entire focus was in our arms. The moment we held you for the first time, a wave of pure gratitude filled our hearts. We looked out at the sun-drenched waterfront of Toronto, realizing your arrival had completed our family. You were our beautiful daylight, bringing a warmth we would carry forever.`;
+      } else if (isWarsaw) {
+        storyText = `Brilliant sunshine bathed the historic facades of the Old Town, reflecting off the steady waters of the Vistula River where families strolled together in the afternoon warmth. Warsaw felt bright and grounded, yet our thoughts were entirely inside. Today, you became the center of our world. The moment we cradled you, we felt the rich weight of tradition and the incredible hope of the future. You were our long-awaited joy, a bright summer in our hearts that would illuminate our family for generations.`;
+      } else if (isLondon) {
+        storyText = `Unusual warm sunshine broke through the heavy clouds, lighting up the ancient brick facades and historic streets of London. The River Thames gleamed in the rare afternoon light while double-decker buses rumbled past parks filled with sunbathers. Yet inside our room, the only light we cared about was in our arms. When we finally held you, we knew that no London summer could ever compare to the radiant joy of your arrival. You instantly became our timeless sun, changing our lives forever.`;
       } else {
         const landmarks = getCityLandmarks(city, country);
         const landmarkRef = landmarks.length > 0 ? `near ${landmarks[0]}` : "on the streets outside";
-        storyText = `Warm sunshine was spreading across ${city} that morning. People went about their day ${landmarkRef}, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+        storyText = `Bright, warm sunshine spread across ${city} that afternoon, bathing the streets in light and bringing a relaxed energy. While people strolled outdoors ${landmarkRef}, our focus was entirely confined to the bundle in our arms. The moment we held you for the very first time, a sense of immense gratitude filled our hearts. The sunny day outside was beautiful, but you were the real daylight in our lives, bringing a warmth we would carry forever.`;
       }
 
       return {
@@ -246,17 +253,19 @@ export default function BirthWeatherStory() {
     } else {
       let storyText = "";
       if (isNY) {
-        storyText = `A cloudy sky hung over New York that morning. In the busy streets, people were commuting and starting their workday, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry and saw the skyline in the distance. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+        storyText = `A heavy slate-colored sky hung low over the island, with steam rising from the streets and commuters disappearing into subway entrances. The city's restless spirit was in full swing, but our focus was entirely inward. The moment your eyes opened for the first time, the dense, noisy energy of New York dissolved into a deep, comforting calm. We held you close, listening to your soft breath as the Manhattan skyline stood in the distance. The vast city outside was sleepless, but in our arms, you were perfectly safe.`;
       } else if (isChicago) {
-        storyText = `A cloudy sky hung over Chicago that morning. People moved through their daily routine near Lake Michigan under cool winds, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+        storyText = `A cool, overcast sky hung over the Midwest, with stiff winds blowing off Lake Michigan and rustling the trees along the shore. Commuters in downtown Chicago moved with purposeful strides through the cool air, but our world had slowed to a complete pause. When we finally cradled you in our arms, any lingering chill in the air vanished. We looked down at your tiny hands and felt an overwhelming sense of warmth. The windy city outside was strong, but you were our ultimate strength.`;
       } else if (isWarsaw) {
-        storyText = `A cloudy sky hung over Warsaw that morning. Near the Vistula River, families were beginning their day, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+        storyText = `A calm, gray sky stretched over the city, casting a quiet, historic mood over the brick walls of the Old Town. Along the Vistula River, Warsaw moved with its steady, resilient pace, but inside, our family stood on the edge of a new beginning. When your eyes opened and we first held you close, a deep sense of calm filled the room. We looked at your tiny newborn features, realizing that our family's future had just arrived, far more beautiful than any sky.`;
       } else if (isToronto) {
-        storyText = `A cloudy sky hung over Toronto that morning. Along the busy waterfront of Lake Ontario, everyday city life went on as usual, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began our greatest chapter together.`;
+        storyText = `An overcast sky settled over the neighborhoods, bringing mild lake air and a calm, quiet atmosphere to the city streets. Along the Lake Ontario waterfront, locals walked their dogs and shared quick smiles, but inside, we were preparing for a lifetime of love. When you finally arrived, any grayness outside disappeared from our sight. We held you close, listening to your tiny breath, completely captivated by your presence. The neighborhood outside was calm, but you were our absolute joy.`;
+      } else if (isLondon) {
+        storyText = `A heavy, classic overcast sky settled over London, casting a soft light down upon the historic streets and brick buildings. The River Thames flowed quietly beneath the bridges, a steady symbol of the city's timeless character. Inside, we were entirely swept up in your arrival. The moment we cradled you for the very first time, the gray day outside was completely forgotten. We held you close, listening to your soft snuffles, knowing that our family's greatest adventure was now starting in this ancient city.`;
       } else {
         const landmarks = getCityLandmarks(city, country);
         const landmarkRef = landmarks.length > 0 ? `near ${landmarks[0]}` : "on the streets outside";
-        storyText = `A cloudy sky hung over ${city} that morning. People went about their day ${landmarkRef}, unaware that our lives were changing forever. We barely noticed the weather once we heard your first cry. In that moment, nothing outside mattered anymore. We wrapped you in a blanket, held you close, and began the greatest chapter of our lives.`;
+        storyText = `A soft, overcast sky hung over ${city} that morning, bringing a mild breeze and a quiet atmosphere to the avenues. While people walked ${landmarkRef}, our hearts were filled with anticipation. The moment we first cradled you and looked down at your tiny hands, any grayness in the day was instantly forgotten. We held you close, listening to your very first soft yawns, knowing that you had just become the light and center of our entire world.`;
       }
 
       return {
@@ -954,7 +963,7 @@ export default function BirthWeatherStory() {
                         <span className="text-xs text-slate-500 font-mono">Date: Oct 14, 2021</span>
                       </div>
                       <p className="text-sm text-slate-300 font-sans leading-relaxed tracking-wide">
-                        As bright, warm sunshine spread across Austin that afternoon, reaching the quiet paths of Central Park, the day had a simple, clear beauty. The air was exceptionally pleasant at 21°C (70°F), wrapping the whole afternoon in a peaceful, quiet calm. Inside, our eyes were only on you as we cradled you in our arms, listening to your very first soft yawns. Among the quiet streets and the natural light outside, you instantly became the bright center of our lives, changing everything we knew about love.
+                        Bright afternoon sunshine spread across Austin, lighting up the neighborhood and casting yellow beams across the limestone ridges. It was a warm day outside, but our focus was entirely in our arms. The moment we cradled you, we felt an immense sense of gratitude that filled our hearts. The sunny day was beautiful, but you were the real daylight in our lives, bringing a warmth we will carry forever.
                       </p>
                     </div>
 
