@@ -12,15 +12,15 @@ const MONTHS_ABBR = [
 const getCityLandmark = (city: string, country?: string): string => {
   const cLower = city.toLowerCase();
   
-  if (cLower.includes("london")) return "the historic banks of the Thames";
+  if (cLower.includes("london")) return "the banks of the Thames and the historic, cobblestone streets";
   if (cLower.includes("paris")) return "the romantic curves of the Seine";
   if (cLower.includes("new york") || cLower.includes("nyc") || cLower.includes("brooklyn")) return "the grand, soaring skyline";
   if (cLower.includes("tokyo")) return "the vibrant, glittering avenues";
   if (cLower.includes("sydney")) return "the ocean-swept harbor";
-  if (cLower.includes("chicago")) return "the sweeping shores of Lake Michigan";
+  if (cLower.includes("chicago")) return "the shores of Lake Michigan and the magnificent lakeshore skyline";
   if (cLower.includes("los angeles") || cLower.includes("la ")) return "the golden sun-bathed hills";
   if (cLower.includes("san francisco")) return "the mist-kissed bay bridges";
-  if (cLower.includes("toronto")) return "the glistening shores of Lake Ontario";
+  if (cLower.includes("toronto")) return "the shores of Lake Ontario and the scenic, bustling waterfront";
   if (cLower.includes("vancouver")) return "the majestic snow-capped peaks";
   if (cLower.includes("rome")) return "the timeless, ancient hills";
   if (cLower.includes("berlin")) return "the wide, historic avenues";
@@ -43,6 +43,7 @@ const getCityLandmark = (city: string, country?: string): string => {
   if (cLower.includes("athens")) return "the sacred slopes of the olive tree hills";
   if (cLower.includes("cincinnati")) return "the hills looking down upon the Ohio River";
   if (cLower.includes("pittsburgh")) return "the beautiful meeting point of three great rivers";
+  if (cLower.includes("warsaw") || cLower.includes("warszawa")) return "the lazy curves of the Vistula River, the historic Old Town, and the Royal Route";
   
   const features = [
     "the quiet, tree-lined streets of the neighborhood",
@@ -68,15 +69,16 @@ const getCityLandmark = (city: string, country?: string): string => {
 };
 
 const getWeatherConditionText = (code: number): string => {
-  if (code === 0) return "Clear Radiant Skies";
-  if (code === 1 || code === 2) return "Partly Cloudy Horizons";
-  if (code === 3) return "Velvet Overcast Skies";
-  if (code === 45 || code === 48) return "Atmospheric Silver Mist";
-  if (code === 51 || code === 53 || code === 55) return "Gentle Whispering Rain";
-  if ([61, 63, 65, 80, 81, 82].includes(code)) return "Rich Rains of Blessings";
-  if ([71, 73, 75, 77, 85, 86].includes(code)) return "Pristine Snow Blanket";
-  if ([95, 96, 99].includes(code)) return "Starlit Electric Skies";
-  return "Clear Serene Horizons";
+  if (code === 0) return "Clear Skies";
+  if (code === 1) return "Gentle Sunshine";
+  if (code === 2) return "Partly Cloudy";
+  if (code === 3) return "Overcast";
+  if (code === 45 || code === 48) return "Morning Mist";
+  if (code === 51 || code === 53 || code === 55) return "Light Rain";
+  if ([61, 63, 65, 80, 81, 82].includes(code)) return "Spring Showers";
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return "Snowfall";
+  if ([95, 96, 99].includes(code)) return "Stormy Skies";
+  return "Calm Breeze";
 };
 
 const parseSunriseTime = (sunriseStr?: string): string => {
@@ -618,7 +620,7 @@ export default function BirthWeatherStory() {
         ctx.font = "bold 13px 'JetBrains Mono', 'Courier New', monospace";
         ctx.fillText("TEMPERATURE", 437, 465);
         ctx.fillStyle = "#E89E82";
-        ctx.font = "bold 26px 'Inter', 'system-ui', sans-serif";
+        ctx.font = "bold 30px 'Inter', 'system-ui', sans-serif";
         const tempSnapStr = `${Math.round(revealResult.tempMax)}°C / ${Math.round((revealResult.tempMax * 9) / 5 + 32)}°F`;
         ctx.fillText(tempSnapStr, 437, 512);
 
@@ -660,7 +662,7 @@ export default function BirthWeatherStory() {
 
         ctx.fillStyle = "#D48D71";
         ctx.font = "bold 15px 'JetBrains Mono', 'Courier New', monospace";
-        ctx.fillText("MEMORABLE OUTLOOK", 160, quoteBoxY + 50);
+        ctx.fillText("THE SKY'S WELCOME", 160, quoteBoxY + 50);
 
         ctx.fillStyle = "#FFFFFF";
         ctx.font = "italic 34px 'Georgia', 'Times New Roman', serif";
@@ -874,7 +876,7 @@ export default function BirthWeatherStory() {
                       <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
                         <div className="text-right">
                           <span className="text-xs font-mono font-bold text-slate-300 block">WELCOME TEMPERATURE</span>
-                          <p className="font-serif font-bold text-lg text-white">
+                          <p className="font-serif font-extrabold text-xl sm:text-2xl text-white">
                             21°C / 70°F
                           </p>
                         </div>
@@ -889,12 +891,12 @@ export default function BirthWeatherStory() {
                       <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r">
                         <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Condition</span>
                         <span className="text-[11px] font-bold text-white leading-tight truncate max-w-[110px]">
-                          Clear Radiant Skies
+                          Gentle Sunshine
                         </span>
                       </div>
                       <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r">
                         <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Temperature</span>
-                        <span className="text-[13px] font-extrabold text-[#E89E82] leading-tight">
+                        <span className="text-[15px] font-extrabold text-[#E89E82] leading-tight">
                           21°C / 70°F
                         </span>
                       </div>
@@ -927,7 +929,7 @@ export default function BirthWeatherStory() {
 
                     {/* Short bold Quote */}
                     <div className="bg-white/[0.03] border-l-2 border-[#E89E82] p-4 rounded-r-xl">
-                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">MEMORABLE OUTLOOK</p>
+                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">THE SKY'S WELCOME</p>
                       <p className="font-serif italic text-white text-md sm:text-lg leading-snug">
                         “A bright sky welcomed a life that would change everything.”
                       </p>
@@ -939,9 +941,6 @@ export default function BirthWeatherStory() {
                         <Sparkles size={11} className="text-[#E89E82]" />
                         <span>Nursery Memory: <strong className="text-white">Keepsake Record</strong></span>
                       </div>
-                      <span className="text-slate-500 bg-white/5 px-2 py-0.5 rounded font-mono uppercase tracking-widest text-[9px]">
-                        Digital Milestone Edition
-                      </span>
                     </div>
                   </div>
                 </div>
@@ -990,7 +989,7 @@ export default function BirthWeatherStory() {
                       <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
                         <div className="text-right">
                           <span className="text-xs font-mono font-bold text-slate-300 block">WELCOME TEMPERATURE</span>
-                          <p className="font-serif font-bold text-lg text-white">
+                          <p className="font-serif font-extrabold text-xl sm:text-2xl text-white">
                             {Math.round(revealResult.tempMax)}°C / {Math.round((revealResult.tempMax * 9) / 5 + 32)}°F
                           </p>
                         </div>
@@ -1010,7 +1009,7 @@ export default function BirthWeatherStory() {
                       </div>
                       <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r">
                         <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Temperature</span>
-                        <span className="text-[13px] font-extrabold text-[#E89E82] leading-tight">
+                        <span className="text-[15px] font-extrabold text-[#E89E82] leading-tight">
                           {Math.round(revealResult.tempMax)}°C / {Math.round((revealResult.tempMax * 9) / 5 + 32)}°F
                         </span>
                       </div>
@@ -1043,7 +1042,7 @@ export default function BirthWeatherStory() {
 
                     {/* Full-width Quote banner inside Card container */}
                     <div className="bg-white/[0.03] border-l-2 border-[#E89E82] p-4 rounded-r-xl">
-                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">MEMORABLE OUTLOOK</p>
+                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">THE SKY'S WELCOME</p>
                       <p className="font-serif italic text-white text-md sm:text-lg leading-snug">
                         “{revealResult.story.quote}”
                       </p>
@@ -1053,11 +1052,8 @@ export default function BirthWeatherStory() {
                     <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-4 text-[10px] font-mono text-slate-400 select-none">
                       <div className="flex items-center gap-1.5">
                         <Sparkles size={11} className="text-[#E89E82]" />
-                        <span>{revealResult.story.metricLabel}: <strong className="text-white">{revealResult.story.metricValue}</strong></span>
+                        <span>Nursery Memory: <strong className="text-white">Keepsake Record</strong></span>
                       </div>
-                      <span className="text-slate-500 bg-white/5 px-2 py-0.5 rounded font-mono uppercase tracking-widest text-[9px]">
-                        Digital Milestone Edition
-                      </span>
                     </div>
                   </div>
                 </div>
