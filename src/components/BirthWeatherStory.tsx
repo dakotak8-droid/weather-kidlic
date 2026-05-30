@@ -9,6 +9,95 @@ const MONTHS_ABBR = [
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
+const getCityLandmark = (city: string, country?: string): string => {
+  const cLower = city.toLowerCase();
+  
+  if (cLower.includes("london")) return "the historic banks of the Thames";
+  if (cLower.includes("paris")) return "the romantic curves of the Seine";
+  if (cLower.includes("new york") || cLower.includes("nyc") || cLower.includes("brooklyn")) return "the grand, soaring skyline";
+  if (cLower.includes("tokyo")) return "the vibrant, glittering avenues";
+  if (cLower.includes("sydney")) return "the ocean-swept harbor";
+  if (cLower.includes("chicago")) return "the sweeping shores of Lake Michigan";
+  if (cLower.includes("los angeles") || cLower.includes("la ")) return "the golden sun-bathed hills";
+  if (cLower.includes("san francisco")) return "the mist-kissed bay bridges";
+  if (cLower.includes("toronto")) return "the glistening shores of Lake Ontario";
+  if (cLower.includes("vancouver")) return "the majestic snow-capped peaks";
+  if (cLower.includes("rome")) return "the timeless, ancient hills";
+  if (cLower.includes("berlin")) return "the wide, historic avenues";
+  if (cLower.includes("amsterdam")) return "the quiet, historic canal rings";
+  if (cLower.includes("cairo")) return "the golden Nile river bend";
+  if (cLower.includes("austin")) return "the warm limestone ridges and green water paths";
+  if (cLower.includes("melbourne")) return "the artistic curves of the Yarra River";
+  if (cLower.includes("mumbai")) return "the endless sweeping Arabian Sea shores";
+  if (cLower.includes("cape town")) return "the shadow of the towering Table Mountain";
+  if (cLower.includes("singapore")) return "the lush, marine-scented harbor";
+  if (cLower.includes("beijing")) return "the sprawling, historic city gates";
+  if (cLower.includes("rio de janeiro") || cLower.includes("rio ")) return "the iconic peaks above the Atlantic blue";
+  if (cLower.includes("barcelona")) return "the sun-soaked Mediterranean coast";
+  if (cLower.includes("dublin")) return "the lush, green banks of the Liffey";
+  if (cLower.includes("seattle")) return "the evergreen shores of Puget Sound";
+  if (cLower.includes("miami")) return "the white sand shoreline and dynamic bay breeze";
+  if (cLower.includes("denver")) return "the magnificent backdrop of the Rocky Mountains";
+  if (cLower.includes("seoul")) return "the beautiful Han river banks and towering peaks";
+  if (cLower.includes("dubai")) return "the warm sands of the Arabian desert";
+  if (cLower.includes("athens")) return "the sacred slopes of the olive tree hills";
+  if (cLower.includes("cincinnati")) return "the hills looking down upon the Ohio River";
+  if (cLower.includes("pittsburgh")) return "the beautiful meeting point of three great rivers";
+  
+  const features = [
+    "the quiet, tree-lined streets of the neighborhood",
+    "the sweeping valley that cradles the town",
+    "the gentle hills rising on the horizon",
+    "the peaceful waterways that trace the town's edge",
+    "the majestic mountain silhouettes standing guard",
+    "the whispering trees and open horizons",
+    "the gentle coastal breeze that sweeps the region",
+    "the historic center where pathways meet",
+    "the warm, sun-kissed ridges surrounding the county",
+    "the winding river banks weaving through town",
+    "the beautiful canopy of green parks",
+    "the historic avenues under endless skies"
+  ];
+  
+  let hash = 0;
+  for (let i = 0; i < city.length; i++) {
+    hash = city.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash) % features.length;
+  return features[index];
+};
+
+const getWeatherConditionText = (code: number): string => {
+  if (code === 0) return "Clear Radiant Skies";
+  if (code === 1 || code === 2) return "Partly Cloudy Horizons";
+  if (code === 3) return "Velvet Overcast Skies";
+  if (code === 45 || code === 48) return "Atmospheric Silver Mist";
+  if (code === 51 || code === 53 || code === 55) return "Gentle Whispering Rain";
+  if ([61, 63, 65, 80, 81, 82].includes(code)) return "Rich Rains of Blessings";
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return "Pristine Snow Blanket";
+  if ([95, 96, 99].includes(code)) return "Starlit Electric Skies";
+  return "Clear Serene Horizons";
+};
+
+const parseSunriseTime = (sunriseStr?: string): string => {
+  if (!sunriseStr) return "6:15 AM";
+  try {
+    const timePart = sunriseStr.split("T")[1];
+    if (!timePart) return "6:15 AM";
+    const [hStr, mStr] = timePart.split(":");
+    let h = parseInt(hStr, 10);
+    const m = parseInt(mStr, 10);
+    if (isNaN(h) || isNaN(m)) return "6:15 AM";
+    const ampm = h >= 12 ? "PM" : "AM";
+    if (h > 12) h -= 12;
+    if (h === 0) h = 12;
+    const mPad = String(m).padStart(2, "0");
+    return `${h}:${mPad} ${ampm}`;
+  } catch {
+    return "6:15 AM";
+  }
+};
+
 interface HistoricalStory {
   theme: string;
   story: string;
@@ -34,11 +123,13 @@ export default function BirthWeatherStory() {
   const [revealResult, setRevealResult] = useState<{
     city: string;
     country: string;
-    date: string; // formatted MM/DD/YYYY
+    date: string; // formatted
     tempMax: number;
     tempMin: number;
     weatherCode: number;
     rainProb: number;
+    windSpeed: number;
+    sunrise: string;
     story: HistoricalStory;
   } | null>(null);
 
@@ -100,48 +191,47 @@ export default function BirthWeatherStory() {
     setShowDropdown(false);
   };
 
-  // Human storytelling generator based on weather parameters
-  const generateBirthStory = (weatherCode: number, tempMax: number, rainProb: number): HistoricalStory => {
+  // Human storytelling generator based on weather parameters and city geography
+  const generateBirthStory = (weatherCode: number, tempMax: number, rainProb: number, city: string, country?: string): HistoricalStory => {
     const isRainy = [51, 53, 55, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(weatherCode);
     const isSnowy = [71, 73, 75, 77, 85, 86].includes(weatherCode);
     const isSunny = [0, 1].includes(weatherCode);
 
-    // Weather description for context
     const tempF = Math.round((tempMax * 9) / 5 + 32);
     const tempC = Math.round(tempMax);
+    const landmark = getCityLandmark(city, country);
 
     if (isRainy) {
       return {
-        theme: "The Cozy Storm Sanctuary",
-        quote: "Rain outside. Endless love inside.",
-        story: `On the day you came into the world, a gentle rain fell over the city, drumming a soft lullaby against the hospital glass. Outside, the air was cool at ${tempC}°C (${tempF}°F), wrapping the streets in a glistening mist. While the storm hummed peacefully, a warm and quiet sanctuary unfolded indoors as we held you for the absolute first time. The skies washed the earth clean, turning a fresh new page for your beautiful debut. No matter how hard it pours, you are our perfect shelter.`,
-        metricLabel: "HEARTWARMING HARMONY",
-        metricValue: "Securely Anchored"
+        theme: "Rain of Blessings",
+        quote: "No storm could compete with the warmth of holding you for the very first time.",
+        story: `On the day of your arrival in ${city}, a cleansing rain washed over ${landmark}, playing a peaceful lullaby against the glass. The air held a cozy chill of ${tempC}°C (${tempF}°F). As the storm cleared the sky, we cradled you for the very first time, knowing that you were our perfect shelter. A brand new story had begun.`,
+        metricLabel: "ATMOSPHERIC HARMONY",
+        metricValue: "Whispering Rain"
       };
     } else if (isSnowy) {
       return {
-        theme: "The Frost-Bound Cradle",
-        quote: "One ordinary freezing day. One extraordinary arrival.",
-        story: `A quiet blanket of fresh winter snow carpeted the neighborhood on the day you arrived. Outside, crisp freezing air held steady around ${tempC}°C (${tempF}°F), silvering the windowpanes with beautiful ice crystals. But indoors, a gentle firelight warmed our hearts the second we met your gaze. You were custom-made for thick knitted hats, sweet nursery huddles, and cozy winter snuggles. Nature gave us a pristine white wonderland, but you gave us our entire world.`,
-        metricLabel: "HEARTWARMING HARMONY",
-        metricValue: "Glowingly Lit"
+        theme: "Silver Skies",
+        quote: "A quiet, pristine winter day made beautiful forever by your sweet arrival.",
+        story: `A quiet blanket of crystalline snow swept over ${city} as you made your entrance. Near ${landmark}, crisp, silver air held steady at ${tempC}°C (${tempF}°F). Outside, the world fell into a soft, sacred hush; indoors, we held you close and felt a fireside warmth that would last a lifetime. Our modern world stood still, welcoming its sweetest miracle.`,
+        metricLabel: "ATMOSPHERIC HARMONY",
+        metricValue: "Pristine Snowfall"
       };
     } else if (isSunny) {
       return {
-        theme: "The Golden Daybreak",
-        quote: "A bright sky welcomed a life that would change everything.",
-        story: `On the clear and radiant morning you were born, the sky was completely flooded with brilliant, warm sunshine. Natural golden light poured through the frame at a pristine ${tempC}°C (${tempF}°F), lighting up the room as we held you for the absolute first time. Not a single cloud had the courage to compete with your glowing earthly debut. You arrived in a bright, inviting world, immediately becoming the central sun of our entire universe.`,
-        metricLabel: "HEARTWARMING HARMONY",
-        metricValue: "Prism of Pure Joy"
+        theme: "Wrapped in Warmth",
+        quote: "The sun cleared the morning mist, shining a spotlight on our greatest miracle.",
+        story: `On the radiant day you were born in ${city}, ${landmark} was flooded with pure, warm sunshine. Natural light filled the room at a bright ${tempC}°C (${tempF}°F), matching the glowing happiness of your family. You arrived into a world of promise, instantly becoming the bright sun around which our entire lives revolve.`,
+        metricLabel: "ATMOSPHERIC HARMONY",
+        metricValue: "Solar Radiance"
       };
     } else {
-      // Overcast / Cloudy / Default
       return {
-        theme: "The Velvet Blanket Skies",
-        quote: "Soft clouds above. A brand-new chapter below.",
-        story: `On the quiet day you were born, a beautiful velvet cloud layer blanketed the town in a natural, soft-focus light. With mild, quiet air hovering right around ${tempC}°C (${tempF}°F), the atmosphere felt like a gentle embrace designed specifically for deep, peaceful rest. As you took your first breaths under those protective, dreamy skies, we held you close and realized that the absolute best chapter of our family story had officially begun.`,
-        metricLabel: "HEARTWARMING HARMONY",
-        metricValue: "Velvet Softness"
+        theme: "A Gentle Beginning",
+        quote: "The earth lay calm and still under protective skies, welcoming you home.",
+        story: `A peaceful, velvet-soft sky hovered over ${city} on the day you took your first breath. Near ${landmark}, the mild atmosphere held around a gentle ${tempC}°C (${tempF}°F), wrapping the town in a safe, dreamlike focus. Under these quiet skies, we wrapped you close, celebrating the beautiful calm of a journey that would redefine our entire world.`,
+        metricLabel: "ATMOSPHERIC HARMONY",
+        metricValue: "Velvet Skyway"
       };
     }
   };
@@ -248,7 +338,7 @@ export default function BirthWeatherStory() {
       const dateStr = `${yearStr}-${monthStr}-${dayStr}`;
 
       // Call Open-Meteo Archive public API
-      const archiveUrl = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${dateStr}&end_date=${dateStr}&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum&timezone=auto`;
+      const archiveUrl = `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${dateStr}&end_date=${dateStr}&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum,wind_speed_10m_max,sunrise&timezone=auto`;
       const response = await fetch(archiveUrl);
       
       if (!response.ok) {
@@ -261,15 +351,36 @@ export default function BirthWeatherStory() {
       let tempMax = 20; // Default pleasant
       let tempMin = 10;
       let rainSum = 0;
+      let windSpeed = 12; // Default wind km/h
+      let sunrise = "6:15 AM"; // Default sunrise
 
       if (data.daily) {
         finalWeatherCode = data.daily.weather_code?.[0] ?? 0;
         tempMax = data.daily.temperature_2m_max?.[0] ?? 20;
         tempMin = data.daily.temperature_2m_min?.[0] ?? 10;
         rainSum = data.daily.precipitation_sum?.[0] ?? 0;
+        
+        // Extract wind speed & fallback
+        if (data.daily.wind_speed_10m_max?.[0] !== undefined && data.daily.wind_speed_10m_max?.[0] !== null) {
+          windSpeed = data.daily.wind_speed_10m_max[0];
+        } else {
+          // Generate realistic deterministic wind speed based on weatherCode and tempMax
+          windSpeed = 8 + (finalWeatherCode % 5) * 3 + Math.round(Math.abs(tempMax) % 4);
+        }
+        
+        // Extract sunrise & fallback
+        if (data.daily.sunrise?.[0]) {
+          sunrise = parseSunriseTime(data.daily.sunrise[0]);
+        } else {
+          // Seasonal deterministic sunrise estimation without timezone shifts
+          const monthNumVal = monthNum;
+          const hour = monthNumVal >= 5 && monthNumVal <= 8 ? 5 : (monthNumVal >= 11 || monthNumVal <= 2 ? 7 : 6);
+          const minute = 10 + (monthNumVal * 4) % 40;
+          sunrise = `${hour}:${String(minute).padStart(2, "0")} AM`;
+        }
       }
 
-      const generatedStory = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0);
+      const generatedStory = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0, cityName, countryName);
 
       // Save formatted readable representation (e.g. Sep 2, 2026) instead of numeric representation
       const formattedDate = `${MONTHS_ABBR[monthNum - 1]} ${dayNum}, ${yearStr}`;
@@ -281,6 +392,8 @@ export default function BirthWeatherStory() {
         tempMax,
         tempMin,
         weatherCode: finalWeatherCode,
+        windSpeed,
+        sunrise,
         rainProb: rainSum > 0 ? Math.min(100, Math.round(rainSum * 10)) : 0,
         story: generatedStory
       });
@@ -316,7 +429,7 @@ export default function BirthWeatherStory() {
         testCtx.font = "34px 'Inter', 'system-ui', sans-serif";
         const storyLines = getWrappedLines(testCtx, revealResult.story.story, 820);
         const storyLineHeight = 56;
-        const storyStartY = 460;
+        const storyStartY = 620;
         const storyEndY = storyStartY + (storyLines.length * storyLineHeight);
 
         // 2. Calculate height and position of Memorable Quote Box
@@ -440,26 +553,13 @@ export default function BirthWeatherStory() {
         const coordDesc = revealResult.country ? `${revealResult.country} • Atmosphere and stars mapped` : "Atmosphere and stars mapped";
         ctx.fillText(coordDesc, 130, 300);
 
-        // 5. BIRTH METEOROLOGICAL SNAPSHOT BOX (Upper-Right coordinates)
-        ctx.fillStyle = "rgba(255, 255, 255, 0.035)";
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
-        ctx.lineWidth = 1.2;
+        // Draw a beautiful golden celestial seal in the upper-right (very luxurious)
+        drawFourPointStar(ctx, 800, 210, 24, "#E89E82");
+        ctx.strokeStyle = "rgba(232, 158, 130, 0.25)";
+        ctx.lineWidth = 1;
         ctx.beginPath();
-        drawRoundRect(ctx, 650, 120, 300, 150, 24);
-        ctx.fill();
+        ctx.arc(800, 210, 38, 0, Math.PI * 2);
         ctx.stroke();
-
-        ctx.fillStyle = "rgba(255, 255, 255, 0.45)";
-        ctx.font = "bold 14px 'JetBrains Mono', 'Courier New', monospace";
-        ctx.fillText("BIRTH TEMPERATURE", 676, 160);
-
-        ctx.fillStyle = "#FFFFFF";
-        ctx.font = "bold 30px 'Inter', 'system-ui', sans-serif";
-        const tempString = `${Math.round(revealResult.tempMax)}°C / ${Math.round((revealResult.tempMax * 9) / 5 + 32)}°F`;
-        ctx.fillText(tempString, 676, 210);
-
-        // High resolution programmatic custom weather icon drawing inside the snapshot box
-        drawCustomKeepsakeIcon(ctx, 884, 195, revealResult.weatherCode);
 
         // 6. Pill Tag Registry (Theme badge & dynamic birthday date width)
         ctx.fillStyle = "rgba(232, 158, 130, 0.12)";
@@ -479,6 +579,69 @@ export default function BirthWeatherStory() {
         ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
         ctx.font = "bold 20px 'JetBrains Mono', 'Courier New', monospace";
         ctx.fillText(`DATE: ${revealResult.date}`, 130 + themeWidth + 24, 372);
+
+        // 5. CENTERED PETIT WEATHER SNAPSHOT TRAY (Replacing upper-right box with full-width luxury snapshot)
+        ctx.fillStyle = "rgba(255, 255, 255, 0.03)";
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.07)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        drawRoundRect(ctx, 130, 430, 820, 130, 24);
+        ctx.fill();
+        ctx.stroke();
+
+        // Snapshot vertical divider lines
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(335, 450);
+        ctx.lineTo(335, 540);
+        ctx.moveTo(540, 450);
+        ctx.lineTo(540, 540);
+        ctx.moveTo(745, 450);
+        ctx.lineTo(745, 540);
+        ctx.stroke();
+
+        // Set alignment to middle center
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        // Column 1: Condition
+        ctx.fillStyle = "#E89E82";
+        ctx.font = "bold 13px 'JetBrains Mono', 'Courier New', monospace";
+        ctx.fillText("CONDITION", 232, 465);
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "bold 19px 'Inter', 'system-ui', sans-serif";
+        ctx.fillText(getWeatherConditionText(revealResult.weatherCode), 232, 512);
+
+        // Column 2: Temperature (Visually emphasized)
+        ctx.fillStyle = "#E89E82";
+        ctx.font = "bold 13px 'JetBrains Mono', 'Courier New', monospace";
+        ctx.fillText("TEMPERATURE", 437, 465);
+        ctx.fillStyle = "#E89E82";
+        ctx.font = "bold 26px 'Inter', 'system-ui', sans-serif";
+        const tempSnapStr = `${Math.round(revealResult.tempMax)}°C / ${Math.round((revealResult.tempMax * 9) / 5 + 32)}°F`;
+        ctx.fillText(tempSnapStr, 437, 512);
+
+        // Column 3: Max Wind Speed
+        ctx.fillStyle = "#E89E82";
+        ctx.font = "bold 13px 'JetBrains Mono', 'Courier New', monospace";
+        ctx.fillText("MAX WIND SPEED", 642, 465);
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "bold 18px 'Inter', 'system-ui', sans-serif";
+        const windSnapStr = `${Math.round(revealResult.windSpeed)} km/h / ${Math.round(revealResult.windSpeed * 0.621371)} mph`;
+        ctx.fillText(windSnapStr, 642, 512);
+
+        // Column 4: Sunrise
+        ctx.fillStyle = "#E89E82";
+        ctx.font = "bold 13px 'JetBrains Mono', 'Courier New', monospace";
+        ctx.fillText("SUNRISE TIME", 847, 465);
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "bold 18px 'Inter', 'system-ui', sans-serif";
+        ctx.fillText(revealResult.sunrise, 847, 512);
+
+        // Reset text alignment defaults to left
+        ctx.textAlign = "left";
+        ctx.textBaseline = "middle";
 
         // 7. STORY PARAGRAPH (Beautifully wrapped and staggered with premium line spacing)
         ctx.fillStyle = "#E2E8F0";
@@ -717,6 +880,34 @@ export default function BirthWeatherStory() {
                       </div>
                     </div>
 
+                    {/* Compact Weather Snapshot Block */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-white/[0.03] border border-white/10 rounded-2xl p-3.5 text-center my-1 select-none">
+                      <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r">
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Condition</span>
+                        <span className="text-[11px] font-bold text-white leading-tight truncate max-w-[110px]">
+                          Clear Radiant Skies
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r">
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Temperature</span>
+                        <span className="text-[13px] font-extrabold text-[#E89E82] leading-tight">
+                          21°C / 70°F
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r text-center">
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Wind Speed</span>
+                        <span className="text-[11px] font-bold text-white leading-tight">
+                          12 km/h / 7 mph
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center py-1">
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Sunrise</span>
+                        <span className="text-[11px] font-bold text-white leading-tight">
+                          7:28 AM
+                        </span>
+                      </div>
+                    </div>
+
                     {/* Theme bar & description layout to match real look */}
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
@@ -802,6 +993,34 @@ export default function BirthWeatherStory() {
                         <div className="p-2 bg-white/5 rounded-xl border border-white/10 shrink-0">
                           <WeatherIcon code={revealResult.weatherCode} size={30} />
                         </div>
+                      </div>
+                    </div>
+
+                    {/* Compact Weather Snapshot Block */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-white/[0.03] border border-white/10 rounded-2xl p-3.5 text-center my-1 select-none">
+                      <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r">
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Condition</span>
+                        <span className="text-[11px] font-bold text-white leading-tight truncate max-w-[110px]">
+                          {getWeatherConditionText(revealResult.weatherCode)}
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r">
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Temperature</span>
+                        <span className="text-[13px] font-extrabold text-[#E89E82] leading-tight">
+                          {Math.round(revealResult.tempMax)}°C / {Math.round((revealResult.tempMax * 9) / 5 + 32)}°F
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r text-center">
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Wind Speed</span>
+                        <span className="text-[11px] font-bold text-white leading-tight">
+                          {Math.round(revealResult.windSpeed)} km/h / {Math.round(revealResult.windSpeed * 0.621371)} mph
+                        </span>
+                      </div>
+                      <div className="flex flex-col items-center justify-center py-1">
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Sunrise</span>
+                        <span className="text-[11px] font-bold text-white leading-tight">
+                          {revealResult.sunrise}
+                        </span>
                       </div>
                     </div>
 
