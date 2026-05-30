@@ -306,7 +306,7 @@ export default function BirthWeatherStory() {
         
         if (!geoResp.ok) {
           console.error(`Geocoding request failed with status: ${geoResp.status}`);
-          setErrorMessage("We couldn't find that city. Please try again using a city and country (for example: London, Ontario, Canada or London, United Kingdom).");
+          setErrorMessage("We couldn't find that city. Please enter the city and country in English (for example: Warsaw, Poland or Munich, Germany).");
           setIsLoadingStory(false);
           return;
         }
@@ -321,7 +321,7 @@ export default function BirthWeatherStory() {
           console.log(`Successfully located city: "${cityName}" in "${countryName}" at Lat: ${lat}, Lon: ${lon}`);
         } else {
           console.warn(`Geocoding search returned no results for input: "${typedCity}"`);
-          setErrorMessage("We couldn't find that city. Please try again using a city and country (for example: London, Ontario, Canada or London, United Kingdom).");
+          setErrorMessage("We couldn't find that city. Please enter the city and country in English (for example: Warsaw, Poland or Munich, Germany).");
           setIsLoadingStory(false);
           return;
         }
@@ -742,13 +742,13 @@ export default function BirthWeatherStory() {
               <div ref={dropdownRef} className="birth-form-field space-y-1.5 focus-within:text-[#D48D71]">
                 <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-400 font-extrabold flex items-center gap-1.5">
                   <Search size={12} />
-                  <span>Birth City & Country</span>
+                  <span>Birth City & Country (in English)</span>
                 </label>
                 <div className="relative w-full block box-border">
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Chicago, Paris, Tokyo..."
+                    placeholder="Examples: New York, United States • Warsaw, Poland • Paris, France"
                     value={typedCity}
                     onChange={(e) => {
                       setTypedCity(e.target.value);
@@ -756,7 +756,7 @@ export default function BirthWeatherStory() {
                       if (selectedCity) setSelectedCity(null);
                     }}
                     onFocus={() => setShowDropdown(true)}
-                    className="w-full block box-border px-4 py-3 bg-[#F9F1EB] dark:bg-[#1E1415] rounded-xl text-sm border-none outline-none text-[#3D2C2E] dark:text-[#FEFAF6] placeholder:text-slate-400 transition"
+                    className="w-full block box-border px-4 py-3 bg-[#F9F1EB] dark:bg-[#1E1415] rounded-xl text-sm border-none outline-none text-[#3D2C2E] dark:text-[#FEFAF6] placeholder:text-slate-400 dark:placeholder:text-slate-600 transition"
                     style={{ width: "100%", boxSizing: "border-box" }}
                   />
                   {typedCity && (
@@ -802,6 +802,10 @@ export default function BirthWeatherStory() {
                     </motion.div>
                   )}
                 </AnimatePresence>
+
+                <p className="text-[10.5px] leading-relaxed text-slate-400 dark:text-slate-500 font-sans pt-0.5 select-none">
+                  Please enter city and country names in English. Local spellings such as Polska, Deutschland, España, or Italia may not be recognized.
+                </p>
               </div>
             </div>
 
