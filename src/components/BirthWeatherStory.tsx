@@ -195,34 +195,45 @@ export default function BirthWeatherStory() {
     setIsLoadingStory(true);
 
     try {
-      let lat = 41.8781; // Chicago fallback
-      let lon = -87.6298;
-      let cityName = "Chicago, IL";
-      let countryName = "United States";
+      let lat: number;
+      let lon: number;
+      let cityName: string;
+      let countryName: string;
 
       if (selectedCity) {
         lat = selectedCity.latitude;
         lon = selectedCity.longitude;
         cityName = selectedCity.name;
-        countryName = selectedCity.country;
+        countryName = selectedCity.country || "";
       } else if (typedCity.trim().length > 0) {
         // Attempt immediate geocode search on typing fallback
+        console.log(`Searching Open-Meteo Geocoding API for city input: "${typedCity}"...`);
         const geoResp = await fetch(
           `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
             typedCity
           )}&count=1&language=en&format=json`
         );
+        
+        if (!geoResp.ok) {
+          console.error(`Geocoding request failed with status: ${geoResp.status}`);
+          setErrorMessage("We couldn't find that city. Please try again using a city and country (for example: London, Ontario, Canada or London, United Kingdom).");
+          setIsLoadingStory(false);
+          return;
+        }
+
         const geoData = await geoResp.json();
         if (geoData.results && geoData.results[0]) {
           const first = geoData.results[0];
           lat = first.latitude;
           lon = first.longitude;
           cityName = first.name;
-          countryName = first.country;
+          countryName = first.country || "";
+          console.log(`Successfully located city: "${cityName}" in "${countryName}" at Lat: ${lat}, Lon: ${lon}`);
         } else {
-          // If no lookup matches, proceed with general input text and default coordinates to make sure there's zero frustration!
-          cityName = typedCity;
-          countryName = "";
+          console.warn(`Geocoding search returned no results for input: "${typedCity}"`);
+          setErrorMessage("We couldn't find that city. Please try again using a city and country (for example: London, Ontario, Canada or London, United Kingdom).");
+          setIsLoadingStory(false);
+          return;
         }
       } else {
         setErrorMessage("Please specify a birth city & country.");
