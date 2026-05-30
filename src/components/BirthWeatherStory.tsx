@@ -873,7 +873,7 @@ export default function BirthWeatherStory() {
                       
                       <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
                         <div className="text-right">
-                          <span className="text-xs font-mono font-bold text-slate-300 block">BIRTH TEMPERATURE</span>
+                          <span className="text-xs font-mono font-bold text-slate-300 block">TEMPERATURE WHEN YOU ARRIVED</span>
                           <p className="font-serif font-bold text-lg text-white">
                             21°C / 70°F
                           </p>
@@ -989,7 +989,7 @@ export default function BirthWeatherStory() {
                       {/* Meteorological snapshot */}
                       <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
                         <div className="text-right">
-                          <span className="text-xs font-mono font-bold text-slate-300 block">BIRTH TEMPERATURE</span>
+                          <span className="text-xs font-mono font-bold text-slate-300 block">TEMPERATURE WHEN YOU ARRIVED</span>
                           <p className="font-serif font-bold text-lg text-white">
                             {Math.round(revealResult.tempMax)}°C / {Math.round((revealResult.tempMax * 9) / 5 + 32)}°F
                           </p>
