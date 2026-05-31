@@ -35,6 +35,166 @@ const POLISH_CITIES_REGISTRY: {
   "poznan": { name: "Poznan", admin1: "Greater Poland", country: "Poland", latitude: 52.4064, longitude: 16.9252 },
 };
 
+const SPECIAL_MAPPINGS: {
+  [key: string]: { name: string; admin1: string; country: string; latitude: number; longitude: number };
+} = {
+  "warszawa": { name: "Warsaw", admin1: "Mazovia", country: "Poland", latitude: 52.2298, longitude: 21.0118 },
+  "warsaw": { name: "Warsaw", admin1: "Mazovia", country: "Poland", latitude: 52.2298, longitude: 21.0118 },
+  "warsawpoland": { name: "Warsaw", admin1: "Mazovia", country: "Poland", latitude: 52.2298, longitude: 21.0118 },
+  "warszawapoland": { name: "Warsaw", admin1: "Mazovia", country: "Poland", latitude: 52.2298, longitude: 21.0118 },
+  "krakow": { name: "Krakow", admin1: "Lesser Poland", country: "Poland", latitude: 50.0647, longitude: 19.9450 },
+  "kraków": { name: "Krakow", admin1: "Lesser Poland", country: "Poland", latitude: 50.0647, longitude: 19.9450 },
+  "lodz": { name: "Lodz", admin1: "Lodz Voivodeship", country: "Poland", latitude: 51.7592, longitude: 19.4560 },
+  "łódź": { name: "Lodz", admin1: "Lodz Voivodeship", country: "Poland", latitude: 51.7592, longitude: 19.4560 },
+  "wroclaw": { name: "Wroclaw", admin1: "Lower Silesia", country: "Poland", latitude: 51.1079, longitude: 17.0385 },
+  "wrocław": { name: "Wroclaw", admin1: "Lower Silesia", country: "Poland", latitude: 51.1079, longitude: 17.0385 },
+  "gdansk": { name: "Gdansk", admin1: "Pomerania", country: "Poland", latitude: 54.3520, longitude: 18.6466 },
+  "gdańsk": { name: "Gdansk", admin1: "Pomerania", country: "Poland", latitude: 54.3520, longitude: 18.6466 },
+  "poznan": { name: "Poznan", admin1: "Greater Poland", country: "Poland", latitude: 52.4064, longitude: 16.9252 },
+  "poznań": { name: "Poznan", admin1: "Greater Poland", country: "Poland", latitude: 52.4064, longitude: 16.9252 },
+  "hamiltoncanada": { name: "Hamilton", admin1: "Ontario", country: "Canada", latitude: 43.2501, longitude: -79.8496 },
+  "hamiltonontario": { name: "Hamilton", admin1: "Ontario", country: "Canada", latitude: 43.2501, longitude: -79.8496 },
+  "hamiltonontariocanada": { name: "Hamilton", admin1: "Ontario", country: "Canada", latitude: 43.2501, longitude: -79.8496 },
+  "londoncanada": { name: "London", admin1: "Ontario", country: "Canada", latitude: 42.9849, longitude: -81.2453 },
+  "londonontario": { name: "London", admin1: "Ontario", country: "Canada", latitude: 42.9849, longitude: -81.2453 },
+  "londonontariocanada": { name: "London", admin1: "Ontario", country: "Canada", latitude: 42.9849, longitude: -81.2453 },
+  "parisfrance": { name: "Paris", admin1: "Île-de-France", country: "France", latitude: 48.8566, longitude: 2.3522 },
+  "paristexas": { name: "Paris", admin1: "Texas", country: "United States", latitude: 33.6609, longitude: -95.5555 },
+};
+
+const getNormalizedMappingKey = (str: string): string => {
+  return str.trim().toLowerCase().replace(/[^a-z0-9]/g, "");
+};
+
+interface ParsedQuery {
+  city: string;
+  countryOrRegion?: string;
+}
+
+const parseTypedCity = (input: string): ParsedQuery => {
+  const clean = input.trim().replace(/\s+/g, " ");
+  
+  // Try comma splitting
+  const parts = clean.split(",");
+  if (parts.length > 1) {
+    return {
+      city: parts[0].trim(),
+      countryOrRegion: parts.slice(1).join(",").trim()
+    };
+  }
+  
+  // Try space-split heuristics (e.g. "Hamilton Canada" or "Paris Texas")
+  const words = clean.split(" ");
+  if (words.length > 1) {
+    const lastWord = words[words.length - 1].toLowerCase();
+    const commonEntities = [
+      "canada", "usa", "us", "uk", "poland", "france", "polska", "germany", "texas",
+      "ontario", "england", "texas", "california", "illinois", "massachusetts"
+    ];
+    if (commonEntities.includes(lastWord)) {
+      return {
+        city: words.slice(0, words.length - 1).join(" ").trim(),
+        countryOrRegion: words[words.length - 1].trim()
+      };
+    }
+  }
+  
+  return {
+    city: clean
+  };
+};
+
+const findSpecialMapping = (typed: string): typeof SPECIAL_MAPPINGS[string] | null => {
+  const normKey = getNormalizedMappingKey(typed);
+  
+  if (SPECIAL_MAPPINGS[normKey]) {
+    return SPECIAL_MAPPINGS[normKey];
+  }
+  
+  const parsed = parseTypedCity(typed);
+  const cityKey = getNormalizedMappingKey(parsed.city);
+  if (SPECIAL_MAPPINGS[cityKey]) {
+    const mapped = SPECIAL_MAPPINGS[cityKey];
+    if (!parsed.countryOrRegion) {
+      return mapped;
+    }
+    
+    const cleanFilter = getNormalizedMappingKey(parsed.countryOrRegion);
+    const mCountry = getNormalizedMappingKey(mapped.country);
+    const mAdmin = getNormalizedMappingKey(mapped.admin1);
+    if (mCountry.includes(cleanFilter) || cleanFilter.includes(mCountry) || mAdmin.includes(cleanFilter) || cleanFilter.includes(mAdmin)) {
+      return mapped;
+    }
+  }
+  
+  return null;
+};
+
+const scoreGeocodingResult = (r: any, typedQuery: string): number => {
+  let score = 0;
+  const nameLower = (r.name || "").trim().toLowerCase();
+  const countryLower = (r.country || "").trim().toLowerCase();
+  const adminLower = (r.admin1 || "").trim().toLowerCase();
+  
+  const parsed = parseTypedCity(typedQuery);
+  const cityQueryLower = parsed.city.toLowerCase();
+  
+  // Exact or prefix name match boosts
+  if (nameLower === cityQueryLower) {
+    score += 150000;
+  } else if (nameLower.startsWith(cityQueryLower)) {
+    score += 50000;
+  } else if (nameLower.includes(cityQueryLower)) {
+    score += 20000;
+  } else {
+    score -= 100000; // Giant penalty for names that don't match the query string at all
+  }
+  
+  // Population size priority
+  if (r.population && typeof r.population === "number") {
+    score += Math.min(r.population / 10, 50000);
+  } else {
+    score -= 15000;
+  }
+  
+  // Recognize town/capital type
+  if (r.feature_code === "PPLC") {
+    score += 40000;
+  } else if (r.feature_code === "PPLA" || r.feature_code === "PPLA2") {
+    score += 25000;
+  } else if (r.feature_code === "PPL") {
+    score += 10000;
+  } else if (r.feature_code === "PPLX") {
+    score -= 30000; // Penalize neighborhoods & suburbs heavily
+  } else if (r.feature_code) {
+    score -= 20000;
+  }
+  
+  // Country filter weight
+  if (parsed.countryOrRegion) {
+    const filterLower = parsed.countryOrRegion.toLowerCase();
+    const matchesCountry = countryLower.includes(filterLower) || filterLower.includes(countryLower);
+    const matchesAdmin = adminLower.includes(filterLower) || filterLower.includes(adminLower);
+    
+    if (matchesCountry && matchesAdmin) {
+      score += 100000;
+    } else if (matchesCountry) {
+      score += 80000;
+    } else if (matchesAdmin) {
+      score += 60000;
+    } else {
+      score -= 80000;
+    }
+  }
+  
+  const normKey = buildNormalizedKey(r.name, r.admin1, r.country);
+  if (Object.values(PROFILE_KEYS).includes(normKey)) {
+    score += 50000;
+  }
+  
+  return score;
+};
+
 const normalizePolishCityInput = (typed: string): string => {
   const clean = typed.trim().toLowerCase();
   if (clean === "warszawa" || clean === "warszawy" || clean === "warsaw") return "Warsaw";
@@ -246,109 +406,75 @@ export default function BirthWeatherStory() {
     const timer = setTimeout(async () => {
       setIsSearchingCity(true);
       try {
-        const normalizedQuery = normalizePolishCityInput(typedCity);
+        // 1. Check if there is an exact Special Mapping or Polish City Registry shortcut
+        const specialMatch = findSpecialMapping(typedCity);
+        if (specialMatch) {
+          console.log(`Using exact special mapping for suggestion: ${specialMatch.name}, ${specialMatch.admin1}, ${specialMatch.country}`);
+          setSuggestions([{
+            name: specialMatch.name,
+            country: specialMatch.country,
+            admin1: specialMatch.admin1,
+            latitude: specialMatch.latitude,
+            longitude: specialMatch.longitude
+          }]);
+          setShowDropdown(true);
+          setIsSearchingCity(false);
+          return;
+        }
+
+        // 2. Fetch wider pool from Open-Meteo Geocoding with normalized polish input (e.g. Warszawa -> Warsaw)
+        const parsed = parseTypedCity(typedCity);
+        const normalizedQuery = normalizePolishCityInput(parsed.city);
         console.log(`Suggestion search for "${typedCity}" - normalized query: "${normalizedQuery}"`);
+        
         const response = await fetch(
           `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
             normalizedQuery
-          )}&count=25&language=en&format=json`
+          )}&count=40&language=en&format=json`
         );
         const data = await response.json();
+        
         if (data.results) {
+          // Score and rank all of them
           const scoredResults = data.results.map((r: any) => {
-            const resultObj = {
-              name: r.name,
-              country: r.country || "",
-              admin1: r.admin1 || "",
-              latitude: r.latitude,
-              longitude: r.longitude,
-              score: 0
+            return {
+              r,
+              score: scoreGeocodingResult(r, typedCity)
             };
-
-            let score = 0;
-            const nameLower = (r.name || "").trim().toLowerCase();
-            const countryLower = (r.country || "").trim().toLowerCase();
-            const queryLower = typedCity.trim().toLowerCase();
-            const cityPart = queryLower.split(",")[0].trim();
-
-            const isPolishTarget = [
-              "warszawa", "warsaw", "kraków", "krakow", "łódź", "lodz",
-              "wrocław", "wroclaw", "gdańsk", "gdansk", "poznań", "poznan"
-            ].includes(cityPart);
-
-            // Prioritize target Polish cities when a Polish target query was inputted
-            if (isPolishTarget && (countryLower === "poland" || countryLower === "polska")) {
-              score += 100000;
-              if (cityPart.startsWith("warsz") && nameLower === "warsaw") {
-                score += 50000;
-              }
-            }
-
-            // National capital indicator
-            if (r.feature_code === "PPLC") {
-              score += 20000;
-            }
-            // Seat of first-order administrative division (region capital)
-            else if (r.feature_code && r.feature_code.startsWith("PPLA")) {
-              score += 10000;
-            }
-            // Suburb/neighborhood penalty
-            else if (r.feature_code === "PPLX") {
-              score -= 5000;
-            }
-
-            // Population prioritization
-            if (r.population && typeof r.population === "number") {
-              score += Math.min(r.population / 100, 10000);
-            }
-
-            // Name matches query
-            if (nameLower === cityPart) {
-              score += 5000;
-            }
-
-            resultObj.score = score;
-            return resultObj;
           });
 
-          // Sort descending by calculated score
-          scoredResults.sort((a: any, b: any) => b.score - a.score);
+          // Filter out completely unrelated fuzzy matches
+          const queryLower = normalizePolishCityInput(parsed.city).toLowerCase();
+          const filtered = scoredResults.filter((item: any) => {
+            const nameLower = (item.r.name || "").toLowerCase();
+            return nameLower.includes(queryLower) || queryLower.includes(nameLower);
+          });
 
-          // Map back to GeocodingResult structure
-          const sortedResults: GeocodingResult[] = scoredResults.map((r: any) => ({
-            name: r.name,
-            country: r.country,
-            admin1: r.admin1,
-            latitude: r.latitude,
-            longitude: r.longitude
-          }));
+          // Sort by descending score
+          filtered.sort((a: any, b: any) => b.score - a.score);
 
-          // Force local registry match prepending for Polish targets
-          const queryPart = typedCity.split(",")[0].trim().toLowerCase();
-          const registryMatch = POLISH_CITIES_REGISTRY[queryPart];
-          if (registryMatch) {
-            const alreadyFirst = sortedResults[0] &&
-                                 sortedResults[0].name.toLowerCase() === registryMatch.name.toLowerCase() &&
-                                 sortedResults[0].country.toLowerCase() === "poland";
-            if (!alreadyFirst) {
-              const exactItem: GeocodingResult = {
-                name: registryMatch.name,
-                country: registryMatch.country,
-                admin1: registryMatch.admin1,
-                latitude: registryMatch.latitude,
-                longitude: registryMatch.longitude
-              };
-              const filteredList = sortedResults.filter(
-                (item) => !(item.name.toLowerCase() === registryMatch.name.toLowerCase() && item.country.toLowerCase() === "poland")
-              );
-              sortedResults.splice(0, sortedResults.length, exactItem, ...filteredList.slice(0, 4));
+          // Collapse region/country level duplicates to keep user choices clear & diverse
+          const uniqueMatches: GeocodingResult[] = [];
+          const seenKeys = new Set<string>();
+          for (const item of filtered) {
+            const result = item.r;
+            const locKey = `${result.name.toLowerCase()}|${(result.admin1 || "").toLowerCase()}|${(result.country || "").toLowerCase()}`;
+            if (!seenKeys.has(locKey)) {
+              seenKeys.add(locKey);
+              uniqueMatches.push({
+                name: result.name,
+                country: result.country || "",
+                admin1: result.admin1 || "",
+                latitude: result.latitude,
+                longitude: result.longitude
+              });
             }
           }
 
-          setSuggestions(sortedResults.slice(0, 5));
+          setSuggestions(uniqueMatches.slice(0, 5));
           setShowDropdown(true);
         } else {
-          // Fallback to Polish registry if API fails completely but we have it
+          // Try local fallback to Polish registry if API returned nothing
           const queryPart = typedCity.split(",")[0].trim().toLowerCase();
           const registryMatch = POLISH_CITIES_REGISTRY[queryPart];
           if (registryMatch) {
@@ -365,7 +491,7 @@ export default function BirthWeatherStory() {
           }
         }
       } catch (err) {
-        console.error("Geocoding failed inside BirthWeatherStory", err);
+        console.error("Geocoding suggestions failed inside BirthWeatherStory", err);
       } finally {
         setIsSearchingCity(false);
       }
@@ -582,93 +708,109 @@ export default function BirthWeatherStory() {
         cityName = selectedCity.name;
         countryName = selectedCity.country || "";
         admin1Name = selectedCity.admin1 || "";
-      } else if (registryMatch) {
-        // Automatically resolve matching Polish cities directly to avoid neighborhood/Ohio fallbacks
-        lat = registryMatch.latitude;
-        lon = registryMatch.longitude;
-        cityName = registryMatch.name;
-        countryName = registryMatch.country;
-        admin1Name = registryMatch.admin1;
-        console.log(`Auto-resolved typed input "${typedCity}" (part: "${cityPartClean}") direct to Polish registry match: ${cityName}, ${admin1Name}, ${countryName} at Lat: ${lat}, Lon: ${lon}`);
-      } else if (typedCity.trim().length > 0) {
-        // Attempt immediate geocode search on typing fallback
-        const normalizedQuery = normalizePolishCityInput(typedCity);
-        console.log(`Searching Open-Meteo Geocoding API for city input: "${typedCity}" (normalized query: "${normalizedQuery}")...`);
-        const geoResp = await fetch(
-          `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
-            normalizedQuery
-          )}&count=25&language=en&format=json`
-        );
-        
-        if (!geoResp.ok) {
-          console.error(`Geocoding request failed with status: ${geoResp.status}`);
-          setErrorMessage("We couldn't find that city. Please enter the city and country in English (for example: Warsaw, Poland or Munich, Germany).");
-          setIsLoadingStory(false);
-          return;
-        }
+      } else {
+        const specialMatch = findSpecialMapping(typedCity);
+        if (specialMatch) {
+          // Highlight direct shortcut resolutions
+          lat = specialMatch.latitude;
+          lon = specialMatch.longitude;
+          cityName = specialMatch.name;
+          countryName = specialMatch.country;
+          admin1Name = specialMatch.admin1;
+          console.log(`Auto-resolved typed input "${typedCity}" direct to special match: ${cityName}, ${admin1Name}, ${countryName} at Lat: ${lat}, Lon: ${lon}`);
+        } else if (typedCity.trim().length > 0) {
+          // Attempt immediate geocode search on typing fallback
+          const parsed = parseTypedCity(typedCity);
+          const normalizedQuery = normalizePolishCityInput(parsed.city);
+          console.log(`Searching Open-Meteo Geocoding API for city input: "${typedCity}" (normalized query: "${normalizedQuery}")...`);
+          const geoResp = await fetch(
+            `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
+              normalizedQuery
+            )}&count=40&language=en&format=json`
+          );
+          
+          if (!geoResp.ok) {
+            console.error(`Geocoding request failed with status: ${geoResp.status}`);
+            setErrorMessage("We couldn't find that city. Please enter the city and country in English (for example: Warsaw, Poland or Munich, Germany).");
+            setIsLoadingStory(false);
+            return;
+          }
 
-        const geoData = await geoResp.json();
-        if (geoData.results && geoData.results[0]) {
-          // Score and sort all results to prioritize national capitals, major cities, and Polish cities appropriately
-          const scoredResults = geoData.results.map((r: any) => {
-            let score = 0;
-            const nameLower = (r.name || "").trim().toLowerCase();
-            const countryLower = (r.country || "").trim().toLowerCase();
-            const queryLower = typedCity.trim().toLowerCase();
-            const queryCityPart = queryLower.split(",")[0].trim();
+          const geoData = await geoResp.json();
+          if (geoData.results && geoData.results.length > 0) {
+            // Score and sort all results to prioritize national capitals, major cities, and Polish cities appropriately
+            const scoredResults = geoData.results.map((r: any) => {
+              return {
+                r,
+                score: scoreGeocodingResult(r, typedCity)
+              };
+            });
 
-            const isPolishTarget = [
-              "warszawa", "warsaw", "kraków", "krakow", "łódź", "lodz",
-              "wrocław", "wroclaw", "gdańsk", "gdansk", "poznań", "poznan"
-            ].includes(queryCityPart);
+            // Filter out completely unrelated fuzzy matches
+            const queryLower = normalizePolishCityInput(parsed.city).toLowerCase();
+            const filtered = scoredResults.filter((item: any) => {
+              const nameLower = (item.r.name || "").toLowerCase();
+              return nameLower.includes(queryLower) || queryLower.includes(nameLower);
+            });
 
-            if (isPolishTarget && (countryLower === "poland" || countryLower === "polska")) {
-              score += 100000;
-              if (queryCityPart.startsWith("warsz") && nameLower === "warsaw") {
-                score += 50000;
+            // Sort by descending score
+            filtered.sort((a: any, b: any) => b.score - a.score);
+
+            // Collapse region/country level duplicates to keep user choices clear & diverse
+            const uniqueMatches: GeocodingResult[] = [];
+            const seenKeys = new Set<string>();
+            for (const item of filtered) {
+              const result = item.r;
+              const locKey = `${result.name.toLowerCase()}|${(result.admin1 || "").toLowerCase()}|${(result.country || "").toLowerCase()}`;
+              if (!seenKeys.has(locKey)) {
+                seenKeys.add(locKey);
+                uniqueMatches.push({
+                  name: result.name,
+                  country: result.country || "",
+                  admin1: result.admin1 || "",
+                  latitude: result.latitude,
+                  longitude: result.longitude
+                });
               }
             }
 
-            if (r.feature_code === "PPLC") {
-              score += 20000;
-            } else if (r.feature_code && r.feature_code.startsWith("PPLA")) {
-              score += 10000;
-            } else if (r.feature_code === "PPLX") {
-              score -= 5000;
+            if (uniqueMatches.length === 0) {
+              console.warn(`Geocoding search returned no names matching query for input: "${typedCity}"`);
+              setErrorMessage("We couldn't find that city. Please enter the city and country in English (for example: Warsaw, Poland or Munich, Germany).");
+              setIsLoadingStory(false);
+              return;
             }
 
-            if (r.population && typeof r.population === "number") {
-              score += Math.min(r.population / 100, 10000);
+            // Ambiguity decision tree (Requirement #7)
+            if (uniqueMatches.length === 1) {
+              const first = uniqueMatches[0];
+              lat = first.latitude;
+              lon = first.longitude;
+              cityName = first.name;
+              countryName = first.country || "";
+              admin1Name = first.admin1 || "";
+              console.log(`Successfully located unambiguous city: "${cityName}" in "${countryName}" at Lat: ${lat}, Lon: ${lon}`);
+            } else {
+              // Ambiguity found! Set the suggestions, show the dropdown so the user can see options, and show an error prompt.
+              setSuggestions(uniqueMatches.slice(0, 5));
+              setShowDropdown(true);
+              setErrorMessage(`Multiple matches found for "${typedCity}". Please select your specific birth city from the suggestions list below to continue.`);
+              setIsLoadingStory(false);
+              return;
             }
-
-            if (nameLower === queryCityPart) {
-              score += 5000;
-            }
-
-            return { r, score };
-          });
-
-          scoredResults.sort((a: any, b: any) => b.score - a.score);
-          const first = scoredResults[0].r;
-
-          lat = first.latitude;
-          lon = first.longitude;
-          cityName = first.name;
-          countryName = first.country || "";
-          admin1Name = first.admin1 || "";
-          console.log(`Successfully located city: "${cityName}" in "${countryName}" at Lat: ${lat}, Lon: ${lon} (prioritization score: ${scoredResults[0].score})`);
+          } else {
+            console.warn(`Geocoding search returned no results for input: "${typedCity}"`);
+            setErrorMessage("We couldn't find that city. Please enter the city and country in English (for example: Warsaw, Poland or Munich, Germany).");
+            setIsLoadingStory(false);
+            return;
+          }
         } else {
-          console.warn(`Geocoding search returned no results for input: "${typedCity}"`);
-          setErrorMessage("We couldn't find that city. Please enter the city and country in English (for example: Warsaw, Poland or Munich, Germany).");
+          setErrorMessage("Please specify a birth city & country.");
           setIsLoadingStory(false);
           return;
         }
-      } else {
-        setErrorMessage("Please specify a birth city & country.");
-        setIsLoadingStory(false);
-        return;
       }
-
+      
       // Log the final resolved city, region, and country used for weather query so incorrect fallbacks can be detected
       console.log(`[CITY RESOLVED FOR WEATHER QUERY] City: "${cityName}", Region/Admin1: "${admin1Name}", Country: "${countryName}" (Lat: ${lat}, Lon: ${lon})`);
 
