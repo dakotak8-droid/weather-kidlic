@@ -9,43 +9,107 @@ const MONTHS_ABBR = [
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
-const getCityLandmarks = (city: string, country?: string): string[] => {
-  const cLower = city.trim().toLowerCase();
-  const coLower = (country || "").trim().toLowerCase();
+const PROFILE_KEYS = {
+  NYC: "new york|new york|united states",
+  CHICAGO: "chicago|illinois|united states",
+  TORONTO: "toronto|ontario|canada",
+  LONDON: "london|england|united kingdom",
+  PARIS: "paris|île-de-france|france",
+  WARSAW: "warsaw|mazovia|poland"
+};
+
+const getCityIdentityKey = (city: string, region: string = "", country: string = ""): string => {
+  return [city.trim(), region.trim(), country.trim()].join("|");
+};
+
+const buildNormalizedKey = (city: string, region: string = "", country: string = ""): string => {
+  let c = city.trim().toLowerCase();
+  let r = region.trim().toLowerCase();
+  let co = country.trim().toLowerCase();
   
-  const isNY = (cLower === "new york" || cLower === "new york city" || cLower === "nyc") && 
-               (coLower === "united states" || coLower === "united states of america" || coLower === "usa" || coLower === "us");
-  if (isNY) {
+  // Normalize Country equivalents
+  if (co === "united states of america" || co === "usa" || co === "us") co = "united states";
+  if (co === "united kingdom" || co === "uk" || co === "gb" || co === "great britain" || co === "england") co = "united kingdom";
+  if (co === "polska") co = "poland";
+  
+  // Normalize Region & City equivalents
+  if (c === "new york" || c === "new york city" || c === "nyc") {
+    c = "new york";
+    if (r === "ny" || r === "new york state" || r === "new york" || r === "") {
+      r = "new york";
+    }
+  } else if (c === "chicago") {
+    if (r === "il" || r === "illinois" || r === "") {
+      r = "illinois";
+    }
+  } else if (c === "toronto") {
+    if (r === "on" || r === "ontario" || r === "") {
+      r = "ontario";
+    }
+  } else if (c === "london") {
+    if (r === "england" || r === "london" || r === "greater london" || r === "") {
+      r = "england";
+    }
+  } else if (c === "paris") {
+    if (r === "ile de france" || r === "ile-de-france" || r === "île-de-france" || r === "") {
+      r = "île-de-france";
+    }
+  } else if (c === "warsaw" || c === "warszawa") {
+    c = "warsaw";
+    if (r === "masovia" || r === "mazovia" || r === "masovian voivodeship" || r === "mazowieckie" || r === "wojewodztwo mazowieckie" || r === "") {
+      r = "mazovia";
+    }
+  }
+  
+  return `${c}|${r}|${co}`;
+};
+
+const isCuratedProfile = (city: string, region: string = "", country: string = ""): "nyc" | "chicago" | "toronto" | "london" | "paris" | "warsaw" | null => {
+  const normKey = buildNormalizedKey(city, region, country);
+  if (normKey === PROFILE_KEYS.NYC) return "nyc";
+  if (normKey === PROFILE_KEYS.CHICAGO) return "chicago";
+  if (normKey === PROFILE_KEYS.TORONTO) return "toronto";
+  if (normKey === PROFILE_KEYS.LONDON) return "london";
+  if (normKey === PROFILE_KEYS.PARIS) return "paris";
+  if (normKey === PROFILE_KEYS.WARSAW) return "warsaw";
+  return null;
+};
+
+const getCityLandmarks = (city: string, region: string = "", country: string = ""): string[] => {
+  const profile = isCuratedProfile(city, region, country);
+  
+  // Safety check: verify selected city key === profile city key before returning any landmarks
+  let profileKey = "";
+  if (profile === "nyc") profileKey = PROFILE_KEYS.NYC;
+  else if (profile === "chicago") profileKey = PROFILE_KEYS.CHICAGO;
+  else if (profile === "toronto") profileKey = PROFILE_KEYS.TORONTO;
+  else if (profile === "london") profileKey = PROFILE_KEYS.LONDON;
+  else if (profile === "paris") profileKey = PROFILE_KEYS.PARIS;
+  else if (profile === "warsaw") profileKey = PROFILE_KEYS.WARSAW;
+  
+  if (!profileKey) return [];
+  
+  const selectedKey = buildNormalizedKey(city, region, country);
+  if (selectedKey !== profileKey) {
+    return [];
+  }
+  
+  if (profile === "nyc") {
     return ["Manhattan skyline", "New York Harbor", "Central Park"];
   }
-
-  const isChicago = (cLower === "chicago") && 
-                    (coLower === "united states" || coLower === "united states of america" || coLower === "usa" || coLower === "us");
-  if (isChicago) {
+  if (profile === "chicago") {
     return ["Lake Michigan", "the Chicago skyline"];
   }
-
-  const isWarsaw = (cLower === "warsaw" || cLower === "warszawa") && 
-                   (coLower === "poland" || coLower === "polska");
-  if (isWarsaw) {
+  if (profile === "warsaw") {
     return ["the Vistula River", "Old Town", "the Royal Route"];
   }
-
-  const isLondon = (cLower === "london") && 
-                   (coLower === "united kingdom" || coLower === "uk" || coLower === "gb" || coLower === "great britain" || coLower === "england");
-  if (isLondon) {
+  if (profile === "london") {
     return ["the River Thames", "historic London streets"];
   }
-
-  const isToronto = (cLower === "toronto") && 
-                    (coLower === "canada");
-  if (isToronto) {
+  if (profile === "toronto") {
     return ["Lake Ontario", "the Toronto waterfront"];
   }
-
-  const isParis = (cLower === "paris") && 
-                  (coLower === "france");
-  if (isParis) {
+  if (profile === "paris") {
     return ["the River Seine", "the Eiffel Tower gardens"];
   }
   
@@ -109,6 +173,7 @@ export default function BirthWeatherStory() {
   const [revealResult, setRevealResult] = useState<{
     city: string;
     country: string;
+    region?: string;
     date: string; // formatted
     tempMax: number;
     tempMin: number;
@@ -185,32 +250,21 @@ export default function BirthWeatherStory() {
     city: string,
     country: string = "",
     windSpeed: number = 12,
-    sunrise: string = "6:15 AM"
+    sunrise: string = "6:15 AM",
+    region: string = ""
   ): HistoricalStory => {
     const isRainy = [51, 53, 55, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(weatherCode);
     const isSnowy = [71, 73, 75, 77, 85, 86].includes(weatherCode);
     const isSunny = [0, 1].includes(weatherCode);
 
-    const cLower = city.trim().toLowerCase();
-    const coLower = (country || "").trim().toLowerCase();
+    const profile = isCuratedProfile(city, region, country);
 
-    const isNY = (cLower === "new york" || cLower === "new york city" || cLower === "nyc") && 
-                 (coLower === "united states" || coLower === "united states of america" || coLower === "usa" || coLower === "us");
-
-    const isChicago = (cLower === "chicago") && 
-                      (coLower === "united states" || coLower === "united states of america" || coLower === "usa" || coLower === "us");
-
-    const isWarsaw = (cLower === "warsaw" || cLower === "warszawa") && 
-                     (coLower === "poland" || coLower === "polska");
-
-    const isToronto = (cLower === "toronto") && 
-                      (coLower === "canada");
-
-    const isLondon = (cLower === "london") && 
-                     (coLower === "united kingdom" || coLower === "uk" || coLower === "gb" || coLower === "great britain" || coLower === "england");
-
-    const isParis = (cLower === "paris") && 
-                    (coLower === "france");
+    const isNY = profile === "nyc";
+    const isChicago = profile === "chicago";
+    const isWarsaw = profile === "warsaw";
+    const isToronto = profile === "toronto";
+    const isLondon = profile === "london";
+    const isParis = profile === "paris";
 
     if (isRainy) {
       let storyText = "";
@@ -376,12 +430,14 @@ export default function BirthWeatherStory() {
       let lon: number;
       let cityName: string;
       let countryName: string;
+      let admin1Name: string = "";
 
       if (selectedCity) {
         lat = selectedCity.latitude;
         lon = selectedCity.longitude;
         cityName = selectedCity.name;
         countryName = selectedCity.country || "";
+        admin1Name = selectedCity.admin1 || "";
       } else if (typedCity.trim().length > 0) {
         // Attempt immediate geocode search on typing fallback
         console.log(`Searching Open-Meteo Geocoding API for city input: "${typedCity}"...`);
@@ -405,6 +461,7 @@ export default function BirthWeatherStory() {
           lon = first.longitude;
           cityName = first.name;
           countryName = first.country || "";
+          admin1Name = first.admin1 || "";
           console.log(`Successfully located city: "${cityName}" in "${countryName}" at Lat: ${lat}, Lon: ${lon}`);
         } else {
           console.warn(`Geocoding search returned no results for input: "${typedCity}"`);
@@ -467,7 +524,7 @@ export default function BirthWeatherStory() {
         }
       }
 
-      const generatedStory = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0, cityName, countryName, windSpeed, sunrise);
+      const generatedStory = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0, cityName, countryName, windSpeed, sunrise, admin1Name);
 
       // Save formatted readable representation (e.g. Sep 2, 2026) instead of numeric representation
       const formattedDate = `${MONTHS_ABBR[monthNum - 1]} ${dayNum}, ${yearStr}`;
@@ -475,6 +532,7 @@ export default function BirthWeatherStory() {
       setRevealResult({
         city: cityName,
         country: countryName,
+        region: admin1Name,
         date: formattedDate,
         tempMax,
         tempMin,
