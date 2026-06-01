@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Search, Calendar, ChevronRight, Sparkles, RefreshCw, X, Heart, Baby, BookOpen, Download } from "lucide-react";
+import { Search, Calendar, Clock, ChevronRight, Sparkles, RefreshCw, X, Heart, Baby, BookOpen, Download } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { GeocodingResult } from "../types";
 import WeatherIcon from "./WeatherIcon";
@@ -34,6 +34,7 @@ interface Dictionary {
   formSubtitle: string;
   fieldLanguage: string;
   fieldBirthDate: string;
+  fieldBirthTime: string;
   fieldBirthCity: string;
   cityPlaceholder: string;
   cityHelper: string;
@@ -114,6 +115,7 @@ const LOCALES: { [key: string]: Dictionary } = {
     formSubtitle: "Before the sleepless nights, snack negotiations, and mysterious sticky fingerprints, there was a single day. Discover the weather that welcomed your child into the world.",
     fieldLanguage: "Language / Idioma",
     fieldBirthDate: "Birth Date (MM/DD/YYYY)",
+    fieldBirthTime: "Birth Time (Optional)",
     fieldBirthCity: "Birth City & Country (in English)",
     cityPlaceholder: "Examples: New York, United States • Warsaw, Poland • Paris, France",
     cityHelper: "Please enter city and country names in English. Local spellings such as Polska, Deutschland, España, or Italia may not be recognized.",
@@ -193,6 +195,7 @@ const LOCALES: { [key: string]: Dictionary } = {
     formSubtitle: "Antes de las noches de desvelo, las negociaciones de refrigerios y las misteriosas huellas pegajosas, hubo un solo día. Descubre el clima que le dio la bienvenida a tu hijo al mundo.",
     fieldLanguage: "Idioma / Language",
     fieldBirthDate: "Fecha de nacimiento (MM/DD/AAAA)",
+    fieldBirthTime: "Hora de nacimiento (Opcional)",
     fieldBirthCity: "Ciudad y país de nacimiento (en inglés)",
     cityPlaceholder: "Ejemplos: New York, United States • Warsaw, Poland • Paris, France",
     cityHelper: "Por favor, ingresa los nombres de la ciudad y el país en inglés. Es posible que no se reconozcan las grafías locales como Polska, Deutschland, España o Italia.",
@@ -575,6 +578,7 @@ export default function BirthWeatherStory() {
   const [typedCity, setTypedCity] = useState("");
   const [selectedCity, setSelectedCity] = useState<GeocodingResult | null>(null);
   const [birthDate, setBirthDate] = useState(""); // "YYYY-MM-DD"
+  const [birthTime, setBirthTime] = useState(""); // "HH:MM (Optional)"
   const [suggestions, setSuggestions] = useState<GeocodingResult[]>([]);
   const [isSearchingCity, setIsSearchingCity] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -719,6 +723,162 @@ export default function BirthWeatherStory() {
     setTypedCity(`${city.name}${city.admin1 ? `, ${city.admin1}` : ""}, ${city.country}`);
     setSuggestions([]);
     setShowDropdown(false);
+  };
+
+  interface PeriodInfo {
+    nameEn: string;
+    nameEs: string;
+    phraseEn: string;
+    phraseEs: string;
+  }
+
+  const getPeriodInfo = (timeStr?: string): PeriodInfo | null => {
+    if (!timeStr) return null;
+    const parts = timeStr.split(":");
+    if (parts.length < 2) return null;
+    const hours = parseInt(parts[0], 10);
+    const minutes = parseInt(parts[1], 10);
+    if (isNaN(hours) || isNaN(minutes)) return null;
+
+    if (hours >= 0 && hours < 6) {
+      return {
+        nameEn: "Early Morning",
+        nameEs: "Madrugada",
+        phraseEn: "On the early morning you arrived",
+        phraseEs: "En la madrugada en que llegaste",
+      };
+    } else if (hours >= 6 && hours < 12) {
+      return {
+        nameEn: "Morning",
+        nameEs: "Mañana",
+        phraseEn: "On the morning you arrived",
+        phraseEs: "En la mañana en que llegaste",
+      };
+    } else if (hours >= 12 && hours < 18) {
+      return {
+        nameEn: "Afternoon",
+        nameEs: "Tarde",
+        phraseEn: "That afternoon",
+        phraseEs: "Aquella tarde",
+      };
+    } else if (hours >= 18 && hours < 21) {
+      return {
+        nameEn: "Evening",
+        nameEs: "Atardecer",
+        phraseEn: "On a peaceful evening",
+        phraseEs: "En un atardecer pacífico",
+      };
+    } else {
+      return {
+        nameEn: "Night",
+        nameEs: "Noche",
+        phraseEn: "Late that night",
+        phraseEs: "En la noche de tu llegada",
+      };
+    }
+  };
+
+  const applyTimeOfArrival = (story: string, lang: 'en' | 'es', birthTime?: string): string => {
+    const period = getPeriodInfo(birthTime);
+    if (!period) return story;
+
+    if (lang === "es") {
+      if (period.nameEs === "Madrugada") {
+        return story
+          .replace(/La mañana comenzó con/gi, "La madrugada de tu llegada comenzó con")
+          .replace(/la mañana en que naciste/gi, "la madrugada en que naciste")
+          .replace(/La mañana en que naciste/gi, "La madrugada en que naciste")
+          .replace(/la mañana/gi, "la madrugada")
+          .replace(/una mañana/gi, "una madrugada")
+          .replace(/Pasamos la mañana/gi, "Pasamos la madrugada")
+          .replace(/el día/gi, "la madrugada")
+          .replace(/amaneció con/gi, "comenzó en la madrugada con")
+          .replace(/amaneció cubierta/gi, "se cubrió en la madrugada");
+      } else if (period.nameEs === "Mañana") {
+        return story
+          .replace(/La mañana comenzó con/gi, "La mañana en que llegaste comenzó con")
+          .replace(/la mañana en que naciste/gi, "la mañana en que llegaste")
+          .replace(/La mañana en que naciste/gi, "La mañana en que llegaste");
+      } else if (period.nameEs === "Tarde") {
+        return story
+          .replace(/La mañana comenzó con/gi, "La tarde comenzó con")
+          .replace(/la mañana en que naciste/gi, "la tarde en que naciste")
+          .replace(/La mañana en que naciste/gi, "La tarde en que naciste")
+          .replace(/la mañana/gi, "la tarde")
+          .replace(/una mañana/gi, "una tarde")
+          .replace(/Pasamos la mañana/gi, "Pasamos la tarde")
+          .replace(/el día/gi, "la tarde")
+          .replace(/amaneció con/gi, "se cubrió por la tarde con")
+          .replace(/amaneció cubierta/gi, "se cubrió por la tarde");
+      } else if (period.nameEs === "Atardecer") {
+        return story
+          .replace(/La mañana comenzó con/gi, "El atardecer comenzó con")
+          .replace(/la mañana en que naciste/gi, "el atardecer en que naciste")
+          .replace(/La mañana en que naciste/gi, "El atardecer en que naciste")
+          .replace(/la mañana/gi, "el atardecer")
+          .replace(/una mañana/gi, "un atardecer")
+          .replace(/Pasamos la mañana/gi, "Pasamos el atardecer")
+          .replace(/el día/gi, "el atardecer")
+          .replace(/amaneció con/gi, "se llenó en el atardecer con")
+          .replace(/amaneció cubierta/gi, "se vistió en el atardecer");
+      } else if (period.nameEs === "Noche") {
+        return story
+          .replace(/La mañana comenzó con/gi, "La noche comenzó con")
+          .replace(/la mañana en que naciste/gi, "la noche en que naciste")
+          .replace(/La mañana en que naciste/gi, "La noche en que naciste")
+          .replace(/la mañana/gi, "la noche")
+          .replace(/una mañana/gi, "una noche")
+          .replace(/Pasamos la mañana/gi, "Pasamos la noche")
+          .replace(/el día/gi, "la noche")
+          .replace(/amaneció con/gi, "se envolvió por la noche con")
+          .replace(/amaneció cubierta/gi, "se cubrió por la noche");
+      }
+    } else {
+      if (period.nameEn === "Early Morning") {
+        return story
+          .replace(/The morning began with/gi, "The early morning began with")
+          .replace(/the morning you were born/gi, "the early morning you were born")
+          .replace(/chilly winter morning/gi, "chilly winter early morning")
+          .replace(/sunny morning/gi, "sunny early morning")
+          .replace(/spent the morning/gi, "spent the early morning")
+          .replace(/the day you were born/gi, "the early morning you arrived")
+          .replace(/on the day/gi, "on the early morning");
+      } else if (period.nameEn === "Morning") {
+        return story
+          .replace(/The morning began with/gi, "On the morning you arrived, it began with")
+          .replace(/the morning you were born/gi, "the morning you arrived")
+          .replace(/on the day/gi, "on the morning you arrived");
+      } else if (period.nameEn === "Afternoon") {
+        return story
+          .replace(/The morning began with/gi, "The afternoon began with")
+          .replace(/the morning you were born/gi, "the afternoon you were born")
+          .replace(/chilly winter morning/gi, "chilly winter afternoon")
+          .replace(/sunny morning/gi, "sunny afternoon")
+          .replace(/spent the morning/gi, "spent the afternoon")
+          .replace(/the day you were born/gi, "the afternoon you arrived")
+          .replace(/on the day/gi, "on the afternoon");
+      } else if (period.nameEn === "Evening") {
+        return story
+          .replace(/The morning began with/gi, "The evening began with")
+          .replace(/the morning you were born/gi, "the evening you were born")
+          .replace(/chilly winter morning/gi, "chilly winter evening")
+          .replace(/sunny morning/gi, "sunny evening")
+          .replace(/spent the morning/gi, "spent the evening")
+          .replace(/the day you were born/gi, "the evening you arrived")
+          .replace(/on the day/gi, "on the evening");
+      } else if (period.nameEn === "Night") {
+        return story
+          .replace(/The morning began with/gi, "The night began with")
+          .replace(/the morning you were born/gi, "the night you were born")
+          .replace(/chilly winter morning/gi, "cold winter night")
+          .replace(/sunny morning/gi, "night")
+          .replace(/spent the morning/gi, "spent the night")
+          .replace(/the day you were born/gi, "the night you arrived")
+          .replace(/on the day/gi, "on the night");
+      }
+    }
+
+    return story;
   };
 
   // Human storytelling generator based on weather parameters and city geography
@@ -1156,6 +1316,7 @@ export default function BirthWeatherStory() {
             windSpeed,
             sunrise,
             birthDate: formattedDate,
+            birthTime: birthTime || undefined,
             lang: lang,
           }),
         });
@@ -1172,11 +1333,15 @@ export default function BirthWeatherStory() {
           console.log("Successfully loaded Gemini-generated story.");
         } else {
           console.warn(`API story generate returned status ${storyResponse.status}, falling back to local generator`);
-          generatedStory = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0, cityName, countryName, windSpeed, sunrise, admin1Name, lang);
+          const backup = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0, cityName, countryName, windSpeed, sunrise, admin1Name, lang);
+          backup.story = applyTimeOfArrival(backup.story, lang, birthTime);
+          generatedStory = backup;
         }
       } catch (apiErr) {
         console.error("API story generate fetch error, falling back to local generator:", apiErr);
-        generatedStory = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0, cityName, countryName, windSpeed, sunrise, admin1Name, lang);
+        const backup = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0, cityName, countryName, windSpeed, sunrise, admin1Name, lang);
+        backup.story = applyTimeOfArrival(backup.story, lang, birthTime);
+        generatedStory = backup;
       }
 
       setRevealResult({
@@ -1567,6 +1732,23 @@ export default function BirthWeatherStory() {
                     required
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)}
+                    className="w-full block box-border px-4 py-3 bg-[#F9F1EB] dark:bg-[#1E1415] rounded-xl text-sm border-none outline-none text-[#3D2C2E] dark:text-[#FEFAF6] placeholder:text-slate-400 transition"
+                    style={{ width: "100%", boxSizing: "border-box" }}
+                  />
+                </div>
+              </div>
+
+              {/* Birth Time Input */}
+              <div className="birth-form-field space-y-1.5 focus-within:text-[#D48D71]">
+                <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-400 font-extrabold flex items-center gap-1.5">
+                  <Clock size={12} />
+                  <span>{t.fieldBirthTime}</span>
+                </label>
+                <div className="relative w-full block box-border">
+                  <input
+                    type="time"
+                    value={birthTime}
+                    onChange={(e) => setBirthTime(e.target.value)}
                     className="w-full block box-border px-4 py-3 bg-[#F9F1EB] dark:bg-[#1E1415] rounded-xl text-sm border-none outline-none text-[#3D2C2E] dark:text-[#FEFAF6] placeholder:text-slate-400 transition"
                     style={{ width: "100%", boxSizing: "border-box" }}
                   />

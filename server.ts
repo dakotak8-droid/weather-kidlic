@@ -28,6 +28,162 @@ function getAiClient() {
   return aiClient;
 }
 
+interface PeriodInfo {
+  nameEn: string;
+  nameEs: string;
+  phraseEn: string;
+  phraseEs: string;
+}
+
+function getPeriodInfo(timeStr?: string): PeriodInfo | null {
+  if (!timeStr) return null;
+  const parts = timeStr.split(":");
+  if (parts.length < 2) return null;
+  const hours = parseInt(parts[0], 10);
+  const minutes = parseInt(parts[1], 10);
+  if (isNaN(hours) || isNaN(minutes)) return null;
+
+  if (hours >= 0 && hours < 6) {
+    return {
+      nameEn: "Early Morning",
+      nameEs: "Madrugada",
+      phraseEn: "On the early morning you arrived",
+      phraseEs: "En la madrugada en que llegaste",
+    };
+  } else if (hours >= 6 && hours < 12) {
+    return {
+      nameEn: "Morning",
+      nameEs: "Mañana",
+      phraseEn: "On the morning you arrived",
+      phraseEs: "En la mañana en que llegaste",
+    };
+  } else if (hours >= 12 && hours < 18) {
+    return {
+      nameEn: "Afternoon",
+      nameEs: "Tarde",
+      phraseEn: "That afternoon",
+      phraseEs: "Aquella tarde",
+    };
+  } else if (hours >= 18 && hours < 21) {
+    return {
+      nameEn: "Evening",
+      nameEs: "Atardecer",
+      phraseEn: "On a peaceful evening",
+      phraseEs: "En un atardecer pacífico",
+    };
+  } else {
+    return {
+      nameEn: "Night",
+      nameEs: "Noche",
+      phraseEn: "Late that night",
+      phraseEs: "En la noche de tu llegada",
+    };
+  }
+}
+
+function applyTimeOfArrival(story: string, lang: 'en' | 'es', birthTime?: string): string {
+  const period = getPeriodInfo(birthTime);
+  if (!period) return story;
+
+  if (lang === "es") {
+    if (period.nameEs === "Madrugada") {
+      return story
+        .replace(/La mañana comenzó con/gi, "La madrugada de tu llegada comenzó con")
+        .replace(/la mañana en que naciste/gi, "la madrugada en que naciste")
+        .replace(/La mañana en que naciste/gi, "La madrugada en que naciste")
+        .replace(/la mañana/gi, "la madrugada")
+        .replace(/una mañana/gi, "una madrugada")
+        .replace(/Pasamos la mañana/gi, "Pasamos la madrugada")
+        .replace(/el día/gi, "la madrugada")
+        .replace(/amaneció con/gi, "comenzó en la madrugada con")
+        .replace(/amaneció cubierta/gi, "se cubrió en la madrugada");
+    } else if (period.nameEs === "Mañana") {
+      return story
+        .replace(/La mañana comenzó con/gi, "La mañana en que llegaste comenzó con")
+        .replace(/la mañana en que naciste/gi, "la mañana en que llegaste")
+        .replace(/La mañana en que naciste/gi, "La mañana en que llegaste");
+    } else if (period.nameEs === "Tarde") {
+      return story
+        .replace(/La mañana comenzó con/gi, "La tarde comenzó con")
+        .replace(/la mañana en que naciste/gi, "la tarde en que naciste")
+        .replace(/La mañana en que naciste/gi, "La tarde en que naciste")
+        .replace(/la mañana/gi, "la tarde")
+        .replace(/una mañana/gi, "una tarde")
+        .replace(/Pasamos la mañana/gi, "Pasamos la tarde")
+        .replace(/el día/gi, "la tarde")
+        .replace(/amaneció con/gi, "se cubrió por la tarde con")
+        .replace(/amaneció cubierta/gi, "se cubrió por la tarde");
+    } else if (period.nameEs === "Atardecer") {
+      return story
+        .replace(/La mañana comenzó con/gi, "El atardecer comenzó con")
+        .replace(/la mañana en que naciste/gi, "el atardecer en que naciste")
+        .replace(/La mañana en que naciste/gi, "El atardecer en que naciste")
+        .replace(/la mañana/gi, "el atardecer")
+        .replace(/una mañana/gi, "un atardecer")
+        .replace(/Pasamos la mañana/gi, "Pasamos el atardecer")
+        .replace(/el día/gi, "el atardecer")
+        .replace(/amaneció con/gi, "se llenó en el atardecer con")
+        .replace(/amaneció cubierta/gi, "se vistió en el atardecer");
+    } else if (period.nameEs === "Noche") {
+      return story
+        .replace(/La mañana comenzó con/gi, "La noche comenzó con")
+        .replace(/la mañana en que naciste/gi, "la noche en que naciste")
+        .replace(/La mañana en que naciste/gi, "La noche en que naciste")
+        .replace(/la mañana/gi, "la noche")
+        .replace(/una mañana/gi, "una noche")
+        .replace(/Pasamos la mañana/gi, "Pasamos la noche")
+        .replace(/el día/gi, "la noche")
+        .replace(/amaneció con/gi, "se envolvió por la noche con")
+        .replace(/amaneció cubierta/gi, "se cubrió por la noche");
+    }
+  } else {
+    if (period.nameEn === "Early Morning") {
+      return story
+        .replace(/The morning began with/gi, "The early morning began with")
+        .replace(/the morning you were born/gi, "the early morning you were born")
+        .replace(/chilly winter morning/gi, "chilly winter early morning")
+        .replace(/sunny morning/gi, "sunny early morning")
+        .replace(/spent the morning/gi, "spent the early morning")
+        .replace(/the day you were born/gi, "the early morning you arrived")
+        .replace(/on the day/gi, "on the early morning");
+    } else if (period.nameEn === "Morning") {
+      return story
+        .replace(/The morning began with/gi, "On the morning you arrived, it began with")
+        .replace(/the morning you were born/gi, "the morning you arrived")
+        .replace(/on the day/gi, "on the morning you arrived");
+    } else if (period.nameEn === "Afternoon") {
+      return story
+        .replace(/The morning began with/gi, "The afternoon began with")
+        .replace(/the morning you were born/gi, "the afternoon you were born")
+        .replace(/chilly winter morning/gi, "chilly winter afternoon")
+        .replace(/sunny morning/gi, "sunny afternoon")
+        .replace(/spent the morning/gi, "spent the afternoon")
+        .replace(/the day you were born/gi, "the afternoon you arrived")
+        .replace(/on the day/gi, "on the afternoon");
+    } else if (period.nameEn === "Evening") {
+      return story
+        .replace(/The morning began with/gi, "The evening began with")
+        .replace(/the morning you were born/gi, "the evening you were born")
+        .replace(/chilly winter morning/gi, "chilly winter evening")
+        .replace(/sunny morning/gi, "sunny evening")
+        .replace(/spent the morning/gi, "spent the evening")
+        .replace(/the day you were born/gi, "the evening you arrived")
+        .replace(/on the day/gi, "on the evening");
+    } else if (period.nameEn === "Night") {
+      return story
+        .replace(/The morning began with/gi, "The night began with")
+        .replace(/the morning you were born/gi, "the night you were born")
+        .replace(/chilly winter morning/gi, "cold winter night")
+        .replace(/sunny morning/gi, "night")
+        .replace(/spent the morning/gi, "spent the night")
+        .replace(/the day you were born/gi, "the night you arrived")
+        .replace(/on the day/gi, "on the night");
+    }
+  }
+
+  return story;
+}
+
 // -------------------------------------------------------------
 // SECURE BACKUP STORIES GENERATOR (Meets all rules and avoids clichés)
 // -------------------------------------------------------------
@@ -41,6 +197,7 @@ function getOfflineBackupStory(params: {
   windSpeed: number;
   sunrise: string;
   birthDate: string;
+  birthTime?: string;
   lang: "en" | "es";
 }): { theme: string; quote: string; story: string } {
   const isRainy = [51, 53, 55, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(params.weatherCode);
@@ -232,6 +389,7 @@ app.post("/api/generate-story", async (req, res) => {
     windSpeed,
     sunrise,
     birthDate,
+    birthTime,
     lang,
   } = req.body;
 
@@ -243,7 +401,7 @@ app.post("/api/generate-story", async (req, res) => {
   const ai = getAiClient();
 
   if (!ai) {
-    console.log("No GEMINI_API_KEY found, running high-quality offline backup generator");
+    console.log("No GEMINI_API_KEY found, running high-quality offline backup generator with birthTime=" + birthTime);
     const backupResult = getOfflineBackupStory({
       city,
       country: country || "",
@@ -254,12 +412,14 @@ app.post("/api/generate-story", async (req, res) => {
       windSpeed: typeof windSpeed === "number" ? windSpeed : 12,
       sunrise: sunrise || "6:15 AM",
       birthDate: birthDate || "Oct 14, 2021",
+      birthTime,
       lang: lang === "es" ? "es" : "en",
     });
+    const finalBackupStory = applyTimeOfArrival(backupResult.story, lang === "es" ? "es" : "en", birthTime);
     res.json({
       theme: backupResult.theme,
       quote: backupResult.quote,
-      story: backupResult.story,
+      story: finalBackupStory,
       quality_check: {
         language_consistent: true,
         weather_consistent: true,
@@ -273,6 +433,37 @@ app.post("/api/generate-story", async (req, res) => {
 
   // Generate prompt
   const language = lang === "es" ? "Spanish (Español)" : "English (English)";
+
+  const timeOfDepartureRule = birthTime
+    ? `
+5. BIRTH TIME PERSONALIZATION (CRITICAL CONSTRAINT):
+   Since the user has provided the birth time ("${birthTime}"), you MUST personalize the weather story specifically to that time period.
+   Categorize the time of arrival as follows:
+   - 00:00–05:59 → Early Morning / Madrugada
+     In English, use phrases such as: "On the early morning you arrived...", "A cold winter early morning...", etc.
+     In Spanish, use phrases such as: "En la madrugada de tu llegada...", "La madrugada en que llegaste...", etc.
+   - 06:00–11:59 → Morning / Mañana
+     In English, use phrases such as: "On the morning you arrived...", "On a quiet winter morning...", etc.
+     In Spanish, use phrases such as: "En la mañana en que llegaste...", "En la mañana de tu llegada...", etc.
+   - 12:00–17:59 → Afternoon / Tarde
+     In English, use phrases such as: "That afternoon...", "On that sunny afternoon...", etc.
+     In Spanish, use phrases such as: "Aquella tarde...", "En esa tarde de tu llegada...", etc.
+   - 18:00–20:59 → Evening / Atardecer
+     In English, use phrases such as: "On a peaceful evening...", "That chilly evening...", etc.
+     In Spanish, use phrases such as: "En un atardecer pacífico...", "Aquella tarde-noche en que llegaste...", etc.
+   - 21:00–23:59 → Night / Noche
+     In English, use phrases such as: "Late that night...", "On the night of your arrival...", etc.
+     In Spanish, use phrases such as: "En la noche de tu llegada...", "Esa noche tranquila en que naciste...", etc.
+
+   ONLY use time-based references matching the correct category. DO NOT use generic daylight/daytime terms if they conflict.
+   All other weather/factual rules must still be followed: no subjective weather adjectives, no famous landmarks.`
+    : `
+5. BIRTH TIME (NOT PROVIDED):
+   Since the user did NOT provide a birth time, continue using neutral daily terms that do not assume a specific hour or time of day, such as:
+   - "The day you were born..." / "El día en que naciste..."
+   - "On the day of your arrival..." / "El día de tu llegada..."
+   - "When you entered the world..." / "Cuando llegaste al mundo..."
+   Do NOT assume a specific time period unless you have to describe the sunrise/dawn hour as a factual footnote (e.g., sunrise was at ${sunrise}).`;
 
   const systemInstruction = `You are an expert nostalgic family keepsakes editor and creative storyteller.
 Your task is to generate a beautiful, authentic personal story and theme for a parent remembering the day their child was born based on the weather conditions of that day.
@@ -302,16 +493,18 @@ Mandatory Constraints:
    - City: ${city} (Region: ${region || 'None'}, Country: ${country})
    - Do NOT generate a generic story that fits any location or weather condition. Make sure the actual numbers or sensory details matching these values (like a biting wind of ${Math.round(windSpeed)} km/h or the soft sunrise at ${sunrise}) are seamlessly woven in.
 
-3. COHERENT TIME OF DAY & WEATHER CONSISTENCY:
+4. COHERENT TIME OF DAY & WEATHER CONSISTENCY:
    - Ensure complete time-of-day consistency.
    - If the story describes dawn, morning, afternoon, or evening, the wording must be logically coherent. Never mention "afternoon" if describing sunrise conditions or morning light. Never mix morning and evening references in the same memory.
    - Ensure the description of weather matches the condition. If it is Snowy, describe a winter wonderland; if Sunny, describe bright, clear skies.
 
-4. REAL GEOGRAPHICAL SENSE, BUT STRICTLY AVOID LANDMARKS & SIGHTSEEING:
+${timeOfDepartureRule}
+
+6. REAL GEOGRAPHICAL SENSE, BUT STRICTLY AVOID LANDMARKS & SIGHTSEEING:
    - Make the city context real but extremely subtle. DO NOT focus on famous landmarks, rivers, historic districts, old walls, city architecture, or tourist-style details. Strictly avoid references such as "banks of the Vistula River", "the old brick walls of Warsaw", "the Manhattan skyline", "the historic center", "Central Park", "Broadway", "Eiffel Tower", "River Thames", "the Seine", "Colosseum", "lake Ontario", or similar touristy features.
    - Instead, focus on what parents would actually remember: whether it was sunny, cloudy, rainy, windy, warm, or cold outside in ${city}, the atmosphere inside the hospital room (e.g., quiet corridors, nurses walking softly, the heat humming), holding the baby for the first time, and the deep contrast between an ordinary weather day outside and an extraordinary moment inside relative to ${city}. Keep all descriptions grounded, believable, and emotionally warm.
 
-5. STAGE AN AUTHENTIC, COMPLETELY UN-POETIC PARENT MEMORY:
+7. STAGE AN AUTHENTIC, COMPLETELY UN-POETIC PARENT MEMORY:
    - THE GOAL IS NOT TO SOUND BEAUTIFUL. THE GOAL IS TO SOUND REAL AND LIFE-LIKE.
    - WRITE AS IF A PARENT IS DESCRIBING THE DAY TO A FRIEND 10 YEARS LATER.
    - Use simple, natural, conversational, down-to-earth language.
@@ -349,6 +542,9 @@ Mandatory Constraints:
      * "Outside, it was just another cloudy day. For us, it became unforgettable."
      * "The weather came and went. The memory stayed."
      * "Most people won't remember that day's weather. We always will."
+     * "The city was busy. We were busy meeting you."
+   - Let the quote sound like something a real parent would say to their child later in life: clean, direct, and completely devoid of greeting-card fluff.
+   - Generate creative, varied sentence structures.
      * "The city was busy. We were busy meeting you."
    - Let the quote sound like something a real parent would say to their child later in life: clean, direct, and completely devoid of greeting-card fluff.
    - Generate creative, varied sentence structures.
@@ -431,7 +627,7 @@ You must output a JSON object containing:
       quality_check: finalJson.quality_check
     });
   } else {
-    console.log("All Gemini attempts failed or timed out, executing high-quality offline backup generator...");
+    console.log("All Gemini attempts failed or timed out, executing high-quality offline backup generator with birthTime=" + birthTime);
     const backupResult = getOfflineBackupStory({
       city,
       country: country || "",
@@ -442,12 +638,14 @@ You must output a JSON object containing:
       windSpeed: typeof windSpeed === "number" ? windSpeed : 12,
       sunrise: sunrise || "6:15 AM",
       birthDate: birthDate || "Oct 14, 2021",
+      birthTime,
       lang: lang === "es" ? "es" : "en",
     });
+    const finalBackupStory = applyTimeOfArrival(backupResult.story, lang === "es" ? "es" : "en", birthTime);
     res.json({
       theme: backupResult.theme,
       quote: backupResult.quote,
-      story: backupResult.story,
+      story: finalBackupStory,
       quality_check: {
         language_consistent: true,
         weather_consistent: true,
