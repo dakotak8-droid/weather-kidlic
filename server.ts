@@ -184,6 +184,154 @@ function applyTimeOfArrival(story: string, lang: 'en' | 'es', birthTime?: string
   return story;
 }
 
+function getThemeForEmptyTime(weatherCode: number, lang: 'en' | 'es'): string {
+  const isRainy = [51, 53, 55, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(weatherCode);
+  const isSnowy = [71, 73, 75, 77, 85, 86].includes(weatherCode);
+  const isSunny = [0, 1].includes(weatherCode);
+  const isCloudy = [2, 3, 45, 48].includes(weatherCode);
+
+  if (lang === "es") {
+    if (isRainy) return "Una llegada con lluvia";
+    if (isSnowy) return "Una bienvenida con nieve";
+    if (isSunny) return "Un inicio soleado";
+    if (isCloudy) return "Un día nublado y tranquilo";
+    return "Un día suave de primavera";
+  } else {
+    if (isRainy) return "A Rainy Arrival";
+    if (isSnowy) return "A Snowy Welcome";
+    if (isSunny) return "A Sunny Beginning";
+    if (isCloudy) return "A Quiet Cloudy Day";
+    return "A Gentle Spring Day";
+  }
+}
+
+function getThemeForProvidedTime(weatherCode: number, hours: number, lang: 'en' | 'es'): string {
+  const isRainy = [51, 53, 55, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(weatherCode);
+  const isSnowy = [71, 73, 75, 77, 85, 86].includes(weatherCode);
+  const isSunny = [0, 1].includes(weatherCode);
+  const isCloudy = [2, 3, 45, 48].includes(weatherCode);
+
+  if (hours >= 0 && hours < 6) {
+    if (lang === "es") {
+      if (isSunny || isCloudy) return "Primera luz";
+      return "Bienvenida al amanecer";
+    } else {
+      if (isSunny || isCloudy) return "First Light";
+      return "Dawn's Welcome";
+    }
+  } else if (hours >= 6 && hours < 12) {
+    if (lang === "es") {
+      if (isRainy) return "Una mañana lluviosa";
+      if (isSnowy) return "Una mañana de nieve";
+      if (isSunny) return "Sol de la mañana";
+      return "Una mañana tranquila";
+    } else {
+      if (isRainy) return "A Rainy Morning";
+      if (isSnowy) return "A Snowy Morning";
+      if (isSunny) return "Morning Sunshine";
+      return "A Quiet Morning";
+    }
+  } else if (hours >= 12 && hours < 18) {
+    if (lang === "es") {
+      if (isRainy) return "Una tarde lluviosa";
+      if (isSnowy) return "Una tarde de nieve";
+      if (isSunny) return "Tarde dorada";
+      return "Una tarde tranquila";
+    } else {
+      if (isRainy) return "A Rainy Afternoon";
+      if (isSnowy) return "A Snowy Afternoon";
+      if (isSunny) return "Golden Afternoon";
+      return "A Quiet Afternoon";
+    }
+  } else if (hours >= 18 && hours < 21) {
+    if (lang === "es") {
+      if (isRainy) return "Un atardecer lluvioso";
+      if (isSnowy) return "Un atardecer nevado";
+      if (isSunny) return "Luces de la tarde-noche";
+      return "Un atardecer tranquilo";
+    } else {
+      if (isRainy) return "A Rainy Evening";
+      if (isSnowy) return "A Snowy Evening";
+      if (isSunny) return "Evening Lights";
+      return "A Quiet Evening";
+    }
+  } else {
+    if (hours === 23 || hours === 0) {
+      return lang === "es" ? "Bienvenida de medianoche" : "Midnight Welcome";
+    }
+    if (lang === "es") {
+      if (isRainy) return "Una noche lluviosa";
+      if (isSnowy) return "Llegada en una noche de nieve";
+      if (isSunny) return "Bajo el cielo nocturno";
+      return "Una noche tranquila";
+    } else {
+      if (isRainy) return "A Rainy Night";
+      if (isSnowy) return "Snowy Night Arrival";
+      if (isSunny) return "Under the Night Sky";
+      return "Under the Night Sky";
+    }
+  }
+}
+
+function getCorrectTheme(weatherCode: number, lang: 'en' | 'es', birthTime?: string): string {
+  if (!birthTime) {
+    return getThemeForEmptyTime(weatherCode, lang);
+  }
+  const parts = birthTime.split(":");
+  if (parts.length < 2) {
+    return getThemeForEmptyTime(weatherCode, lang);
+  }
+  const hours = parseInt(parts[0], 10);
+  if (isNaN(hours)) {
+    return getThemeForEmptyTime(weatherCode, lang);
+  }
+  return getThemeForProvidedTime(weatherCode, hours, lang);
+}
+
+function makeStoryTimeNeutral(story: string, lang: 'en' | 'es'): string {
+  if (lang === "es") {
+    return story
+      .replace(/La mañana comenzó/gi, "El día comenzó")
+      .replace(/la mañana en que naciste/gi, "el día en que naciste")
+      .replace(/La mañana en que naciste/gi, "El día en que naciste")
+      .replace(/la mañana/gi, "el día")
+      .replace(/una mañana/gi, "un día")
+      .replace(/Pasamos la mañana/gi, "Pasamos las primeras horas")
+      .replace(/amaneció con/gi, "comenzó con")
+      .replace(/amaneció cubierta/gi, "se cubrió")
+      .replace(/amaneció/gi, "comenzó el día")
+      .replace(/el sol asomando a las \d+:\d+\s*(?:AM|PM)?/gi, "el cielo sobre la ciudad")
+      .replace(/al amanecer/gi, "en tu llegada")
+      .replace(/salida del sol a las \d+:\d+\s*(?:AM|PM)?/gi, "llegada")
+      .replace(/llovizna a las \d+:\d+\s*(?:AM|PM)?/gi, "llovizna")
+      .replace(/a las \d+:\d+\s*(?:AM|PM)?/gi, "")
+      .replace(/tarde/gi, "jornada")
+      .replace(/noche/gi, "jornada")
+      .replace(/madrugada/gi, "jornada");
+  } else {
+    return story
+      .replace(/The morning began/gi, "The day began")
+      .replace(/the morning you were born/gi, "the day you were born")
+      .replace(/chilly winter morning/gi, "chilly winter day")
+      .replace(/sunny morning/gi, "sunny day")
+      .replace(/spent the morning/gi, "spent those first hours")
+      .replace(/spent the afternoon/gi, "spent those first hours")
+      .replace(/spent the night/gi, "spent those first hours")
+      .replace(/first afternoon/gi, "first day")
+      .replace(/morning/gi, "day")
+      .replace(/afternoon/gi, "day")
+      .replace(/evening/gi, "day")
+      .replace(/night/gi, "day")
+      .replace(/dawn/gi, "arrival")
+      .replace(/sunrise/gi, "arrival")
+      .replace(/sunset/gi, "arrival")
+      .replace(/midnight/gi, "arrival")
+      .replace(/as the sun rose behind clouds at \d+:\d+\s*(?:AM|PM)?/gi, "under the skies")
+      .replace(/as the sun rose at \d+:\d+\s*(?:AM|PM)?/gi, "on that day")
+      .replace(/at \d+:\d+\s*(?:AM|PM)?/gi, "");
+  }
+}
+
 // -------------------------------------------------------------
 // SECURE BACKUP STORIES GENERATOR (Meets all rules and avoids clichés)
 // -------------------------------------------------------------
@@ -415,9 +563,15 @@ app.post("/api/generate-story", async (req, res) => {
       birthTime,
       lang: lang === "es" ? "es" : "en",
     });
-    const finalBackupStory = applyTimeOfArrival(backupResult.story, lang === "es" ? "es" : "en", birthTime);
+    let finalBackupStory = backupResult.story;
+    if (birthTime) {
+      finalBackupStory = applyTimeOfArrival(finalBackupStory, lang === "es" ? "es" : "en", birthTime);
+    } else {
+      finalBackupStory = makeStoryTimeNeutral(finalBackupStory, lang === "es" ? "es" : "en");
+    }
+    const overrideTheme = getCorrectTheme(typeof weatherCode === "number" ? weatherCode : 0, lang === "es" ? "es" : "en", birthTime);
     res.json({
-      theme: backupResult.theme,
+      theme: overrideTheme,
       quote: backupResult.quote,
       story: finalBackupStory,
       quality_check: {
@@ -620,10 +774,15 @@ You must output a JSON object containing:
   }
 
   if (finalJson) {
+    const overrideTheme = getCorrectTheme(typeof weatherCode === "number" ? weatherCode : 0, lang === "es" ? "es" : "en", birthTime);
+    let finalStory = finalJson.story;
+    if (!birthTime) {
+      finalStory = makeStoryTimeNeutral(finalStory, lang === "es" ? "es" : "en");
+    }
     res.json({
-      theme: finalJson.theme,
+      theme: overrideTheme,
       quote: finalJson.quote,
-      story: finalJson.story,
+      story: finalStory,
       quality_check: finalJson.quality_check
     });
   } else {
@@ -641,9 +800,15 @@ You must output a JSON object containing:
       birthTime,
       lang: lang === "es" ? "es" : "en",
     });
-    const finalBackupStory = applyTimeOfArrival(backupResult.story, lang === "es" ? "es" : "en", birthTime);
+    let finalBackupStory = backupResult.story;
+    if (birthTime) {
+      finalBackupStory = applyTimeOfArrival(finalBackupStory, lang === "es" ? "es" : "en", birthTime);
+    } else {
+      finalBackupStory = makeStoryTimeNeutral(finalBackupStory, lang === "es" ? "es" : "en");
+    }
+    const overrideTheme = getCorrectTheme(typeof weatherCode === "number" ? weatherCode : 0, lang === "es" ? "es" : "en", birthTime);
     res.json({
-      theme: backupResult.theme,
+      theme: overrideTheme,
       quote: backupResult.quote,
       story: finalBackupStory,
       quality_check: {
