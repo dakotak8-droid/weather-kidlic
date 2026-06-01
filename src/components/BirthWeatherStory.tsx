@@ -131,8 +131,8 @@ const LOCALES: { [key: string]: Dictionary } = {
     errApiRecovery: "Open-Meteo archive is recovering state. Please check your network and retry in a few moments!",
 
     // Example
-    exampleCity: "Austin, Texas",
-    exampleCountrySub: "United States • Atmosphere and stars mapped",
+    exampleCity: "Austin",
+    exampleCountrySub: "Texas, United States",
     exampleTemp: "21°C / 70°F",
     exampleCondition: "Gentle Sunshine",
     exampleWind: "12 km/h / 7 mph",
@@ -210,8 +210,8 @@ const LOCALES: { [key: string]: Dictionary } = {
     errApiRecovery: "El archivo de Open-Meteo se está recuperando. ¡Por favor, verifica tu conexión e inténtalo de nuevo en unos momentos!",
 
     // Example
-    exampleCity: "Austin, Texas",
-    exampleCountrySub: "United States • Atmósfera y estrellas mapeadas",
+    exampleCity: "Austin",
+    exampleCountrySub: "Texas, Estados Unidos",
     exampleTemp: "21°C / 70°F",
     exampleCondition: "Brillo Solar Suave",
     exampleWind: "12 km/h / 7 mph",
@@ -737,235 +737,179 @@ export default function BirthWeatherStory() {
     const isSnowy = [71, 73, 75, 77, 85, 86].includes(weatherCode);
     const isSunny = [0, 1].includes(weatherCode);
 
-    const profile = isCuratedProfile(city, region, country);
+    const cityLower = city.toLowerCase();
+    const isNY = cityLower.includes("new york") || cityLower.includes("nyc");
+    const isChicago = cityLower.includes("chicago");
+    const isWarsaw = cityLower.includes("warsaw") || cityLower.includes("warszawa");
+    const isToronto = cityLower.includes("toronto");
+    const isLondon = cityLower.includes("london");
+    const isParis = cityLower.includes("paris");
 
-    const isNY = profile === "nyc";
-    const isChicago = profile === "chicago";
-    const isWarsaw = profile === "warsaw";
-    const isToronto = profile === "toronto";
-    const isLondon = profile === "london";
-    const isParis = profile === "paris";
+    const tempF = Math.round((tempMax * 9) / 5 + 32);
+    const tempC = Math.round(tempMax);
+    const windKn = Math.round(windSpeed);
+    const windMph = Math.round(windSpeed * 0.621371);
+
+    // Dynamic month-based date format to avoid timezone shifts
+    const today = new Date();
+    const yearStr = today.getFullYear().toString();
+    const formattedDate = lang === "es" ? "ese día memorable" : "that unforgettable day";
 
     if (lang === "es") {
       if (isRainy) {
-        let storyText = "";
+        let story = "";
+        let theme = "Recibidos por la Lluvia";
+        let quote = "Bajo el repiqueteo de las gotas, tu calor llenó nuestra vida de un brillo infinito.";
+
         if (isNY) {
-          storyText = `Era una típica mañana húmeda en New York, con taxis amarillos salpicando los charcos de las calles y vapor subiendo de las rejillas del metro. Los viajeros de la mañana se apresuraban por las calles bajo sus paraguas. Pero dentro de nuestra tranquila habitación de hospital, nada de ese ajetreo importaba ya. En el momento en que te sostuvimos por primera vez, la agitada ciudad afuera se desvaneció en el fondo. Era difícil creer que finalmente estábamos sosteniendo a nuestro propio bebé. Ese frío y lluvioso día de New York se convirtió en el comienzo silencioso de todo para nosotros.`;
+          story = `La mañana comenzó con lloviznas suaves sobre New York. Los taxis amarillos esquivaban charcos a lo largo de Broadway, la bruma matinal se asentaba entre los rascacielos y el vapor trepaba de las rejillas del metro. Las nubes cubrían el cielo húmedo de la metrópoli, marcando una temperatura templada de ${tempC}°C (${tempF}°F). Nos encontrábamos flotando en un remanso de tranquilidad en el hospital. Sostener de pronto tu cuerpo tibio con el sonido lejano de los limpiaparabrisas rítmicos fue de una belleza abrumadora. Nos abrazamos, sabiendo que este gélido día lluvioso pasaría a la historia de nuestro hogar como el portal hacia la felicidad más pura.`;
         } else if (isChicago) {
-          storyText = `Un viento frío soplaba desde Lake Michigan, barriendo una intensa lluvia por las calles del centro de Chicago. La gente en las aceras se abrigaba bien con sus impermeables para mantenerse caliente. Adentro, estábamos completamente protegidos del clima, esperando para conocerte. En el segundo en que te sostuvimos en nuestros brazos, el ajetreo de la ciudad se calmó por completo. Trajiste un calor a nuestras vidas que ninguna tormenta fría del lago podía tocar, y ese día lluvioso en Chicago se convirtió en uno de nuestros recuerdos favoritos.`;
-        } else if (isToronto) {
-          storyText = `Una lluvia fresca caía sobre los vecindarios, golpeando suavemente las ventanas de las casas. Abajo, a lo largo de la costa de Lake Ontario, la ciudad se sentía tranquila y lenta. Nuestras mentes estaban completamente concentradas en la habitación del hospital donde te esperábamos. Cuando finalmente te sostuvimos por primera vez, la tarde lluviosa afuera pareció no importar en absoluto. Tu llegada trajo una maravillosa sensación de paz a nuestra familia, convirtiendo una tarde gris junto al lago en un recuerdo indefinido.`;
+          story = `El viento característico soplaba a ${windKn} km/h (${windMph} mph) agitando con ímpetu la lluvia fría directo desde las aguas profundas del Chicago Lake Michigan. Los transeúntes agachaban el torso con abrigos oscuros sobre el asfalto mojado de la Magnificent Mile. Dentro del hospital, cobijados por un silencio reconfortante, aguardábamos con el corazón latiendo a mil por hora. Al recibirte en nuestros brazos, tu pequeña respiración ahogó el llanto en un gemido tierno. Aquella tempestad invernal de Chicago se transformó instantáneamente en el entorno más dulce y memorable de nuestras vidas, colmándonos de calma.`;
         } else if (isWarsaw) {
-          storyText = `Una lluvia constante caía sobre los adoquines del Old Town, goteando hacia las orillas del Vistula River. Afuera, Warsaw seguía su rutina otoñal habitual, pero en nuestra habitación de hospital, la historia de nuestra propia familia apenas comenzaba. En el momento en que te abrazamos, los siglos de historia de afuera se desvanecieron en el fondo. Te sostuvimos fuerte, sabiendo que comenzábamos un nuevo y hermoso capítulo de nuestras vidas juntos.`;
-        } else if (isLondon) {
-          storyText = `Una llovizna densa y clásica caía sobre London, mojando las calles históricas y haciendo que los transeúntes corrieran hacia la estación de metro más cercana. Afuera, una neblina húmeda avanzaba sobre el River Thames. Dentro de nuestra cálida habitación, estábamos a un millón de millas de distancia de la ciudad húmeda. Sostenerte por primera vez fue un momento increíblemente emotivo del que todavía hablamos hoy. Finalmente estabas aquí, y la historia de nuestra propia familia apenas comenzaba.`;
+          story = `Una lluvia fresca y persistente lavaba los adoquines medievales del Old Town en Varsovia, deslizándose sigilosamente hacia las orillas tranquilas del río Vístula. El amanecer gris se asomó a las ${sunrise} envolviendo la ciudad en un murmullo pasivo y otoñal de ${tempC}°C (${tempF}°F). En el hospital, las voces se silenciaron cuando tu llanto inaugural rompió el aire fresco de la habitación. Miramos tu carita tan perfecta, acariciando tus dedos diminutos. Varsovia despertaba bajo la llovizna, pero para nosotros se levantaba un reino de luz imperecedera que abrigaría todos nuestros inviernos futuros.`;
         } else if (isParis) {
-          storyText = `La lluvia golpeaba suavemente los tejados de zinc y lavaba los tranquilos adoquines de Paris. Cerca del River Seine, la gente se refugiaba bajo los toldos verdes de los cafés en las esquinas. Pero nuestra atención estaba por completo dentro de nuestra cálida habitación. Cuando te abrazamos por primera vez, la tarde gris parisina afuera se desvaneció por completo. Tu respiración suave era el único sonido que nos importaba, y ese día húmedo se convirtió en el recuerdo más preciado de nuestras vidas.`;
+          story = `Un manto plomizo cubría los tejados de zinc y las elegantes cafeterías de París mientras la lluvia repiqueteaba con timidez en las orillas del río Sena. Se sentía un aire sereno a ${tempC}°C (${tempF}°F) con una brisa mansa de ${windKn} km/h (${windMph} mph). El milagro de tu nacimiento cubrió de una paz mística nuestra pequeña estancia. Cuando la enfermera te colocó sobre mi pecho por primera vez, un sol invisible pareció encenderse entre nosotros. Ese París húmedo y gris se grabó eternamente en nuestra memoria como el decorado más sublime de nuestra vida familiar.`;
+        } else if (isLondon) {
+          story = `Una húmeda neblina londinense flotaba sobre el curso del río Támesis, mientras una llovizna clásica empapaba las cabinas telefónicas rojas y las aceras de la capital inglesa. El amanecer llegó a las ${sunrise} cubriendo Londres con nubes cargadas y bajas a ${tempC}°C (${tempF}°F). En nuestra habitación abrigada la calma era absoluta. Al sostenerte y arrullarte con asombro, el frío clima de la metrópoli dio paso a un nido de amor indestructible. Ese día lluvioso de Londres se convirtió en el inicio solemne de nuestra pequeña y hermosa dinastía.`;
+        } else if (isToronto) {
+          story = `La lluvia fresca empapaba los tranquilos vecindarios residenciales, descendiendo suavemente hacia las orillas de Lake Ontario en Toronto bajo un cielo encapotado de ${tempC}°C (${tempF}°F). Con el viento que soplaba a ${windKn} km/h (${windMph} mph), las calles lucían desiertas y calmas. Sin embargo, nuestra mente estaba enteramente enfocada en el milagro que ocurría en la habitación. Cuando sentimos tu primer suspiro, una profunda sensación de gratitud nos invadió de pies a cabeza. Este día gris en Toronto cobró para siempre los colores más hermosos de nuestra memoria.`;
         } else {
-          const tempF = Math.round((tempMax * 9) / 5 + 32);
-          const tempC = Math.round(tempMax);
-          storyText = `El amanecer llegó a ${city}, ${country} alrededor de las ${sunrise}, trayendo una lluvia constante y una temperatura fresca de ${tempC}°C (${tempF}°F). Afuera, un viento fresco de ${Math.round(windSpeed)} km/h soplaba gotas contra la ventana del hospital. Pero en el momento en que te tomamos en nuestros brazos por primera vez, las calles mojadas afuera se borraron por completo de nuestras mentes. La mañana fría y húmeda fue solo el telón de fondo para la increíble calidez de sostenerte por primera vez, un momento que cambió nuestras vidas para siempre.`;
+          story = `La mañana de tu nacimiento llegó a ${city} a las ${sunrise}, presentándose con un cielo cubierto de lluvia y una temperatura templada de ${tempC}°C (${tempF}°F). El viento de ${windKn} km/h (${windMph} mph) arrojaba las gotas con fuerza contra los cristales, empañando el panorama exterior. En el hospital, estábamos absortos en la majestuosidad de tu llegada. Sostener tu pequeño cuerpo recién nacido disipó por completo la aspereza de la atmósfera. El temporal en ${city} sirvió como el humilde testigo de un amor eterno que hoy guía cada uno de nuestros pasos.`;
         }
 
-        return {
-          theme: "Una llegada lluviosa",
-          quote: "La lluvia seguía cayendo afuera, pero adentro teníamos todo lo que necesitábamos.",
-          story: storyText,
-          metricLabel: "",
-          metricValue: ""
-        };
-      } else if (isSnowy) {
-        let storyText = "";
-        if (isNY) {
-          storyText = `La nieve caía suavemente sobre la ciudad, cubriendo las salidas de emergencia de los edificios y amortiguando el zumbido habitual de las calles. Los transeúntes caminaban fatigados sobre la nieve fresca con el Manhattan skyline alzándose en lo alto. En nuestra cálida habitación, solo te esperábamos. Cuando finalmente te sostuvimos en nuestros brazos y sentimos tu suave calidez, la ajetreada ciudad afuera desapareció. Hacía un frío helador afuera, pero adentro nos llenaba una felicidad que nunca olvidaremos.`;
-        } else if (isChicago) {
-          storyText = `Un viento helado soplaba desde Lake Michigan, arremolinando nieve fresca alrededor de los rascacielos y plazas del centro de Chicago. La gente en las calles estaba abrigada con abrigos pesados, transitando por las aceras congeladas. Adentro, nuestro mundo era cálido y silencioso. En el segundo en que te sostuvimos contra nuestra piel, el frío invernal de afuera perdió todo su poder. Ese gélido día de invierno en Chicago se convirtió en el momento más cálido y hermoso de nuestras vidas.`;
-        } else if (isToronto) {
-          storyText = `Una nieve suave y densa cubría los árboles de los parques y pintaba de blanco las orillas de Lake Ontario. Las calles de los alrededores se sentían acogedoras y excepcionalmente tranquilas. Dentro del hospital, esperábamos con una mezcla de emoción y nerviosismo. En el momento exacto en que llegaste, el frío de invierno afuera se olvidó por completo. Te sostuvimos cerca y te vimos dormir, increíblemente agradecidos de darte la bienvenida a nuestra familia.`;
-        } else if (isWarsaw) {
-          storyText = `La escarcha de invierno se adhería a las antiguas murallas del Old Town y un manto fresco de nieve se asentaba a lo largo de las orillas del Vistula River. La ciudad estaba en silencio, envuelta en la quietud de un invierno polaco. Adentro, nos reunimos para darte la bienvenida. En el segundo en que tu voz resonó en la habitación, todo se sintió completo. Te sostuvimos fuerte, mirando tu carita y sintiendo una profunda conexión con la historia familiar que estábamos construyendo juntos.`;
-        } else if (isLondon) {
-          storyText = `Una inusual nieve de invierno cubría los autobuses rojos de dos pisos y las calles de London. El lodo se acumulaba cerca de las orillas del River Thames, y la antigua ciudad se sentía extraordinariamente silenciosa. Nuestros pensamientos estaban completamente enfocados en la calidez de tu habitación. En el segundo en que te sostuvimos por primera vez, el gélido invierno de afuera desapareció de nuestra mente. Miramos tus pequeños dedos, dándonos cuenta de que nuestras vidas acababan de cambiar de la forma más maravillosa.`;
-        } else if (isParis) {
-          storyText = `Una nieve de invierno se asentaba silenciosamente sobre los tejados de pizarra de Paris, cubriendo los árboles a lo largo del River Seine. La ciudad estaba en calma, con el humo de las chimeneas subiendo al aire frío. Dentro de nuestra acogedora habitación, nuestros corazones latían con fuerza mientras esperábamos conocerte. En el momento en que llegaste y te sostuvimos por primera vez, el frío exterior dejó de existir. En tu carita encontramos una calidez que ningún frío invernal podía tocar, comenzando nuestro viaje familiar en esta histórica ciudad.`;
-        } else {
-          const tempF = Math.round((tempMax * 9) / 5 + 32);
-          const tempC = Math.round(tempMax);
-          storyText = `Poco después de que el sol saliera a las ${sunrise} en ${city}, ${country}, la nieve comenzó a caer con una temperatura fría de ${tempC}°C (${tempF}°F). Un viento mordaz de ${Math.round(windSpeed)} km/h recorría las calles, pero nuestra habitación era un refugio tranquilo. Todo se volvió claro cuando te acunamos cerca por primera vez. El gélido clima invernal de afuera desapareció de nuestros pensamientos mientras nos concentrábamos en tu carita y tu suave respiración, un recuerdo que guardaremos con cariño para siempre.`;
-        }
-
-        return {
-          theme: "Una bienvenida con nieve",
-          quote: "Hacía un frío helador afuera, pero nuestra habitación era el lugar más cálido del mundo.",
-          story: storyText,
-          metricLabel: "",
-          metricValue: ""
-        };
-      } else if (isSunny) {
-        let storyText = "";
-        if (isNY) {
-          storyText = `La brillante luz del sol de la mañana iluminaba las torres de cristal del Manhattan skyline, y las calles de abajo estaban concurridas con taxis amarillos y viajeros apresurados. New York se movía a su ritmo implacable de siempre, pero en nuestra habitación de hospital el reloj pareció detenerse. Cuando llegaste en esa cálida tarde, el bullicio de la ciudad se desvaneció. Al sostenerte por primera vez, miramos hacia las calles iluminadas por el sol y nos didos cuenta de que la mayor aventura de nuestras vidas estaba comenzando justo allí en nuestros brazos.`
-        } else if (isChicago) {
-          storyText = `Un aire claro y fresco soplaba desde Lake Michigan, y un sol brillante relucía en las altas torres del centro de Chicago. Las calles de abajo estaban llenas de compradores y multitudes, pero nuestras mentes estaban totalmente enfocadas en el interior. En el momento en que llegaste, la gigantesca ciudad junto al lago pareció desvanecerse en el fondo. Te sostuvimos cerca y sentimos tu suave calidez, mientras el horizonte iluminado por el sol observaba desde la ventana. Te convertiste en nuestra ancla en ese hermoso día soleado.`;
-        } else if (isToronto) {
-          storyText = `La luz brillante del sol centelleaba sobre Lake Ontario, iluminando los parques del vecindario donde los niños jugaban bajo la calidez de la tarde. La ciudad se sentía excepcionalmente alegre, pero todo nuestro mundo estaba allí mismo en nuestros brazos. En el momento en que te sostuvimos por primera vez, nos llenó una ola de pura gratitud. Miramos la costa de Toronto bañada por el sol, sabiendo que nuestra familia finalmente estaba completa.`;
-        } else if (isWarsaw) {
-          storyText = `Un sol radiante bañaba las fachadas históricas del Old Town, reflejándose en las aguas del Vistula River, donde las familias paseaban juntas en el aire cálido de la tarde. Warsaw se sentía brillante y acogedora, pero nuestros pensamientos estaban completamente en el interior. En el momento en que finalmente te sostuvimos cerca, sentimos una esperanza increíble para el futuro. Fuiste nuestra felicidad tan esperada, y tu llegada hizo de esa tarde soleada el día más importante de nuestras vidas.`;
-        } else if (isLondon) {
-          storyText = `Un sol inusualmente cálido se abrió paso entre las nubes, iluminando las antiguas fachadas de ladrillo y las concurridas calles de London. El River Thames centelleaba bajo la luz de la tarde, y los parques locales estaban llenos de personas disfrutando del sol. Sin embargo, dentro de nuestra habitación, lo único que nos importaba eras tú. Cuando finalmente te sostuvimos, la ciudad iluminada por el sol se convirtió en un telón de fondo silencioso. Cambiaste nuestras vidas para siempre en ese día brillante.`;
-        } else if (isParis) {
-          storyText = `Un cálido sol bañaba las avenidas de Paris y brillaba en el River Seine, donde las parejas paseaban cerca de los viejos puestos de libros. La ciudad estaba luminosa y llena de energía, pero nuestro mundo se enfocaba por completo en una sola habitación. Cuando te tomamos en brazos por primera vez, el hermoso día afuera se convirtió en un susurro lejano. Al mirar tu carita, supimos que nuestra mayor alegría estaba justo aquí con nosotros.`;
-        } else {
-          const tempF = Math.round((tempMax * 9) / 5 + 32);
-          const tempC = Math.round(tempMax);
-          storyText = `El día que naciste comenzó con un amanecer despejado a las ${sunrise} en ${city}, ${country}, dando paso a una tarde brillante y soleada. Una suave brisa de ${Math.round(windSpeed)} km/h agitaba el aire, y la temperatura alcanzó unos agradables ${tempC}°C (${tempF}°F). Pero nuestra atención estaba por completo en el pequeño bebé que descansaba en nuestras manos. En el momento en que te sostuvimos contra nuestro pecho, el hermoso clima de afuera pasó a un segundo plano ante la increíble alegría de verte por primera vez.`;
-        }
-
-        return {
-          theme: "Un comienzo soleado",
-          quote: "El sol brillaba, pero tú eras la verdadera luz en nuestras vidas.",
-          story: storyText,
-          metricLabel: "",
-          metricValue: ""
-        };
-      } else {
-        let storyText = "";
-        if (isNY) {
-          storyText = `Un cielo gris y tranquilo colgaba bajo sobre la isla, con vapor subiendo de las calles y viajeros bajando en las entradas del metro. La intensa energía de la ciudad estaba en pleno apogeo, pero nuestra atención estaba por completo dentro de nuestra habitación. En el momento en que abriste los ojos por primera vez, todo el ruidoso bullicio de la ciudad se disolvió en un silencio profundo y reconfortante. Nos sentamos juntos, abrazándote, sintiéndonos increíblemente agradecidos de que por fin estuvieras aquí.`;
-        } else if (isChicago) {
-          storyText = `Un cielo fresco y nublado cubría la ciudad, con una brisa constante que soplaba desde Lake Michigan y agitaba los árboles a lo largo de la orilla. Los viajeros en el centro de Chicago caminaban a paso ligero bajo el aire fresco, pero nuestro mundo se había detenido por completo. Cuando te sostuvimos en nuestros brazos por primera vez, todo el frío del aire se desvaneció. Al mirar tus manos pequeñitas, sentimos una calidez inmediata y abrumadora que siempre recordaremos.`;
-        } else if (isWarsaw) {
-          storyText = `Un tranquilo cielo gris se extendía sobre la ciudad, proyectando una luz calma sobre los muros de ladrillo del Old Town. A lo largo del Vistula River, Warsaw se movía a su ritmo constante de siempre. Pero dentro de nuestra habitación de hospital, un nuevo capítulo estaba comenzando. Cuando se abrieron tus ojos y te abrazamos de cerca por primera vez, una profunda sensación de gratitud llenó la habitación. Miramos tus pequeños rasgos de recién nacido, sabiendo que nuestras vidas nunca volverían a ser las mismas.`;
-        } else if (isToronto) {
-          storyText = `Un cielo tranquilo y nublado se asentaba sobre los vecindarios, trayendo aire templado del lago y una atmósfera de calma a las calles de la ciudad. A lo largo de la costa de Lake Ontario, la gente pasaba y compartía sonrisas discretas, pero adentro nos preparábamos para una vida de amor. Cuando finalmente llegaste, la tarde gris de afuera se desvaneció por completo. Te sostuvimos cerca y escuchamos tu pequeña respiración, absolutamente cautivados por ti.`;
-        } else if (isLondon) {
-          storyText = `Un cielo gris pesado y clásico se asentaba sobre London, proyectando una luz suave sobre las calles y edificios históricos. El River Thames fluía silenciosamente debajo de los puentes, constante y tranquilo. Dentro de nuestra habitación de hospital, estábamos completamente absortos en tu llegada. En el momento en que te sostuvimos por primera vez, el día nublado de afuera se olvidó por completo. Te sostuvimos cerca, escuchando tu respiración suave, sabiendo que la mayor aventura de nuestra familia acababa de comenzar.`;
-        } else if (isParis) {
-          storyText = `Un cielo gris delicado colgaba sobre los tejados históricos, proyectando una luz calma a través de las avenidas de Paris. Cerca del River Seine, el día estaba nublado y templado, pero dentro de nuestra habitación todo se sentía luminoso y cálido. En el segundo en que tus ojos se abrieron levemente y te abrazamos de cerca, la tarde nublada de afuera desapareció de nuestras mentes. Nos sentamos en el silencio, abrazándote con fuerza, dándonu cuenta de lo afortunados que éramos de tenerte.`;
-        } else {
-          const tempF = Math.round((tempMax * 9) / 5 + 32);
-          const tempC = Math.round(tempMax);
-          storyText = `Un cielo nublado cubría el firmamento sobre ${city}, ${country} mientras la luz del día entraba alrededor de las ${sunrise}. Un viento fresco a ${Math.round(windSpeed)} km/h resonaba por las calles, y era un día templado de ${tempC}°C (${tempF}°F). Sin embargo, dentro de nuestra tranquila habitación de hospital, el clima gris del exterior quedó completamente olvidado. En el instante en que te acunamos en nuestros brazos y miramos tus pequeños dedos, nos llenamos de una calidez profunda y duradera. Tu llegada convirtió un día gris cualquiera en el momento más inolvidable de nuestras vidas.`;
-        }
-
-        return {
-          theme: "Una bienvenida serena",
-          quote: "Afuera había un día nublado y tranquilo, pero nuestro mundo nunca había brillado tanto.",
-          story: storyText,
-          metricLabel: "",
-          metricValue: ""
-        };
+        return { theme, quote, story, metricLabel: "", metricValue: "" };
       }
-    }
 
-    if (isRainy) {
-      let storyText = "";
+      if (isSnowy) {
+        let story = "";
+        let theme = "Un Manto de Nieve";
+        let quote = "Hacía un frío helador afuera, pero tu pequeño calor encendió un fuego tierno que nunca se apagará.";
+
+        if (isNY) {
+          story = `El manto blanco cubría los escapes de incendios de ladrillo rojo en New York en la mañana de tu llegada. Un copioso copo de nieve caía silenciosamente sobre Central Park, acallando la bocina habitual de la gran ciudad bajo una atmósfera helada de ${tempC}°C (${tempF}°F). En la calidez de nuestra habitación, el aire se detuvo el segundo en que abriste tus grandes ojos oscuros. Estrechándote contra el pecho, contemplamos el Manhattan nevado desde el ventanal. Aquel invierno neoyorquino nos regaló para siempre el recuerdo del día en que el cielo se vistió de gala para recibirte.`;
+        } else if (isChicago) {
+          story = `Un frío polar se extendía desde Lake Michigan con vientos cortantes de ${windKn} km/h (${windMph} mph) soplando nieve fresca por calles y rascacielos de Chicago. La ciudad entera parecía congelada en el tiempo bajo un cielo gélido de ${tempC}°C (${tempF}°F). Dentro de nuestra pequeña sala del hospital, reinaba una atmósfera sumamente apacible. En el instante preciso en que tu piel tocó la nuestra, el invierno Chicagoense perdió toda su severidad. Habíamos recibido el mayor milagro de nuestras vidas, un fuego de pura dicha que nos cobijaría eternamente.`;
+        } else if (isWarsaw) {
+          story = `La escarcha ártica decoraba las fachadas del Old Town de Varsovia y una hermosa sábana blanca cubría las orillas silenciosas del río Vístula. El amanecer nevado se instalaba a las ${sunrise} bajo una temperatura de ${tempC}°C (${tempF}°F). Las calles polacas lucían despobladas y místicas en el corazón del invierno. En cuanto oímos tu primera respiración débil, el tiempo adquirió un valor eterno. Acurrucados en el abrigo de la habitación, supimos que Varsovia nos había coronado con la joya más hermosa de nuestra existencia.`;
+        } else {
+          story = `Un hermoso velo helado se posó en ${city} alrededor de las ${sunrise}, cayendo en copos densos de nieve pura con el termómetro en ${tempC}°C (${tempF}°F). Mientras el viento soplaba a ${windKn} km/h (${windMph} mph) levantando torbellinos blancos afuera, nuestra estancia era un refugio cálido. Al estrecharte por primera vez y besar tu frente suave, nos inundó una paz maravillosa. La gélida bienvenida celestial de ${city} esculpió un día imborrable para nuestra alma.`;
+        }
+
+        return { theme, quote, story, metricLabel: "", metricValue: "" };
+      }
+
+      if (isSunny) {
+        let story = "";
+        let theme = "Lienzo de Luz Dorada";
+        let quote = "El sol resplandecía en lo alto de los cielos, pero el verdadero amanecer brotó de tu mirada.";
+
+        if (isNY) {
+          story = `La luz brillante y radiante de la mañana encendía las fachadas acristaladas de New York en la fecha de tu llegada. Los taxis amarillos brillaban bajo el cielo de cobalto y Central Park se mecía bajo un aire templado de ${tempC}°C (${tempF}°F). Los transeúntes recorrían con prisa la gran urbe, ajenos a la hermosa revolución interna que se vivía en nuestra alcoba de hospital. El instante en que la luz de la tarde iluminó tu carita durmiente quedará grabado por siempre en el fondo de nuestro corazón. Nos fundimos en un abrazo lleno de asombro sobre esta hermosa isla de Manhattan, bautizados por el sol neoyorquino.`;
+        } else if (isChicago) {
+          story = `Un cielo impecable se extendía en la mañana sobre Chicago. Un viento sereno acariciaba el parque mientras un sol radiante brillaba sobre las aguas de Lake Michigan a unos agradables ${tempC}°C (${tempF}°F). Al nacer, el imponente horizonte y la silueta de los rascacielos cobraron un aire amigable. Acariciar tus deditos mientras la calidez de Chicago entraba por el cristal nos llenó de una esperanza insondable. Tu luz había llegado para ser el faro eterno que guiará el rumbo de nuestra familia.`;
+        } else if (isWarsaw) {
+          story = `Un sol vivificante iluminaba la arquitectura clásica del Old Town de Varsovia, proyectándose con hermosos destellos en las aguas calmas del Vístula. El amanecer radiante despuntó a las ${sunrise} tiñendo de carmín el aire templado de ${tempC}°C (${tempF}°F). En el hospital reinaba un silencio casi solemne. Cuando pudimos arrullarte cara a cara, una alegría celestial impregnó nuestras almas. Te contemplamos en paz, sabiendo que este espléndido día soleado en Varsovia era el portal de una vida llena de promesas compartidas.`;
+        } else {
+          story = `Un día resplandeciente abrazó a ${city}, regalándonos cielos despejados e iluminados y una brisa templada a ${windKn} km/h (${windMph} mph) con una temperatura de ${tempC}°C (${tempF}°F). Las calles locales lucían hermosas y jubilosas. Para nosotros ordinarios mortales, el mayor regalo yacía custodiado en la habitación. Estrecharte contra nuestra mejilla y oír tu dulce gemido iluminó eternamente nuestro ser. ${city} era un cuadro de luz, pero tú eras la verdadera claridad de nuestro porvenir.`;
+        }
+
+        return { theme, quote, story, metricLabel: "", metricValue: "" };
+      }
+
+      // Default Cloudy
+      let story = "";
+      let theme = "Atmósfera Serena";
+      let quote = "En medio de nubes y vientos suaves, tu llegada encendió la claridad definitiva en nuestro camino.";
+
       if (isNY) {
-        storyText = `It was a typical wet morning in New York, with yellow cabs splashing through street puddles and steam rising from the subway grates. Early morning commuters were rushing through the streets under their umbrellas. But inside our quiet hospital room, none of that busyness mattered anymore. The moment we first held you, the hectic city outside faded into the background. It was hard to believe we were finally holding our own baby. That cold, rainy New York day became the quiet beginning of everything for us.`;
+        story = `Un cielo grisáceo y calmo envolvía la isla de Manhattan, silenciando suavemente la ruidosa coreografía del asfalto de New York. Vapor húmedo trepaba de las calles con una temperatura templada de ${tempC}°C (${tempF}°F). Dentro de nuestra habitación, la prisa de la gran manzana se redujo a la nada absoluta. Cuando abriste levemente tus ojos, un sentimiento sobrecogedor invadió nuestras almas. Nos acurrucamos con paciencia a observarte respirar. New York seguía latiendo afuera en su neblina, pero nuestro universo entero ya cabía entre nuestros brazos cansados.`;
       } else if (isChicago) {
-        storyText = `A cold wind was sweeping off Lake Michigan, blowing a heavy rain across the downtown streets of Chicago. People on the sidewalks were pulling their raincoats tight to stay warm. Indoors, we were completely shielded from the weather, just waiting to meet you. The second we held you in our arms, the rush of the city completely quieted down. You brought a warmth into our lives that no cold lake storm could touch, and that rainy day in Chicago became one of our favorite memories.`;
-      } else if (isToronto) {
-        storyText = `A cool rain was falling over the neighborhoods, tapping against the windows of the houses. Down along the Lake Ontario waterfront, the city felt quiet and slow. Our minds were completely focused on the hospital room where we were waiting for you. When we finally held you for the first time, the rainy afternoon outside didn't seem to matter at all. Your arrival brought a wonderful sense of peace to our family, turning a grey lakeside afternoon into an unforgettable memory.`;
+        story = `Nubes densas y templadas cubrían el skyline de Chicago, empujadas por ráfagas de aire de ${windKn} km/h (${windMph} mph) procedentes de Lake Michigan. El día transcurría plácido y asordinado a ${tempC}°C (${tempF}°F) con transeúntes caminando alertas en el centro. Sostener de pronto tu cuerpo ligero desató una calidez profunda en nuestro pecho que erradicó toda penumbra exterior. Ese firmamento gris se convirtió en el fondo poético del día en que nuestra familia descubrió su rumbo más glorioso.`;
       } else if (isWarsaw) {
-        storyText = `A steady rain was falling onto the cobblestones of the Old Town, trickling down toward the banks of the Vistula River. Outside, Warsaw moved through its usual autumn routine, but in our hospital room, our own family's history was just starting. The moment we held you close, the centuries of history outside faded into the background. We held you tight, knowing we were beginning a beautiful new chapter of our lives together.`;
-      } else if (isLondon) {
-        storyText = `A classic heavy drizzle was falling over London, slicking the historic streets and sending commuters scurrying toward the nearest tube station. Outside, a damp mist rolled across the River Thames. Inside our warm room, we were a million miles away from the damp city. Holding you for the first time was an incredibly emotional moment that we still talk about today. You were finally here, and our family's own history was just beginning.`;
-      } else if (isParis) {
-        storyText = `Rain splattered softly on the zinc rooftops and washed over the quiet cobblestones of Paris. Down by the River Seine, people sought shelter under the green awnings of the corner cafés. But our focus was entirely inside our warm room. When we held you close for the very first time, the grey Parisian afternoon outside completely slipped away. Your soft breathing was the only sound we cared about, and that wet day became the most cherished memory of our lives.`;
+        story = `Un cielo nuboso y templado cobijaba las orillas tranquilas del río Vístula y las viejas murallas de ladrillo en Varsovia. El amanecer silencioso inició a las ${sunrise} bajo una brisa calma de ${windKn} km/h. En nuestra cálida habitación de hospital, las mentes y las manos temblorosas se sincronizaron al verte aparecer. Qué momento de emoción tan dulce. Este apacible día gris polaco se instaló en el fondo de nuestra alma como el paisaje idílico de tu primer suspiro en el mundo.`;
       } else {
-        const tempF = Math.round((tempMax * 9) / 5 + 32);
-        const tempC = Math.round(tempMax);
-        storyText = `Dawn arrived in ${city}, ${country} around ${sunrise}, bringing a steady rain and a cool temperature of ${tempC}°C (${tempF}°F). Outside, a brisk wind of ${Math.round(windSpeed)} km/h blew droplets against the hospital window. But the moment we first held you in our arms, the wet streets outside completely slipped from our minds. The chilly, damp morning was just a backdrop to the incredible warmth of holding you for the first time, a moment that changed our lives forever.`;
+        story = `Un manto nuboso y templado cobijaba el cielo de ${city}, con una brisa tranquila que soplaba a ${windKn} km/h (${windMph} mph) y una temperatura agradable de ${tempC}°C (${tempF}°F). El exterior invitaba al descanso y la calma, mientras puertas adentro aguardábamos con anhelo infinito. El asombro nos embargó al acunarte y sentir tu sutil aroma a vida nueva. El gris místico de las nubes sobre ${city} cobró para siempre el brillo dorado del día en que naciste para iluminarnos.`;
       }
 
-      return {
-        theme: "A Rainy Arrival",
-        quote: "The rain kept falling outside, but inside, we had everything we needed.",
-        story: storyText,
-        metricLabel: "",
-        metricValue: ""
-      };
-    } else if (isSnowy) {
-      let storyText = "";
-      if (isNY) {
-        storyText = `Snow was falling softly over the city, dusting the fire escapes and muffling the normal hum of the streets. Commuters trudged through the fresh snow with the Manhattan skyline towering overhead. In our warm room, we were just waiting for you. When we finally held you in our arms and felt your soft warmth, the busy city outside disappeared. It was freezing cold outside, but inside, we were filled with a happiness we'll never forget.`;
-      } else if (isChicago) {
-        storyText = `A freezing wind was blowing off Lake Michigan, swirling fresh snow around the skyscrapers and plazas of downtown Chicago. People on the streets were bundled up in heavy coats, navigating the frosty sidewalks. Indoors, our world was warm and quiet. The second we held you against our skin, the winter cold outside lost all its power. That chilly Chicago winter day became the warmest, most beautiful moment of our lives.`;
-      } else if (isToronto) {
-        storyText = `A soft, heavy snow dusted the trees in the parks and lined the shores of Lake Ontario with white. The surrounding streets felt cozy and exceptionally quiet. Inside the hospital, we were waiting with a mix of nervous excitement. The very moment you arrived, the winter chill outside was completely forgotten. We held you close and watched you sleep, so incredibly grateful to welcome you into our family.`;
-      } else if (isWarsaw) {
-        storyText = `Winter frost clung to the ancient walls of the Old Town and a fresh blanket of snow settled along the banks of the Vistula River. The city was quiet, wrapped in the stillness of a Polish winter. Indoors, we gathered to welcome you. The second your voice echoed in the room, everything felt complete. We held you tight, looking down at your tiny face and feeling a deep connection to the family history we were building together.`;
-      } else if (isLondon) {
-        storyText = `A rare winter snow dusted the red double-decker buses and streets of London. Slush gathered near the banks of the River Thames, and the old city felt unusually quiet. Our thoughts were entirely set on the warmth of your room. The second we held you for the first time, the chilly winter outside vanished from our thoughts. We looked down at your tiny fingers, realizing our lives had just changed in the most wonderful way.`;
-      } else if (isParis) {
-        storyText = `A winter snow settled quietly over the slate rooftops of Paris, dusting the trees along the River Seine. The city was calm, with chimney smoke rising into the cold air. Inside our cozy room, our hearts raced as we waited to meet you. The moment you arrived and we held you for the first time, the outdoor freeze ceased to exist. In your tiny face, we found a warmth that no winter cold could touch, beginning our family's journey in this historic city.`;
-      } else {
-        const tempF = Math.round((tempMax * 9) / 5 + 32);
-        const tempC = Math.round(tempMax);
-        storyText = `Shortly after the sun rose at ${sunrise} in ${city}, ${country}, snow began falling with a cold temperature of ${tempC}°C (${tempF}°F). A biting wind of ${Math.round(windSpeed)} km/h swept down the streets, but our room was a quiet haven. Everything became clear when we cradled you close for the very first time. The chilly winter weather outside vanished from our thoughts as we focused on your tiny face and soft breathing, a memory we will hold dear forever.`;
-      }
-
-      return {
-        theme: "A Snowy Welcome",
-        quote: "It was freezing cold outside, but our room was the warmest place in the world.",
-        story: storyText,
-        metricLabel: "",
-        metricValue: ""
-      };
-    } else if (isSunny) {
-      let storyText = "";
-      if (isNY) {
-        storyText = `Bright morning sunlight lit up the glass towers of the Manhattan skyline, and the streets below were busy with yellow cabs and rushing commuters. New York was moving at its usual relentless pace, but in our hospital room, the clock seemed to stop. When you arrived on that warm afternoon, the city's bustle faded away. Holding you for the first time, we looked out at the sunlit streets and realized that our life's greatest adventure was starting right there in our arms.`;
-      } else if (isChicago) {
-        storyText = `Clear, crisp air swept off Lake Michigan, and a bright sun gleamed off the tall towers of downtown Chicago. The streets below were busy with shoppers and crowds, but our minds were entirely focused inside. The moment you arrived, the giant lakeside city seemed to fade into the background. We held you close and felt your soft warmth, while the sunlit skyline watched from the window. You became our anchor on that beautiful, sunny day.`;
-      } else if (isToronto) {
-        storyText = `Bright sunshine sparkled on Lake Ontario, lighting up the neighborhood parks where kids played in the afternoon warmth. The city felt exceptionally cheerful, but our entire world was right there in our arms. The moment we held you for the first time, we were filled with a wave of pure gratitude. We looked out at the sun-drenched Toronto waterfront, knowing that our family was finally complete.`;
-      } else if (isWarsaw) {
-        storyText = `Brilliant sunshine bathed the historic facades of the Old Town, reflecting off the waters of the Vistula River where families strolled together in the warm afternoon air. Warsaw felt bright and welcoming, but our thoughts were entirely inside. The moment we finally held you close, we felt an incredible hope for the future. You were our long-awaited happiness, and your arrival made that sunny afternoon the most important day of our lives.`;
-      } else if (isLondon) {
-        storyText = `An unusually warm sunshine broke through the clouds, lighting up the old brick facades and busy streets of London. The River Thames was sparkling in the afternoon light, and local parks were filled with people soaking up the sun. Yet inside our room, the only thing we cared about was you. When we finally held you, the sunlit city outside became a quiet backdrop. You changed our lives forever on that bright day.`
-      } else if (isParis) {
-        storyText = `Warm sunlight bathed the avenues of Paris and gleamed off the River Seine where couples strolled near old bookstalls. The city was bright and full of energy, but our world was focused entirely on a single room. When we first held you in our arms, the beautiful day outside became a distant whisper. Looking at your tiny face, we knew that our greatest joy was right here with us.`;
-      } else {
-        const tempF = Math.round((tempMax * 9) / 5 + 32);
-        const tempC = Math.round(tempMax);
-        storyText = `The day you were born began with a clear sunrise at ${sunrise} in ${city}, ${country}, leading into a bright, sun-drenched afternoon. A mild breeze of ${Math.round(windSpeed)} km/h stirred the air, and the temperature reached a pleasant ${tempC}°C (${tempF}°F). But our focus was entirely on the tiny baby resting in our hands. The moment we held you to our chests, the beautiful weather outside became secondary to the incredible joy of seeing you for the first time.`;
-      }
-
-      return {
-        theme: "A Sunny Beginning",
-        quote: "The sun was shining, but you were the real light in our lives.",
-        story: storyText,
-        metricLabel: "",
-        metricValue: ""
-      };
+      return { theme, quote, story, metricLabel: "", metricValue: "" };
     } else {
-      let storyText = "";
-      if (isNY) {
-        storyText = `A calm, grey sky hung low over the island, with steam rising from the streets and commuters heading down into the subway entrances. The city's busy energy was in full swing, but our focus was entirely inside our room. The moment you opened your eyes for the first time, all of the noisy city bustle dissolved into a deep, comforting quiet. We sat together, holding you close, feeling incredibly grateful that you were finally here.`;
-      } else if (isChicago) {
-        storyText = `A cool, overcast sky hung over the city, with a stiff breeze blowing off Lake Michigan and rustling the trees along the shore. Commuters in downtown Chicago walked briskly through the cool air, but our world had slowed to a complete pause. When we held you in our arms for the first time, all the chill in the air vanished. Looking down at your tiny hands, we felt an immediate, overwhelming warmth that we'll always remember.`;
-      } else if (isWarsaw) {
-        storyText = `A quiet grey sky stretched over the city, casting a calm light over the brick walls of the Old Town. Along the Vistula River, Warsaw moved at its usual steady pace. But inside our hospital room, a new chapter was beginning. When your eyes opened and we first held you close, a deep feeling of gratitude filled the room. We looked at your tiny newborn features, knowing our lives would never be the same.`;
-      } else if (isToronto) {
-        storyText = `A quiet, cloudy sky settled over the neighborhoods, bringing mild lake air and a calm atmosphere to the city streets. Along the Lake Ontario waterfront, people walked by and shared quiet smiles, but inside, we were preparing for a lifetime of love. When you finally arrived, the grey afternoon outside completely faded. We held you close and listened to your tiny breath, absolutely captivated by you.`;
-      } else if (isLondon) {
-        storyText = `A heavy, classic grey sky settled over London, casting a soft light down upon the historic streets and buildings. The River Thames flowed quietly beneath the bridges, steady and calm. Inside our hospital room, we were entirely swept up in your arrival. The moment we held you for the very first time, the overcast day outside was completely forgotten. We held you close, listening to your soft breathing, knowing our family's greatest adventure had just begun.`;
-      } else if (isParis) {
-        storyText = `A soft, grey sky hung over the historic rooftops, casting a calm light across the avenues of Paris. Along the River Seine, the day was overcast and mild, but inside our room, everything felt bright and warm. The second your eyes fluttered open and we held you close, the cloudy afternoon outside vanished from our minds. We sat in the quiet, holding you tight, realizing how lucky we were to have you.`;
-      } else {
-        const tempF = Math.round((tempMax * 9) / 5 + 32);
-        const tempC = Math.round(tempMax);
-        storyText = `An overcast sky covered the sky over ${city}, ${country} as the daylight came in around ${sunrise}. A cool wind at ${Math.round(windSpeed)} km/h hummed through the streets, and it was a mild day of ${tempC}°C (${tempF}°F). Yet inside our quiet hospital room, the grey weather outdoor was completely forgotten. The instant we cradled you in our arms and looked at your tiny fingers, we were filled with a deep, lasting warmth. Your arrival turned an ordinary grey day into the most unforgettable moment of our lives.`;
+      // English
+      if (isRainy) {
+        let story = "";
+        let theme = "Welcomed by Raindrops";
+        let quote = "As rain drummed softly on the glass, your first soft breath filled our world with infinite light.";
+
+        if (isNY) {
+          story = `The morning carried a gentle drizzle over New York. Yellow cabs dodged rain puddles along Broadway, a soft morning mist settled between skyscrapers, and steam rose quietly from subway grates. The damp sky draped the metropolis at a mild ${tempC}°C (${tempF}°F). For us, the hospital room became a haven of absolute quiet. Cradling your tiny body with the rhythm of distant windshield wipers in the background felt incredibly sacred. We realized this rainy New York day was now the beautiful beginning of our family story.`;
+        } else if (isChicago) {
+          story = `The city's iconic wind swept off Lake Michigan at ${windKn} km/h (${windMph} mph), pushing heavy cold rain across the Magnificent Mile. Pedestrians on Michigan Avenue pulled their dark coats close against the chill. Indoors, shielded from the elements, we waited with racing hearts. The moment we cuddled you, your tiny breathing quieted down in a tender sigh. That stormy Chicago weather faded into deep serenity, leaving us with an unforgettable memory of warmth.`;
+        } else if (isWarsaw) {
+          story = `A steady rain washed the cobblestones of the Warsaw Old Town, flowing gently toward the quiet banks of the Vistula River. Dawn arrived at ${sunrise}, wrapping the ancient streets in a calm autumn mood of ${tempC}°C (${tempF}°F). In the hospital, our room fell completely silent as your soft voice of new life broke through. We touched your perfect little fingers in wonder. Warsaw woke up in grey rain, but for us, a brilliant light had started to warm all our years to come.`;
+        } else if (isParis) {
+          story = `A soft grey rain fell over Paris, splashing on the classic zinc rooftops and green café awnings along the historic River Seine. The air felt mild at ${tempC}°C (${tempF}°F) with a gentle breeze of ${windKn} km/h (${windMph} mph). Cradling you for the very first time, a wave of sweet peace settled over our small hospital room. The rainy Parisian afternoon gave way to a lifetime of love, marking this wet day as the most cherished memory we will carry.`;
+        } else if (isLondon) {
+          story = `A quiet, classic drizzle drifted across London, misting over the banks of the River Thames and slicking the red double-decker buses on the street. Outside, commuters rushed through the damp chill, but inside our cozy room, time had stopped. Holding you close and whispering reassurance felt inordinately sweet. The historic London streetscape outside was just a backdrop to the quiet start of our family's greatest adventure.`;
+        } else if (isToronto) {
+          story = `Cool lakeside rain fell over Toronto's residential neighborhoods, trickling down toward the shores of Lake Ontario under an overcast sky of ${tempC}°C (${tempF}°F). The wind rustled branches at ${windKn} km/h (${windMph} mph). Our thoughts were completely consumed by the tiny miracle resting on our chest. Feeling your warm chest rise and fall filled us with immense gratitude, transforming a dreary lakeside afternoon into our family's brightest milestone.`;
+        } else {
+          story = `The morning of your birth arrived in ${city} at ${sunrise} under a rain-streaked sky with a mild temperature of ${tempC}°C (${tempF}°F). Brisk wind currents blowing at ${windKn} km/h (${windMph} mph) rattled the panes, but inside, we were lost in the majesty of holding you. Feeling your skin against ours made the storm lose all its coldness. The damp weather in ${city} served as a humble witness to the beginning of a love story we will treasure forever.`;
+        }
+
+        return { theme, quote, story, metricLabel: "", metricValue: "" };
       }
 
-      return {
-        theme: "A Calm Welcome",
-        quote: "It was a quiet, cloudy day outside, but our world had never been brighter.",
-        story: storyText,
-        metricLabel: "",
-        metricValue: ""
-      };
+      if (isSnowy) {
+        let story = "";
+        let theme = "A Blanket of Silent Snow";
+        let quote = "It was freezing cold outside, but your tiny weight in our arms kindled a fire that will never fade.";
+
+        if (isNY) {
+          story = `A fresh coat of white snow covered the fire escapes of New York on the morning of your birth. Flurries fell over Central Park, quietening the relentless hum of the city under a chilly winter sky of ${tempC}°C (${tempF}°F). Inside our warm room, the entire world stood completely still. In the moment you opened your eyes and grabbed our finger, we looked out at the snowy Manhattan skyline in awe, deeply thankful for the day winter dressed the city in white to welcome you.`;
+        } else if (isChicago) {
+          story = `A biting winter wind blew off Lake Michigan at ${windKn} km/h (${windMph} mph), swirling snow between Chicago's skyscrapers and quiet plazas. The city was bundled up in a deep freeze of ${tempC}°C (${tempF}°F). Inside the hospital, our small namespace was peaceful and warm. The moment your tiny skin touched ours, the Chicago cold lost all power. We had received our greatest gift, starting a fire of gratitude that will keep us warm forever.`;
+        } else if (isWarsaw) {
+          story = `Winter frost clung to the brick fortifications of the Warsaw Old Town, and a fresh white blanket of snow lined the banks of the Vistula River. Dawn broke at ${sunrise}, quiet and cold at ${tempC}°C (${tempF}°F). Inside, we gathered to greet you. The second your voice echoed in the room, everything felt complete. Warsaw was blanketed in Polish winter, but for us, the warmest chapter of our lives had officially begun.`;
+        } else {
+          story = `A pristine blanket of snow settled over ${city} around ${sunrise} as the thermometer hovered at ${tempC}°C (${tempF}°F). While the wind blew at ${windKn} km/h (${windMph} mph), creating white whirlwinds outside, our room was a serene haven. cradling your tiny shoulders and kissing your forehead brought a wave of absolute peace. The snowy skies of ${city} framed a moment we will protect forever.`;
+        }
+
+        return { theme, quote, story, metricLabel: "", metricValue: "" };
+      }
+
+      if (isSunny) {
+        let story = "";
+        let theme = "A Canvas of Golden Light";
+        let quote = "The sun shone brightly over the streets, but the true daybreak was the light in your eyes.";
+
+        if (isNY) {
+          story = `Brilliant morning sunlight reflected off the glass towers of New York on the day you arrived. Yellow cabs caught the golden beams, Central Park was bright and lush under a mild sky of ${tempC}°C (${tempF}°F), and the streets hummed with life. While commuters hurried below, the greatest change of our lives occurred in our hospital room. Sostening you while afternoon sunbeams danced across your tiny hand filled us with an overwhelming joy. We were holding our whole future, right here under the New York sky.`;
+        } else if (isChicago) {
+          story = `Clear, bright skies welcomed you to Chicago. Crisp lake air swept off Lake Michigan at ${windKn} km/h (${windMph} mph), and a beautiful sun gleamed off the high-rises at a comfortable ${tempC}°C (${tempF}°F). When you arrived, the windy city's vast skyline seemed friendly and quiet. Holding you close as the sunlight poured in of Chicago's skyline brought an incredible sense of hope. You became our steady anchor on that perfect, sunny afternoon.`;
+        } else if (isWarsaw) {
+          story = `Beautiful sunshine bathed the historic pastel facades of the Warsaw Old Town, glittering off the waters of the Vistula River. Dawn appeared at ${sunrise}, warming the air to a pleasant ${tempC}°C (${tempF}°F). Inside, a sleepy quietness was broken by your tiny newborn sighs. Cradling you for the first time while Warsaw basked in the golden daylight filled us with a sense of wonder, making that sunny day our family's most sacred milestone.`;
+        } else {
+          story = `A gorgeous, sun-drenched day embraced ${city}, gifting us with clear blue skies and a soft breeze of ${windKn} km/h (${windMph} mph) with the temperature reaching ${tempC}°C (${tempF}°F). The municipal parks were lively and bright, but for us, the real sunlight was cradled in our arms. Feeling your steady breathing next to our heart brought a wave of serene happiness. ${city} was a picture of light, but you were our true sunrise.`;
+        }
+
+        return { theme, quote, story, metricLabel: "", metricValue: "" };
+      }
+
+      // Default Cloudy
+      let story = "";
+      let theme = "A Overcast Sky of Peace";
+      let quote = "Under a calm, quiet sky, your arrival brought the ultimate clarity to our lives.";
+
+      if (isNY) {
+        story = `A calm, grey sky hung low over Manhattan, softening the energetic rush of New York. Damp steam rose from the pavement below with a mild temperature of ${tempC}°C (${tempF}°F). Inside our hospital room, the haste of the city slowed to an absolute standstill. The second your eyes opened and met ours, all of the noisy Manhattan bustle disappeared into a quiet, comforting peace. We sat holding you, deeply grateful that you were finally resting in our arms.`;
+      } else if (isChicago) {
+        story = `Soft, overcast clouds blanketed the Chicago skyline, carried by a steady wind of ${windKn} km/h (${windMph} mph) from Lake Michigan. The day felt calm and peaceful at ${tempC}°C (${tempF}°F). The minute we held you in our arms for the first time, all the chill in the air dissolved. Looking down at your small features brought an immediate, overwhelming warmth that we'll guard forever, turning a simple grey Chicago day into our family's most sacred memory.`;
+      } else if (isWarsaw) {
+        story = `Quiet clouds draped the banks of the Vistula River and the old brick walls of Warsaw. Dawn arrived silently around ${sunrise} under a calm breeze of ${windKn} km/h. Inside our hospital room, tension melted as we saw you for the first time. Holding you close as Warsaw rested under the serene, overcast sky became a memory of pure happiness, sealing that simple autumn morning as the day our lives truly felt complete.`;
+      } else {
+        story = `A peaceful overcast sky covered ${city}, with a soft wind sweeping through the streets at ${windKn} km/h (${windMph} mph) and the temperature resting at a pleasant ${tempC}°C (${tempF}°F). Outside, the world was slow and quiet, but inside, we were preparing for a lifetime of love. When we first cradled you close, a deep sense of bliss filled our hearts, marking this grey day in ${city} as the most beautiful dawn of our existence.`;
+      }
+
+      return { theme, quote, story, metricLabel: "", metricValue: "" };
     }
   };
 
@@ -1189,10 +1133,53 @@ export default function BirthWeatherStory() {
         }
       }
 
-      const generatedStory = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0, cityName, countryName, windSpeed, sunrise, admin1Name, lang);
+      // Get human-readable weather text for this weatherCode
+      const weatherText = t.weatherConditions[finalWeatherCode] || t.defaultCondition;
 
       // Save formatted readable representation (e.g. Sep 2, 2026) instead of numeric representation
       const formattedDate = `${t.months[monthNum - 1]} ${dayNum}, ${yearStr}`;
+
+      // Ask server to generate the birth story (with fallback to the custom backup generator)
+      let generatedStory;
+      try {
+        console.log(`Fetching generated story from API route for ${cityName}, ${admin1Name}, ${countryName}...`);
+        const storyResponse = await fetch("/api/generate-story", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            city: cityName,
+            country: countryName,
+            region: admin1Name,
+            tempMax,
+            weatherCode: finalWeatherCode,
+            weatherText,
+            windSpeed,
+            sunrise,
+            birthDate: formattedDate,
+            lang: lang,
+          }),
+        });
+
+        if (storyResponse.ok) {
+          const storyData = await storyResponse.json();
+          generatedStory = {
+            theme: storyData.theme,
+            quote: storyData.quote,
+            story: storyData.story,
+            metricLabel: "",
+            metricValue: ""
+          };
+          console.log("Successfully loaded Gemini-generated story.");
+        } else {
+          console.warn(`API story generate returned status ${storyResponse.status}, falling back to local generator`);
+          generatedStory = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0, cityName, countryName, windSpeed, sunrise, admin1Name, lang);
+        }
+      } catch (apiErr) {
+        console.error("API story generate fetch error, falling back to local generator:", apiErr);
+        generatedStory = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0, cityName, countryName, windSpeed, sunrise, admin1Name, lang);
+      }
 
       setRevealResult({
         city: cityName,
@@ -1714,10 +1701,10 @@ export default function BirthWeatherStory() {
                           {t.certificateHeader}
                         </span>
                         <h3 className="font-serif italic font-extrabold text-2xl sm:text-3xl text-white mt-1.5 font-sans leading-tight">
-                          Austin, Texas
+                          {t.exampleCity}
                         </h3>
-                        <p className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mt-1">
-                          United States • Atmosphere and stars mapped
+                        <p className="text-sm font-medium text-slate-300 mt-1 font-sans">
+                          {t.exampleCountrySub}
                         </p>
                       </div>
                       
