@@ -63,23 +63,23 @@ function getOfflineBackupStory(params: {
   if (params.lang === "es") {
     if (isRainy) {
       let story = "";
-      let theme = "Recibidos por la Lluvia";
-      let quote = "La lluvia de afuera no importaba en lo absoluto; conocerte fue el momento más feliz de nuestras vidas.";
+      let theme = "Un día de lluvia";
+      let quote = "Afuera llovía de manera constante, pero apenas nos fijamos en el clima. Estábamos concentrados en conocerte.";
 
       if (isNY) {
-        story = `La mañana del ${params.birthDate} comenzó con lloviznas suaves sobre Nueva York. Afuera, se veían los taxis amarillos esquivando charcos en Broadway y la bruma de la mañana flotaba entre los rascacielos. Hacía una temperatura templada de ${tempC}°C (${tempF}°F), pero dentro de la habitación del hospital apenas lo notamos. Estábamos concentrados en conocerte por primera vez y sostener tu cuerpecito cálido en nuestros brazos. Esa mañana lluviosa en Nueva York se convirtió en el día en que nuestras vidas cambiaron para siempre.`;
+        story = `La mañana del ${params.birthDate} comenzó con lloviznas suaves sobre Nueva York. Afuera paraban los taxis amarillos esquivando charcos en Broadway y la bruma flotaba entre los rascacielos. Hacía una temperatura templada de ${tempC}°C (${tempF}°F), pero adentro en la habitación del hospital apenas lo registramos. Estábamos totalmente enfocados en verte y tenerte en brazos por primera vez. Esa mañana de lluvia limpia en Nueva York se convirtió en un momento increíble que nunca vamos a olvidar.`;
       } else if (isChicago) {
-        story = `Una lluvia fría caía sobre Chicago, con el viento soplando desde el lago Míchigan a ${windKn} km/h (${windMph} mph). La gente en la calle caminaba apurada con abrigos oscuros, pero nuestra atención estaba puesta por completo en recibirte. Cuando te sostuvimos en brazos por primera vez, tu respiración suave era el único sonido de la habitación. El clima frío y húmedo de Chicago afuera no importaba en lo absoluto; sentíamos una inmensa felicidad de tenerte con nosotros.`;
+        story = `Llovía bastante sobre Chicago, con un viento frío de ${windKn} km/h (${windMph} mph) soplando desde el lago. Los autos pasaban despacio por las calles mojadas, pero adentro en el hospital todo era tranquilidad. Cuando por fin te tuvimos en brazos por primera vez, nos olvidamos por completo del mal clima. Fue un día lluvioso afuera, pero en esa habitación solo sentimos un alivio y una paz enorme al ver tu carita por primera vez.`;
       } else if (isWarsaw) {
-        story = `Varsovia amaneció tranquila y húmeda, con una llovizna constante que mojaba los adoquines del centro histórico. Hacía un poco de frío, con ${tempC}°C (${tempF}°F), y el sol salió tras nubes grises a las ${params.sunrise}. En nuestra habitación, en cambio, todo era calidez y calma. Pasamos esas primeras horas abrazándote, mirándote la carita y contando tus pequeños dedos. Varsovia seguía su curso bajo la lluvia de otoño, pero para nosotros todo comenzó ahí.`;
+        story = `Varsovia amaneció con una llovizna constante que mojaba los adoquines del centro histórico. Hacía un poco de frío, con ${tempC}°C (${tempF}°F) de temperatura, y el sol salió tras nubes grises a las ${params.sunrise}. En nuestra habitación, en cambio, todo era calidez y calma. Pasamos esas primeras horas simplemente abrazándote y contando tus pequeños dedos, mientras la ciudad seguía su curso habitual bajo la lluvia de otoño.`;
       } else if (isParis) {
-        story = `Una llovizna ligera caía sobre París, mojando los tejados de zinc y los cafés tranquilos junto al Sena. Hacía un clima templado de ${tempC}°C (${tempF}°F) con una brisa muy suave. Sentimos un alivio y una alegría inmensos cuando por fin te pusieron en nuestros brazos. Al abrazarte por primera vez nos olvidamos por completo del clima gris de afuera. Esa tarde tranquila y lluviosa en París siempre será uno de nuestros recuerdos más queridos.`;
+        story = `Una llovizna ligera caía sobre París, mojando los tejados de zinc y las aceras junto al Sena. Hacía un clima templado de ${tempC}°C (${tempF}°F) con una brisa mansa. Sentimos un alivio inmenso cuando por fin te pusieron en nuestros brazos. Al abrazarte por primera vez nos olvidamos por completo del día gris y húmedo afuera. Esa tarde tranquila y lluviosa en París siempre será uno de nuestros recuerdos más sencillos y queridos.`;
       } else if (isLondon) {
-        story = `Una llovizna clásica londinense caía afuera, dejando las calles húmedas y tranquilas. El sol salió a las ${params.sunrise} detrás de nubes pesadas con una temperatura de ${tempC}°C (${tempF}°F). Mientras la ciudad seguía con su rutina húmeda habitual, nuestro mundo se detuvo dentro de esa habitación de hospital. Te sostuvimos cerca, escuchando tus pequeños murmullos de recién nacido, con la certeza de que nunca habíamos sido tan felices.`;
+        story = `Una llovizna clásica londinense caía afuera, dejando las calles mojadas y tranquilas. El sol salió a las ${params.sunrise} detrás de nubes pesadas con una temperatura de ${tempC}°C (${tempF}°F). Mientras la ciudad seguía con su rutina húmeda de siempre, nuestro mundo se detuvo un momento dentro de esa habitación. Te sostuvimos muy cerca, escuchando tus respiraciones de recién nacido, con la certeza de que nunca habíamos estado tan felices.`;
       } else if (isToronto) {
-        story = `Una lluvia fresca caía sobre Toronto, bajando hacia las orillas del lago Ontario bajo un cielo nublado de ${tempC}°C (${tempF}°F). El viento soplaba a ${windKn} km/h (${windMph} mph), pero la habitación del hospital se sentía como un refugio cálido y seguro. Nos distrajimos por completo del clima gris de afuera, ocupados en abrazarte y contemplar cada detalle de tu carita. Ese día lluvioso junto al lago es ahora el recuerdo más hermoso que compartimos.`;
+        story = `Una lluvia fresca caía sobre Toronto, bajando hacia las orillas del lago Ontario bajo un cielo nublado de ${tempC}°C (${tempF}°F). El viento soplaba a ${windKn} km/h (${windMph} mph), pero la habitación del hospital se sentía segura y muy cómoda. Nos distrajimos por completo del clima gris de afuera, ocupados en abrazarte y mirar cada detalle de tu carita. Siempre que recordamos ese día lluvioso, pensamos en esa primera tarde juntos.`;
       } else {
-        story = `La mañana en que naciste en ${params.city} fue húmeda y lluviosa, frente a un termómetro que marcaba unos templados ${tempC}°C (${tempF}°F) y un viento de ${windKn} km/h (${windMph} mph). Pero adentro estábamos en nuestro propio mundo de calma. Sostener tu pequeño cuerpo por primera vez nos hizo olvidar la lluvia de afuera. El día húmedo en ${params.city} quedó grabado para siempre como el inicio de nuestra familia.`;
+        story = `La mañana en que naciste en ${params.city} fue bastante húmeda y lluviosa, con una temperatura de ${tempC}°C (${tempF}°F) y un viento de ${windKn} km/h (${windMph} mph). Pero adentro del hospital solo estábamos concentrados en tenerte en nuestros brazos. La lluvia de afuera no nos importó en lo absoluto; conocerte fue el único momento que realmente ocupó nuestras mentes.`;
       }
 
       return { theme, quote, story };
@@ -87,17 +87,17 @@ function getOfflineBackupStory(params: {
 
     if (isSnowy) {
       let story = "";
-      let theme = "Recibidos por la Nieve";
-      let quote = "Hacía mucho frío afuera, pero abrazarte nos dio toda la calidez que podíamos necesitar.";
+      let theme = "Un día de nieve";
+      let quote = "Hacía muchísimo frío afuera, pero de la puerta para adentro solo estábamos felices de tenerte al fin con nosotros.";
 
       if (isNY) {
-        story = `Un hermoso manto de nieve cubría las calles y tejados de Nueva York la mañana en que naciste. La nieve caía en silencio sobre Central Park, apagando el ruido habitual de la gran ciudad en un día frío de invierno a ${tempC}°C (${tempF}°F). Nos mantuvimos muy abrigados en la habitación del hospital, sosteniéndote cerca y mirando cómo abrías tus ojos curiosos. Al contemplar ese Manhattan nevado y silencioso desde la ventana, supimos que nunca habíamos sentido tanta calidez en nuestros corazones.`;
+        story = `Nueva York estaba cubierta por una capa gruesa de nieve la mañana en que naciste. La nieve caía sin hacer ruido sobre Central Park, silenciando el tráfico habitual de la gran ciudad en un día frío de invierno a ${tempC}°C (${tempF}°F). En la calidez de la habitación nos quedamos muy abrigados, simplemente mimándote y mirando cómo abrías los ojos por primera vez. Fue un día muy blanco y silencioso afuera, pero para nosotros estuvo lleno de calma.`;
       } else if (isChicago) {
-        story = `El viento soplaba helado desde el lago Míchigan a ${windKn} km/h (${windMph} mph), acumulando nieve fresca entre los grandes edificios de Chicago con una temperatura de ${tempC}°C (${tempF}°F). Sin embargo, dentro de la habitación del hospital todo era calidez. En el momento exacto en que te tuvimos en brazos, nos olvidamos por completo del frío invierno de afuera. Estábamos increíblemente agradecidos de tener por fin a nuestro bebé con nosotros.`;
+        story = `El viento soplaba muy frío desde el lago Míchigan a ${windKn} km/h (${windMph} mph), acumulando nieve entre los edificios de Chicago con una temperatura de ${tempC}°C (${tempF}°F). Pero adentro de la habitación del hospital todo era tranquilidad. En el momento exacto en que te tuvimos en brazos por primera vez, nos olvidamos por completo del frío del invierno exterior. Estábamos increíblemente contentos de tener por fin a nuestro bebé.`;
       } else if (isWarsaw) {
-        story = `Una nieve fresca cubría por completo las calles históricas de Varsovia y la escarcha bordeaba el río Vístula. El sol asomó tras nubes frías a las ${params.sunrise} con una temperatura gélida de ${tempC}°C (${tempF}°F). Adentro, nuestra atención estaba puesta solo en ti. Escuchar tus primeros murmullos y sostenerte contra nuestro pecho nos dio todo el abrigo que necesitábamos. Varsovia estaba silenciosa bajo el invierno polaco, pero nuestros corazones estaban llenos de alegría.`;
+        story = `Una nieve fresca cubría por completo las calles históricas de Varsovia y el río Vístula. El sol asomó tras nubes frías a las ${params.sunrise} con una temperatura gélida de ${tempC}°C (${tempF}°F). Adentro, nuestra atención estaba puesta solo en ti. Escuchar tus primeros murmullos y sostenerte contra nuestro pecho nos dio todo el abrigo que necesitábamos en un día de invierno tan callado en Polonia.`;
       } else {
-        story = `Una capa de nieve limpia cubría ${params.city} la mañana en que naciste, con una temperatura de ${tempC}°C (${tempF}°F) y un viento que soplaba la nieve afuera a ${windKn} km/h (${windMph} mph). Pero nuestra habitación del hospital era un refugio cálido y en paz. Al acunarte y darte un beso en la frente, sentimos una inmensa tranquilidad. El día nevado en ${params.city} será siempre el recuerdo más cálido de nuestras vidas.`;
+        story = `Una capa de nieve limpia cubría ${params.city} la mañana en que naciste, con una temperatura gélida de ${tempC}°C (${tempF}°F) y un viento soplando la nieve afuera a ${windKn} km/h (${windMph} mph). Pero nuestra habitación del hospital era un refugio templado y tranquilo. Al tenerte en brazos por primera vez, nos invadió un alivio inmenso y el clima helado de afuera pasó a segundo plano.`;
       }
 
       return { theme, quote, story };
@@ -105,35 +105,35 @@ function getOfflineBackupStory(params: {
 
     if (isSunny) {
       let story = "";
-      let theme = "Un Día de Sol";
-      let quote = "El día afuera estaba hermoso y despejado, pero la mejor parte fue sostenerte en brazos por primera vez.";
+      let theme = "Un día soleado";
+      let quote = "El clima afuera estaba hermoso y despejado, pero la mejor parte del día fue sostenerte en brazos por primera vez.";
 
       if (isNY) {
-        story = `Nueva York disfrutaba de un día hermoso, brillante y soleado cuando llegaste al mundo. El sol de la mañana se reflejaba en los edificios de cristal de Manhattan, los taxis amarillos recorrían Broadway bajo un cielo despejado y hacía una temperatura de ${tempC}°C (${tempF}°F). Mientras la gran ciudad seguía con su rutina apresurada allá abajo, nosotros solo teníamos ojos para ti, contando tus pequeños dedos y disfrutando este momento único. Ese día soleado en Nueva York siempre será nuestro favorito.`;
+        story = `Nueva York disfrutaba de un día hermoso, brillante y soleado cuando llegaste al mundo. El sol de la mañana se reflejaba en los edificios de Manhattan, los taxis amarillos recorrían Broadway bajo un cielo azul y hacía una temperatura agradable de ${tempC}°C (${tempF}°F). Mientras la gran ciudad seguía con su rutina apresurada de siempre allá abajo, nosotros pasamos la tarde mirándote, contándote los deditos y disfrutando este primer momento juntos.`;
       } else if (isChicago) {
-        story = `El clima afuera en Chicago era agradable y despejado, con un sol brillante que se reflejaba en el lago Míchigan y una suave brisa de ${windKn} km/h (${windMph} mph). Hacía unos templados ${tempC}°C (${tempF}°F), pero apenas nos fijamos en eso. Estábamos ocupados dándote la bienvenida y sosteniéndote muy cerca. Tomar tu pequeña mano mientras la luz del sol de Chicago entraba por la ventana fue el momento más feliz de nuestras vidas.`;
+        story = `El clima afuera en Chicago era agradable y muy despejado, con un sol brillante que se reflejaba en el lago Míchigan y una suave brisa de ${windKn} km/h (${windMph} mph). Hacía unos templados ${tempC}°C (${tempF}°F), pero apenas nos fijamos en eso. Estábamos ocupados dándote la bienvenida y pasándote de brazo en brazo en la habitación. Tomar tu pequeña mano mientras entraba la luz del sol por la ventana fue inolvidable.`;
       } else if (isWarsaw) {
-        story = `Varsovia estaba iluminada por un sol brillante y despejado el día en que naciste. El sol de la mañana salió a las ${params.sunrise} sobre los edificios históricos del centro y brillaba en el río Vístula a unos agradables ${tempC}°C (${tempF}°F). En la habitación del hospital todo era paz y silencio mientras te abrazábamos por primera vez. Esa mañana luminosa en Varsovia siempre nos recordará el día en que por fin fuimos una familia.`;
+        story = `Varsovia estaba iluminada por un sol brillante y despejado el día en que naciste. El sol de la mañana salió a las ${params.sunrise} sobre los edificios históricos y brillaba en el río Vístula a unos templados ${tempC}°C (${tempF}°F). En el hospital todo era paz y silencio mientras te abrazábamos por primera vez. Esa tarde luminosa siempre nos recordará el día en que por fin fuimos una familia.`;
       } else {
-        story = `Un día despejado y lleno de sol nos recibió en ${params.city} cuando naciste, con cielos azules y una suave brisa soplando a ${windKn} km/h (${windMph} mph). La temperatura subió a unos agradables ${tempC}°C (${tempF}°F), haciendo que afuera fuera un día hermoso. Pero la mejor parte, por mucho, fue tenerte entre nuestros brazos por primera vez. El sol brillante de ${params.city} hizo que todo se sintiera aún más especial al darte la bienvenida a nuestra familia.`;
+        story = `Un día despejado y lleno de sol nos recibió en ${params.city} cuando naciste, con cielos abiertos y una suave brisa soplando a ${windKn} km/h (${windMph} mph). La temperatura máxima subió a unos agradables ${tempC}°C (${tempF}°F). Pero la mejor parte, por mucho, fue tenerte entre nuestros brazos por primera vez en esa habitación tranquila de hospital.`;
       }
 
       return { theme, quote, story };
     }
 
-    // Default Cloudy / Overcast
+    // Default Cloudy
     let story = "";
-    let theme = "Atmósfera Serena";
-    let quote = "Bajo un cielo gris y tranquilo, nuestro mundo cambió por completo en el momento en que por fin te conocimos.";
+    let theme = "Un día nublado";
+    let quote = "Bajo un cielo gris y muy tranquilo, todo cambió en el momento en que te vimos por primera vez.";
 
     if (isNY) {
-      story = `El cielo sobre Manhattan estaba tranquilo y gris, suavizando el ruido y el movimiento constante de Nueva York. Hacía un clima templado de ${tempC}°C (${tempF}°F) afuera, pero dentro de nuestra habitación el tiempo pareció detenerse por completo. En el segundo en que abriste los ojos y nos miraste, todo el bullicio de la ciudad desapareció. Nos quedamos sentados abrazándote, sintiendo una inmensa gratitud de que por fin estuvieras aquí.`;
+      story = `El cielo sobre Manhattan estaba completamente tranquilo y gris, suavizando el ruido y el movimiento habitual de Nueva York. Hacía un clima templado de ${tempC}°C (${tempF}°F) afuera, pero dentro de nuestra habitación el tiempo pareció ir más despacio. En el segundo en que abriste los ojos y nos miraste, todo el bullicio de la ciudad desapareció de nuestra cabeza. Nos quedamos callados abrazándote con una inmensa tranquilidad.`;
     } else if (isChicago) {
-      story = `Nubes grises cubrían los edificios de Chicago, empujadas por un viento constante de ${windKn} km/h (${windMph} mph) que venía del lago Míchigan. El día se sentía muy tranquilo a unos ${tempC}°C (${tempF}°F), y toda nuestra atención estaba enfocada en conocerte. Cuando te sostuvimos en brazos y tu pequeña mano rodeó nuestro dedo, cualquier preocupación desapareció. Ese día gris y silencioso en Chicago será siempre el día en que nuestras vidas cambiaron para mejor.`;
+      story = `Unas nubes grises cubrían los edificios de Chicago, empujadas por un viento constante de ${windKn} km/h (${windMph} mph) que venía del lago Míchigan. El día se sentía muy callado a unos ${tempC}°C (${tempF}°F), y toda nuestra atención estaba enfocada en conocerte. Al sostenerte en brazos y sentir tu pequeña mano rodando nuestro dedo, cualquier preocupación desapareció de inmediato.`;
     } else if (isWarsaw) {
-      story = `Un cielo cubierto y pacífico cobijaba las orillas del río Vístula y las viejas murallas de Varsovia la mañana en que naciste. El sol salió tras las nubes grises a las ${params.sunrise} con una brisa muy suave. Estábamos demasiado ocupados abrazándote por primera vez como para pensar en el clima. Sostenerte cerca mientras Varsovia descansaba bajo ese cielo sereno fue un momento de pura felicidad que guardaremos para siempre.`;
+      story = `Un cielo cubierto y pacífico cobijaba las orillas del río Vístula y las viejas murallas de Varsovia la mañana en que naciste. El sol salió tras las nubes grises a las ${params.sunrise} con una brisa muy suave. Estábamos demasiado ocupados abrazándote por primera vez en el hospital como para pensar en el clima de afuera. Sostener tu cuerpo ligero nos dio una sensación de alivio indescriptible.`;
     } else {
-      story = `Un cielo gris y tranquilo cubría ${params.city} el día en que naciste, con una suave brisa soplando a ${windKn} km/h (${windMph} mph) y una temperatura agradable de ${tempC}°C (${tempF}°F). Afuera el día transcurría despacio y en paz, mientras que adentro vivíamos el momento más emocionante de nuestras vidas. Cuando te estrechamos por primera vez contra nuestro pecho, sentimos un profundo alivio y felicidad. Ese día nublado en ${params.city} es para siempre nuestro recuerdo preferido.`;
+      story = `Un cielo gris y tranquilo cubría ${params.city} el día en que naciste, con una suave brisa soplando a ${windKn} km/h (${windMph} mph) y una temperatura de ${tempC}°C (${tempF}°F). Afuera el día transcurría despacio, mientras que adentro vivíamos el momento más emocionante al tenerte por fin con nosotros. Ese día nublado en ${params.city} siempre será nuestro recuerdo preferido.`;
     }
 
     return { theme, quote, story };
@@ -141,23 +141,23 @@ function getOfflineBackupStory(params: {
     // English Backup Stories
     if (isRainy) {
       let story = "";
-      let theme = "Welcomed by Raindrops";
-      let quote = "The rain outside didn't matter at all—hearing your first soft breath was the happiest moment of our lives.";
+      let theme = "A Rainy Morning";
+      let quote = "Outside, it was raining steadily, but we barely noticed. We were focused on meeting you for the first time.";
 
       if (isNY) {
-        story = `New York was waking up under a gentle morning drizzle on ${params.birthDate}. Outside, we could see yellow cabs dodging puddles on Broadway, and a soft mist resting between the skyscrapers. It was a mild ${tempC}°C (${tempF}°F), but inside the hospital room, we barely noticed the damp weather. We were too focused on meeting you for the first time and holding your tiny, warm body. This rainy New York morning became the day our lives changed completely.`;
+        story = `New York was waking up under a gentle morning drizzle on ${params.birthDate}. Outside, yellow cabs were dodging puddles on Broadway, and a soft mist rested between the skyscrapers. It was a mild ${tempC}°C (${tempF}°F), but inside the hospital room, we barely noticed the damp weather. We were too focused on meeting you for the first time and holding your tiny, warm body in our arms. That wet morning became a moment we will never forget.`;
       } else if (isChicago) {
-        story = `A chilly rain was falling across Chicago, with the wind blowing off Lake Michigan at ${windKn} km/h (${windMph} mph). People on the streets below were bundled up in dark coats, but our attention was completely focused on finally meeting you. When we first held you in our arms, your soft breathing was the only sound in the room. The cold, wet Chicago weather outside didn't matter at all—we were just so incredibly happy to have you with us.`;
+        story = `A cold rain was falling across Chicago, with the wind blowing off Lake Michigan at ${windKn} km/h (${windMph} mph). People on the streets below were bundled up in dark coats, but our attention was completely focused on finally meeting you. When we first held you in our arms, your soft breathing was the only sound in the room. The cold, wet Chicago weather outside didn't matter at all—we were just so incredibly happy to have you with us.`;
       } else if (isWarsaw) {
-        story = `Warsaw was quiet and damp, with a steady rain washing the cobblestone streets of the Old Town. It was on the cooler side at ${tempC}°C (${tempF}°F), and the sun rose behind grey clouds at ${params.sunrise}. But inside our room, everything was warm and calm. We spent those first hours holding you, staring at your face, and counting your tiny fingers. Warsaw carried on under the autumn rain, but our whole family's world started right there.`;
+        story = `Warsaw was quiet and damp, with a steady rain washing the cobblestone streets of the Old Town. It was on the cooler side at ${tempC}°C (${tempF}°F), and the sun rose behind grey clouds at ${params.sunrise}. But inside our room, everything was warm and calm. We spent those first hours holding you, staring at your face, and counting your tiny fingers. Warsaw carried on under the autumn rain, but our family's world started right there.`;
       } else if (isParis) {
         story = `A soft grey rain was falling over Paris, wetting the zinc rooftops and quiet cafes along the Seine. The temperature was quite mild at ${tempC}°C (${tempF}°F) with a light breeze of ${windKn} km/h (${windMph} mph). We were so happy and relieved when the nurse finally placed you in our arms. Cradling you for the first time, we completely forgot about the damp weather outside. That quiet, rainy Parisian afternoon will always be one of our favorite memories.`;
       } else if (isLondon) {
-        story = `A classic London drizzle was falling outside, leaving the streets wet and quiet. The morning sun rose at ${params.sunrise} behind heavy, damp clouds with a temperature of ${tempC}°C (${tempF}°F). While the city carried on with its usual wet routine, our world stopped inside that hospital room. We held you close, listening to your faint newborn sounds, and realized we had never been happier.`;
+        story = `A classic London drizzle was falling outside, leaving the streets wet and quiet. The morning sun rose at ${params.sunrise} behind heavy, damp clouds with a temperature of ${tempC}°C (${tempF}°F). While the city carried on with its usual wet routine, our world stopped inside that hospital room. We held you close, listening to your faint newborn sounds, and felt an incredible sense of relief.`;
       } else if (isToronto) {
-        story = `Cool lakeside rain fell over Toronto's residential neighborhoods, trickling down toward the shores of Lake Ontario under an overcast sky of ${tempC}°C (${tempF}°F). The wind was blowing at ${windKn} km/h (${windMph} mph), but the hospital room felt like a warm, safe haven. We were completely distracted from the dreary weather outside, busy holding you and taking in every single detail of your tiny features. That rainy lakeside day is now the most beautiful memory we share.`;
+        story = `Cool lakeside rain fell over Toronto's residential neighborhoods, trickling down toward the shores of Lake Ontario under an overcast sky of ${tempC}°C (${tempF}°F). The wind was blowing at ${windKn} km/h (${windMph} mph), but the hospital room felt like a warm, safe haven. We were completely distracted from the dreary weather outside, busy holding you and taking in every single detail. That rainy lakeside day is now the most beautiful memory we share.`;
       } else {
-        story = `The morning you were born in ${params.city} was wet and rainy, with the thermometer showing a mild ${tempC}°C (${tempF}°F) and a wind of ${windKn} km/h (${windMph} mph) softy blowing outside. But inside, we were in our own quiet world. Holding your little body for the first time made us forget all about the storm outside. The rainy day in ${params.city} is forever marked as the happiest moment of our lives.`;
+        story = `The morning you were born in ${params.city} was wet and rainy, with the thermometer showing a mild ${tempC}°C (${tempF}°F) and a wind of ${windKn} km/h (${windMph} mph) softly blowing outside. But inside, we were in our own quiet world. Holding your little body for the first time made us forget all about the storm outside. The rainy day in ${params.city} is forever marked as the happiest moment of our lives.`;
       }
 
       return { theme, quote, story };
@@ -165,11 +165,11 @@ function getOfflineBackupStory(params: {
 
     if (isSnowy) {
       let story = "";
-      let theme = "A Blanket of Silent Snow";
+      let theme = "Snow Outside";
       let quote = "It was freezing cold outside, but holding you close brought all the warmth we could ever need.";
 
       if (isNY) {
-        story = `A fresh coat of white snow was covering the streets and rooftops of New York on the morning you were born. Flurries fell silently over Central Park, quietening the usual busy hum of the city on a chilly winter day of ${tempC}°C (${tempF}°F). We stayed warm in our hospital room, holding you close and watching your beautiful dark eyes look around. Looking out at the quiet, snowy Manhattan skyline, we had never felt so much warmth in our hearts.`;
+        story = `A fresh coat of white snow was covering the streets and rooftops of New York on the morning you were born. Flurries fell silently over Central Park, quietening the usual busy hum of the city on a chilly winter day of ${tempC}°C (${tempF}°F). We stayed warm in our hospital room, holding you close and watching your beautiful eyes look around. Looking out at the quiet, snowy Manhattan skyline, we had never felt so much warmth in our hearts.`;
       } else if (isChicago) {
         story = `The wind was blowing cold off Lake Michigan at ${windKn} km/h (${windMph} mph), swirling fresh snow down between Chicago's high-rises with a temperature of ${tempC}°C (${tempF}°F). Inside our hospital room, though, it was wonderfully warm. The exact moment we held you close, all the freezing Chicago winter outside was completely forgotten. We were just incredibly grateful to finally have our beautiful baby in our arms.`;
       } else if (isWarsaw) {
@@ -183,7 +183,7 @@ function getOfflineBackupStory(params: {
 
     if (isSunny) {
       let story = "";
-      let theme = "A Canvas of Sunny Light";
+      let theme = "A Sunny Day";
       let quote = "The weather outside was beautiful and bright, but the happiest part of the day was holding you for the first time.";
 
       if (isNY) {
@@ -201,7 +201,7 @@ function getOfflineBackupStory(params: {
 
     // Default Cloudy
     let story = "";
-    let theme = "A Serene Overcast Sky";
+    let theme = "A Quiet Cloudy Day";
     let quote = "Under a quiet, peaceful sky, our world changed completely the moment we finally met you.";
 
     if (isNY) {
@@ -305,42 +305,47 @@ Mandatory Constraints:
    - Make the city feel real and distinct using specific, subtle references to the local atmosphere, landmarks, architecture, landscape, geography, or culture of "${city}" (e.g., Chicago's wind off Lake Michigan, Willis Tower shadow, El train; New York's steam escaping from street grates, yellow cabs, fire escapes, Central Park; London's brick facades, Westminster breeze, River Thames; Warsaw's cobblestone streets, Vistula River, Royal Route; Paris's zinc/slate roofs, warm cafés, River Seine; or other cities' local rivers, valleys, hills, streets, coastlines, or general geographic/architectural character!).
    - If it is not a major city, refer naturally to its regional context or general landscape (hills, quiet streets, nearby rivers, parks).
 
-5. REDUCE POETIC EXCESS / WARM EMOTIONAL TONE:
-   - WRITE LIKE A REAL PARENT remembering the day their child was born.
-   - Use warm, natural, believable, conversational, memory-like language.
-   - Keep the emotional tone, but reduce poetry significantly. Avoid dramatic metaphors and symbolic language.
-   - Avoid phrases that sound like novels, poems, greeting cards, or inspirational quotes.
-   - Avoid excessive sentimentality.
+5. STAGE AN AUTHENTIC, COMPLETELY UN-POETIC PARENT MEMORY:
+   - THE GOAL IS NOT TO SOUND BEAUTIFUL. THE GOAL IS TO SOUND REAL AND LIFE-LIKE.
+   - WRITE AS IF A PARENT IS DESCRIBING THE DAY TO A FRIEND 10 YEARS LATER.
+   - Use simple, natural, conversational, down-to-earth language.
+   - Stop writing poetry. Stop writing greeting-card language. Stop writing inspirational quotes.
+   - Do NOT use literary language. Do NOT use symbolic language. Do NOT use romantic language. Do NOT write quotes that sound like social media inspiration posts.
+   - Strictly avoid poetic metaphors or overly dramatic expressions.
    - Crucially, you MUST NOT use or imitate expressions like:
-     * "the true sunrise was in your eyes" / "el verdadero amanecer brotó de tu mirada"
-     * "our souls were transformed" / "nuestras almas se transformaron"
-     * "the light of our future" / "la luz de nuestro futuro"
-     * "eternally illuminated our being" / "iluminó eternamente nuestro ser"
+     * "infinite light" / "luz infinita"
+     * "eternal love" / "amor eterno"
+     * "true sunrise" / "verdadero amanecer"
+     * "majesty of holding you" / "majestad de abrazarte"
+     * "treasure forever" / "tesoro para siempre" / "guardar por siempre"
+     * "transformed our lives forever" / "transformó nuestras vidas para siempre"
+     * "humble witness" / "testigo humilde"
+     * "radiant soul" / "alma radiante"
+     * "light in our eyes" / "luz en nuestros ojos"
+     * "destiny" / "destino"
+     * "miracle of miracles" / "milagro de milagros"
      * "Outside..., but inside..." / "Afuera..., pero adentro..."
      * "The weather faded into the background..." / "El clima pasó al segundo plano..."
      * "Nothing else mattered..." / "Nada más importaba..." / "Nada de ese ajetreo importaba..."
-   - Stories must sound realistic and family-oriented, rather than cinematic.
-   - If a sentence sounds like poetry, simplify it.
-   - Preferred style:
-     ✔ Authentic, Personal, Human, Warm, Conversational, Family-oriented
-   - Examples of desired tone to guide your generation:
-     * "Detroit was enjoying a beautiful sunny day, but our attention was focused on only one thing — finally meeting you for the first time."
-     * "The weather outside was pleasant and bright, but we barely noticed it. We were too busy counting your tiny fingers and taking in every moment."
-     * "The city carried on with its normal routine, while our world changed completely inside that hospital room."
-     * "The sunshine made for a lovely day, but the happiest part of it was finally holding you in our arms."
+   - Recommended writing style is authentic, grounded, human, and believable.
+   - Excellent examples of desired tone:
+     * "Outside, it was raining steadily across Havana, but we barely noticed. We were focused on meeting you for the first time."
+     * "The weather was warm and humid that morning. Nurses moved quietly through the hallways while family members waited nearby. Everything felt normal until the moment you arrived."
+     * "The city continued its usual routine, but for us the day became unforgettable for a completely different reason."
+   - Let the quote sound like something a real parent would say to their child later in life: clean, direct, and completely devoid of greeting-card fluff.
    - Generate creative, varied sentence structures.
 
 Response JSON Schema:
 You must output a JSON object containing:
-- theme: a beautiful short title (3-5 words) summarizing the day's feeling (e.g., 'A Crisp November Dawn' or 'Bajo un manto templado').
-- quote: a heartwarming, memorable quote (1 sentence) welcoming the baby (e.g. 'Among clouds, rain, and sunlight, you were always the brightest part of the day').
-- story: the complete narrative memory (approx 150-250 words, structured as a single elegant paragraph).
+- theme: a clean, simple, unpoetic title (e.g. 'A Wet November Morning' or 'Un lunes de llovizna').
+- quote: a down-to-earth, simple, memorable statement welcoming the baby (1 sentence). Do not make it sound like a social media inspiration post.
+- story: the complete narrative memory (approx 120-200 words, structured as a single elegant paragraph).
 - quality_check: an object containing:
   - language_consistent: boolean (is it 100% written in the requested language?)
-  - weather_consistent: boolean (does it accurately and seamlessly incorporate the provided weather data?)
-  - time_consistent: boolean (are there any conflicting time references like afternoon vs sunrise?)
-  - city_consistent: boolean (does it make appropriate local references without hallucinating unrelated landmarks?)
-  - structure_consistent: boolean (does it avoid the forbidden cliches and repetiveness?)
+  - weather_consistent: boolean (does it accurately incorporate the provided weather data?)
+  - time_consistent: boolean (are there any conflicting time references?)
+  - city_consistent: boolean (does it make appropriate local references?)
+  - structure_consistent: boolean (does it avoid the forbidden cliches and poetic style?)
 `;
 
   let attempts = 0;
