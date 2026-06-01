@@ -1034,8 +1034,8 @@ export default function BirthWeatherStory() {
         // Subheader Atmosphere Text
         ctx.fillStyle = "rgba(255, 255, 255, 0.55)";
         ctx.font = "600 22px 'Inter', 'system-ui', sans-serif";
-        const coordDesc = revealResult.country ? `${revealResult.country} • Atmosphere and stars mapped` : "Atmosphere and stars mapped";
-        ctx.fillText(coordDesc, 130, 300);
+        const locDesc = revealResult.region ? `${revealResult.region}, ${revealResult.country}` : (revealResult.country || "");
+        ctx.fillText(locDesc, 130, 300);
 
         // Draw a beautiful golden celestial seal in the upper-right (very luxurious)
         drawFourPointStar(ctx, 800, 210, 24, "#E89E82");
@@ -1454,8 +1454,8 @@ export default function BirthWeatherStory() {
                         <h3 className="font-serif italic font-extrabold text-2xl sm:text-3xl text-white mt-1.5 font-sans leading-tight">
                           {revealResult.city}
                         </h3>
-                        <p className="text-[10px] uppercase font-mono tracking-wider text-slate-400 mt-1">
-                          {revealResult.country ? `${revealResult.country} • ` : ""}Atmosphere and stars mapped
+                        <p className="text-sm font-medium text-slate-300 mt-1 font-sans">
+                          {revealResult.region ? `${revealResult.region}, ${revealResult.country}` : revealResult.country}
                         </p>
                       </div>
                       
