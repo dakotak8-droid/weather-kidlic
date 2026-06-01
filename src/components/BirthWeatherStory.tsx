@@ -9,6 +9,220 @@ const MONTHS_ABBR = [
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 ];
 
+interface Dictionary {
+  certificateHeader: string;
+  weatherOnArrival: string;
+  conditionHeader: string;
+  temperatureHeader: string;
+  windSpeedHeader: string;
+  sunriseHeader: string;
+  skysWelcome: string;
+  themeLabel: string;
+  dateLabel: string;
+  authenticKeepsake: string;
+  referenceIdea: string;
+  downloadButton: string;
+  downloadButtonLoading: string;
+  downloadOptimized: string;
+  months: string[];
+  weatherConditions: { [key: number]: string };
+  defaultCondition: string;
+
+  // Form strings
+  tinyTag: string;
+  formTitle: string;
+  formSubtitle: string;
+  fieldLanguage: string;
+  fieldBirthDate: string;
+  fieldBirthCity: string;
+  cityPlaceholder: string;
+  cityHelper: string;
+  btnRevealLoading: string;
+  btnRevealNormal: string;
+  trustLine: string;
+
+  // Errors
+  errNoDate: string;
+  errFutureDate: string;
+  errYearLimit: string;
+  errNoCity: string;
+  errMultipleMatches: string;
+  errEmptyCity: string;
+  errApiRecovery: string;
+
+  // Example Card details
+  exampleCity: string;
+  exampleCountrySub: string;
+  exampleTemp: string;
+  exampleCondition: string;
+  exampleWind: string;
+  exampleSunrise: string;
+  exampleTheme: string;
+  exampleDate: string;
+  exampleStory: string;
+  exampleQuote: string;
+}
+
+const LOCALES: { [key: string]: Dictionary } = {
+  en: {
+    certificateHeader: "WEATHER KEEPSAKE CERTIFICATE",
+    weatherOnArrival: "WEATHER ON YOUR ARRIVAL",
+    conditionHeader: "CONDITION",
+    temperatureHeader: "TEMPERATURE",
+    windSpeedHeader: "MAX WIND SPEED",
+    sunriseHeader: "SUNRISE TIME",
+    skysWelcome: "THE SKY'S WELCOME",
+    themeLabel: "Theme",
+    dateLabel: "Date",
+    authenticKeepsake: "Your Authentic Weather Keepsake",
+    referenceIdea: "Reference Idea",
+    downloadButton: "Download Keepsake",
+    downloadButtonLoading: "Crafting Keepsake...",
+    downloadOptimized: "Optimized for Instagram (4:5 vertical), Facebook, and baby memory albums",
+    months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    weatherConditions: {
+      0: "Clear Skies",
+      1: "Soft Sunshine",
+      2: "Partly Cloudy",
+      3: "Overcast",
+      45: "Morning Mist",
+      48: "Morning Mist",
+      51: "Light Rain",
+      53: "Light Rain",
+      55: "Light Rain",
+      61: "Spring Showers",
+      63: "Spring Showers",
+      65: "Spring Showers",
+      80: "Spring Showers",
+      81: "Spring Showers",
+      82: "Spring Showers",
+      71: "Snowfall",
+      73: "Snowfall",
+      75: "Snowfall",
+      77: "Snowfall",
+      85: "Snowfall",
+      86: "Snowfall",
+      95: "Stormy Skies",
+      96: "Stormy Skies",
+      99: "Stormy Skies",
+    },
+    defaultCondition: "Calm Breeze",
+
+    // Form
+    tinyTag: "Tiny Date. Big Memory.",
+    formTitle: "What was the weather when your baby was born?",
+    formSubtitle: "Before the sleepless nights, snack negotiations, and mysterious sticky fingerprints, there was a single day. Discover the weather that welcomed your child into the world.",
+    fieldLanguage: "Language / Idioma",
+    fieldBirthDate: "Birth Date (MM/DD/YYYY)",
+    fieldBirthCity: "Birth City & Country (in English)",
+    cityPlaceholder: "Examples: New York, United States • Warsaw, Poland • Paris, France",
+    cityHelper: "Please enter city and country names in English. Local spellings such as Polska, Deutschland, España, or Italia may not be recognized.",
+    btnRevealLoading: "Scanning the heavens...",
+    btnRevealNormal: "Reveal the weather story",
+    trustLine: "Powered by historical weather archives and location data.",
+
+    // Errors
+    errNoDate: "Please select a valid birth date.",
+    errFutureDate: "Are they a time traveler? The birth date cannot be in the future!",
+    errYearLimit: "Alas! Historical weather archives are only available back to 1940. Please enter a birth date from 1940 onwards.",
+    errNoCity: "We couldn't find that city. Please enter the city and country in English (for example: Warsaw, Poland or Munich, Germany).",
+    errMultipleMatches: "Multiple matches found for \"{city}\". Please select your specific birth city from the suggestions list below to continue.",
+    errEmptyCity: "Please specify a birth city & country.",
+    errApiRecovery: "Open-Meteo archive is recovering state. Please check your network and retry in a few moments!",
+
+    // Example
+    exampleCity: "Austin, Texas",
+    exampleCountrySub: "United States • Atmosphere and stars mapped",
+    exampleTemp: "21°C / 70°F",
+    exampleCondition: "Gentle Sunshine",
+    exampleWind: "12 km/h / 7 mph",
+    exampleSunrise: "7:28 AM",
+    exampleTheme: "Wrapped in Warmth",
+    exampleDate: "Oct 14, 2021",
+    exampleStory: "Bright afternoon sunshine spread across Austin, lighting up the neighborhood and casting yellow beams across the limestone ridges. It was a warm day outside, but our focus was entirely in our arms. The moment we cradled you, we felt an immense sense of gratitude that filled our hearts. The sunny day was beautiful, but you were the real daylight in our lives, bringing a warmth we will carry forever.",
+    exampleQuote: "Among clouds, rain, and sunlight, you were always the brightest part of the day.",
+  },
+
+  es: {
+    certificateHeader: "CERTIFICADO DE RECUERDO DEL CLIMA",
+    weatherOnArrival: "EL CLIMA EN TU LLEGADA",
+    conditionHeader: "CONDICIÓN",
+    temperatureHeader: "TEMPERATURA",
+    windSpeedHeader: "VELOCIDAD MÁXIMA DEL VIENTO",
+    sunriseHeader: "HORA DEL AMANECER",
+    skysWelcome: "LA BIENVENIDA DEL CIELO",
+    themeLabel: "Tema",
+    dateLabel: "Fecha",
+    authenticKeepsake: "Tu Recuerdo del Clima Auténtico",
+    referenceIdea: "Idea de Referencia",
+    downloadButton: "Descargar Recuerdo",
+    downloadButtonLoading: "Creando Recuerdo...",
+    downloadOptimized: "Optimizado para Instagram (4:5 vertical), Facebook y álbumes de recuerdos de bebés",
+    months: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+    weatherConditions: {
+      0: "Cielos Despejados",
+      1: "Brillo Solar Suave",
+      2: "Parcialmente Nublado",
+      3: "Cubierto",
+      45: "Niebla Matutina",
+      48: "Niebla Matutina",
+      51: "Lluvia Ligera",
+      53: "Lluvia Ligera",
+      55: "Lluvia Ligera",
+      61: "Lloviznas de Primavera",
+      63: "Lloviznas de Primavera",
+      65: "Lloviznas de Primavera",
+      80: "Lloviznas de Primavera",
+      81: "Lloviznas de Primavera",
+      82: "Lloviznas de Primavera",
+      71: "Nevada",
+      73: "Nevada",
+      75: "Nevada",
+      77: "Nevada",
+      85: "Nevada",
+      86: "Nevada",
+      95: "Cielos Tormentosos",
+      96: "Cielos Tormentosos",
+      99: "Cielos Tormentosos",
+    },
+    defaultCondition: "Brisa Calma",
+
+    // Form
+    tinyTag: "Fecha pequeña. Gran recuerdo.",
+    formTitle: "¿Cómo era el clima cuando nació tu bebé?",
+    formSubtitle: "Antes de las noches de desvelo, las negociaciones de refrigerios y las misteriosas huellas pegajosas, hubo un solo día. Descubre el clima que le dio la bienvenida a tu hijo al mundo.",
+    fieldLanguage: "Idioma / Language",
+    fieldBirthDate: "Fecha de nacimiento (MM/DD/AAAA)",
+    fieldBirthCity: "Ciudad y país de nacimiento (en inglés)",
+    cityPlaceholder: "Ejemplos: New York, United States • Warsaw, Poland • Paris, France",
+    cityHelper: "Por favor, ingresa los nombres de la ciudad y el país en inglés. Es posible que no se reconozcan las grafías locales como Polska, Deutschland, España o Italia.",
+    btnRevealLoading: "Escaneando los cielos...",
+    btnRevealNormal: "Descubrir la historia del clima",
+    trustLine: "Desarrollado con archivos climáticos históricos y datos de ubicación.",
+
+    // Errors
+    errNoDate: "Por favor, selecciona una fecha de nacimiento válida.",
+    errFutureDate: "¿Acaso viajan en el tiempo? ¡La fecha de nacimiento no puede ser en el futuro!",
+    errYearLimit: "¡Vaya! Los archivos meteorológicos históricos solo están disponibles desde 1940. Por favor, ingresa una fecha de nacimiento a partir de 1940.",
+    errNoCity: "No pudimos encontrar esa ciudad. Por favor, ingresa la ciudad y el país en inglés (por ejemplo: Warsaw, Poland o Munich, Germany).",
+    errMultipleMatches: "Se encontraron múltiples coincidencias para \"{city}\". Por favor, selecciona tu ciudad de nacimiento específica de la lista de sugerencias a continuación para continuar.",
+    errEmptyCity: "Por favor, especifica una ciudad y un país de nacimiento.",
+    errApiRecovery: "El archivo de Open-Meteo se está recuperando. ¡Por favor, verifica tu conexión e inténtalo de nuevo en unos momentos!",
+
+    // Example
+    exampleCity: "Austin, Texas",
+    exampleCountrySub: "United States • Atmósfera y estrellas mapeadas",
+    exampleTemp: "21°C / 70°F",
+    exampleCondition: "Brillo Solar Suave",
+    exampleWind: "12 km/h / 7 mph",
+    exampleSunrise: "7:28 AM",
+    exampleTheme: "Cubierto de Calidez",
+    exampleDate: "Oct 14, 2021",
+    exampleStory: "Un brillante sol de la tarde se extendía sobre Austin, iluminando el vecindario y proyectando rayos amarillos a lo largo de las colinas de piedra caliza. Hacía un día cálido afuera, pero nuestra atención estaba por completo en nuestros brazos. En el momento en que te acunamos, sentimos una inmensa sensación de gratitud que llenó nuestros corazones. El día soleado era hermoso, pero tú eras la verdadera luz del día en nuestras vidas, trayendo una calidez que llevaremos para siempre.",
+    exampleQuote: "Entre las nubes, la lluvia y la luz del sol, siempre fuiste la parte más brillante del día.",
+  }
+};
+
 const PROFILE_KEYS = {
   NYC: "new york|new york|united states",
   CHICAGO: "chicago|illinois|united states",
@@ -317,17 +531,9 @@ const getCityLandmarks = (city: string, region: string = "", country: string = "
   return [];
 };
 
-const getWeatherConditionText = (code: number): string => {
-  if (code === 0) return "Clear Skies";
-  if (code === 1) return "Soft Sunshine";
-  if (code === 2) return "Partly Cloudy";
-  if (code === 3) return "Overcast";
-  if (code === 45 || code === 48) return "Morning Mist";
-  if (code === 51 || code === 53 || code === 55) return "Light Rain";
-  if ([61, 63, 65, 80, 81, 82].includes(code)) return "Spring Showers";
-  if ([71, 73, 75, 77, 85, 86].includes(code)) return "Snowfall";
-  if ([95, 96, 99].includes(code)) return "Stormy Skies";
-  return "Calm Breeze";
+const getWeatherConditionText = (code: number, lang: "en" | "es" = "en"): string => {
+  const dictionary = LOCALES[lang] || LOCALES.en;
+  return dictionary.weatherConditions[code] || dictionary.defaultCondition;
 };
 
 const parseSunriseTime = (sunriseStr?: string): string => {
@@ -358,6 +564,13 @@ interface HistoricalStory {
 }
 
 export default function BirthWeatherStory() {
+  const [lang, setLang] = useState<"en" | "es">(() => {
+    const saved = localStorage.getItem("parent_weather_lang");
+    return (saved as "en" | "es") || "en";
+  });
+
+  const t = LOCALES[lang] || LOCALES.en;
+
   // Input fields state
   const [typedCity, setTypedCity] = useState("");
   const [selectedCity, setSelectedCity] = useState<GeocodingResult | null>(null);
@@ -517,7 +730,8 @@ export default function BirthWeatherStory() {
     country: string = "",
     windSpeed: number = 12,
     sunrise: string = "6:15 AM",
-    region: string = ""
+    region: string = "",
+    lang: "en" | "es" = "en"
   ): HistoricalStory => {
     const isRainy = [51, 53, 55, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(weatherCode);
     const isSnowy = [71, 73, 75, 77, 85, 86].includes(weatherCode);
@@ -531,6 +745,118 @@ export default function BirthWeatherStory() {
     const isToronto = profile === "toronto";
     const isLondon = profile === "london";
     const isParis = profile === "paris";
+
+    if (lang === "es") {
+      if (isRainy) {
+        let storyText = "";
+        if (isNY) {
+          storyText = `Era una típica mañana húmeda en New York, con taxis amarillos salpicando los charcos de las calles y vapor subiendo de las rejillas del metro. Los viajeros de la mañana se apresuraban por las calles bajo sus paraguas. Pero dentro de nuestra tranquila habitación de hospital, nada de ese ajetreo importaba ya. En el momento en que te sostuvimos por primera vez, la agitada ciudad afuera se desvaneció en el fondo. Era difícil creer que finalmente estábamos sosteniendo a nuestro propio bebé. Ese frío y lluvioso día de New York se convirtió en el comienzo silencioso de todo para nosotros.`;
+        } else if (isChicago) {
+          storyText = `Un viento frío soplaba desde Lake Michigan, barriendo una intensa lluvia por las calles del centro de Chicago. La gente en las aceras se abrigaba bien con sus impermeables para mantenerse caliente. Adentro, estábamos completamente protegidos del clima, esperando para conocerte. En el segundo en que te sostuvimos en nuestros brazos, el ajetreo de la ciudad se calmó por completo. Trajiste un calor a nuestras vidas que ninguna tormenta fría del lago podía tocar, y ese día lluvioso en Chicago se convirtió en uno de nuestros recuerdos favoritos.`;
+        } else if (isToronto) {
+          storyText = `Una lluvia fresca caía sobre los vecindarios, golpeando suavemente las ventanas de las casas. Abajo, a lo largo de la costa de Lake Ontario, la ciudad se sentía tranquila y lenta. Nuestras mentes estaban completamente concentradas en la habitación del hospital donde te esperábamos. Cuando finalmente te sostuvimos por primera vez, la tarde lluviosa afuera pareció no importar en absoluto. Tu llegada trajo una maravillosa sensación de paz a nuestra familia, convirtiendo una tarde gris junto al lago en un recuerdo indefinido.`;
+        } else if (isWarsaw) {
+          storyText = `Una lluvia constante caía sobre los adoquines del Old Town, goteando hacia las orillas del Vistula River. Afuera, Warsaw seguía su rutina otoñal habitual, pero en nuestra habitación de hospital, la historia de nuestra propia familia apenas comenzaba. En el momento en que te abrazamos, los siglos de historia de afuera se desvanecieron en el fondo. Te sostuvimos fuerte, sabiendo que comenzábamos un nuevo y hermoso capítulo de nuestras vidas juntos.`;
+        } else if (isLondon) {
+          storyText = `Una llovizna densa y clásica caía sobre London, mojando las calles históricas y haciendo que los transeúntes corrieran hacia la estación de metro más cercana. Afuera, una neblina húmeda avanzaba sobre el River Thames. Dentro de nuestra cálida habitación, estábamos a un millón de millas de distancia de la ciudad húmeda. Sostenerte por primera vez fue un momento increíblemente emotivo del que todavía hablamos hoy. Finalmente estabas aquí, y la historia de nuestra propia familia apenas comenzaba.`;
+        } else if (isParis) {
+          storyText = `La lluvia golpeaba suavemente los tejados de zinc y lavaba los tranquilos adoquines de Paris. Cerca del River Seine, la gente se refugiaba bajo los toldos verdes de los cafés en las esquinas. Pero nuestra atención estaba por completo dentro de nuestra cálida habitación. Cuando te abrazamos por primera vez, la tarde gris parisina afuera se desvaneció por completo. Tu respiración suave era el único sonido que nos importaba, y ese día húmedo se convirtió en el recuerdo más preciado de nuestras vidas.`;
+        } else {
+          const tempF = Math.round((tempMax * 9) / 5 + 32);
+          const tempC = Math.round(tempMax);
+          storyText = `El amanecer llegó a ${city}, ${country} alrededor de las ${sunrise}, trayendo una lluvia constante y una temperatura fresca de ${tempC}°C (${tempF}°F). Afuera, un viento fresco de ${Math.round(windSpeed)} km/h soplaba gotas contra la ventana del hospital. Pero en el momento en que te tomamos en nuestros brazos por primera vez, las calles mojadas afuera se borraron por completo de nuestras mentes. La mañana fría y húmeda fue solo el telón de fondo para la increíble calidez de sostenerte por primera vez, un momento que cambió nuestras vidas para siempre.`;
+        }
+
+        return {
+          theme: "Una llegada lluviosa",
+          quote: "La lluvia seguía cayendo afuera, pero adentro teníamos todo lo que necesitábamos.",
+          story: storyText,
+          metricLabel: "",
+          metricValue: ""
+        };
+      } else if (isSnowy) {
+        let storyText = "";
+        if (isNY) {
+          storyText = `La nieve caía suavemente sobre la ciudad, cubriendo las salidas de emergencia de los edificios y amortiguando el zumbido habitual de las calles. Los transeúntes caminaban fatigados sobre la nieve fresca con el Manhattan skyline alzándose en lo alto. En nuestra cálida habitación, solo te esperábamos. Cuando finalmente te sostuvimos en nuestros brazos y sentimos tu suave calidez, la ajetreada ciudad afuera desapareció. Hacía un frío helador afuera, pero adentro nos llenaba una felicidad que nunca olvidaremos.`;
+        } else if (isChicago) {
+          storyText = `Un viento helado soplaba desde Lake Michigan, arremolinando nieve fresca alrededor de los rascacielos y plazas del centro de Chicago. La gente en las calles estaba abrigada con abrigos pesados, transitando por las aceras congeladas. Adentro, nuestro mundo era cálido y silencioso. En el segundo en que te sostuvimos contra nuestra piel, el frío invernal de afuera perdió todo su poder. Ese gélido día de invierno en Chicago se convirtió en el momento más cálido y hermoso de nuestras vidas.`;
+        } else if (isToronto) {
+          storyText = `Una nieve suave y densa cubría los árboles de los parques y pintaba de blanco las orillas de Lake Ontario. Las calles de los alrededores se sentían acogedoras y excepcionalmente tranquilas. Dentro del hospital, esperábamos con una mezcla de emoción y nerviosismo. En el momento exacto en que llegaste, el frío de invierno afuera se olvidó por completo. Te sostuvimos cerca y te vimos dormir, increíblemente agradecidos de darte la bienvenida a nuestra familia.`;
+        } else if (isWarsaw) {
+          storyText = `La escarcha de invierno se adhería a las antiguas murallas del Old Town y un manto fresco de nieve se asentaba a lo largo de las orillas del Vistula River. La ciudad estaba en silencio, envuelta en la quietud de un invierno polaco. Adentro, nos reunimos para darte la bienvenida. En el segundo en que tu voz resonó en la habitación, todo se sintió completo. Te sostuvimos fuerte, mirando tu carita y sintiendo una profunda conexión con la historia familiar que estábamos construyendo juntos.`;
+        } else if (isLondon) {
+          storyText = `Una inusual nieve de invierno cubría los autobuses rojos de dos pisos y las calles de London. El lodo se acumulaba cerca de las orillas del River Thames, y la antigua ciudad se sentía extraordinariamente silenciosa. Nuestros pensamientos estaban completamente enfocados en la calidez de tu habitación. En el segundo en que te sostuvimos por primera vez, el gélido invierno de afuera desapareció de nuestra mente. Miramos tus pequeños dedos, dándonos cuenta de que nuestras vidas acababan de cambiar de la forma más maravillosa.`;
+        } else if (isParis) {
+          storyText = `Una nieve de invierno se asentaba silenciosamente sobre los tejados de pizarra de Paris, cubriendo los árboles a lo largo del River Seine. La ciudad estaba en calma, con el humo de las chimeneas subiendo al aire frío. Dentro de nuestra acogedora habitación, nuestros corazones latían con fuerza mientras esperábamos conocerte. En el momento en que llegaste y te sostuvimos por primera vez, el frío exterior dejó de existir. En tu carita encontramos una calidez que ningún frío invernal podía tocar, comenzando nuestro viaje familiar en esta histórica ciudad.`;
+        } else {
+          const tempF = Math.round((tempMax * 9) / 5 + 32);
+          const tempC = Math.round(tempMax);
+          storyText = `Poco después de que el sol saliera a las ${sunrise} en ${city}, ${country}, la nieve comenzó a caer con una temperatura fría de ${tempC}°C (${tempF}°F). Un viento mordaz de ${Math.round(windSpeed)} km/h recorría las calles, pero nuestra habitación era un refugio tranquilo. Todo se volvió claro cuando te acunamos cerca por primera vez. El gélido clima invernal de afuera desapareció de nuestros pensamientos mientras nos concentrábamos en tu carita y tu suave respiración, un recuerdo que guardaremos con cariño para siempre.`;
+        }
+
+        return {
+          theme: "Una bienvenida con nieve",
+          quote: "Hacía un frío helador afuera, pero nuestra habitación era el lugar más cálido del mundo.",
+          story: storyText,
+          metricLabel: "",
+          metricValue: ""
+        };
+      } else if (isSunny) {
+        let storyText = "";
+        if (isNY) {
+          storyText = `La brillante luz del sol de la mañana iluminaba las torres de cristal del Manhattan skyline, y las calles de abajo estaban concurridas con taxis amarillos y viajeros apresurados. New York se movía a su ritmo implacable de siempre, pero en nuestra habitación de hospital el reloj pareció detenerse. Cuando llegaste en esa cálida tarde, el bullicio de la ciudad se desvaneció. Al sostenerte por primera vez, miramos hacia las calles iluminadas por el sol y nos didos cuenta de que la mayor aventura de nuestras vidas estaba comenzando justo allí en nuestros brazos.`
+        } else if (isChicago) {
+          storyText = `Un aire claro y fresco soplaba desde Lake Michigan, y un sol brillante relucía en las altas torres del centro de Chicago. Las calles de abajo estaban llenas de compradores y multitudes, pero nuestras mentes estaban totalmente enfocadas en el interior. En el momento en que llegaste, la gigantesca ciudad junto al lago pareció desvanecerse en el fondo. Te sostuvimos cerca y sentimos tu suave calidez, mientras el horizonte iluminado por el sol observaba desde la ventana. Te convertiste en nuestra ancla en ese hermoso día soleado.`;
+        } else if (isToronto) {
+          storyText = `La luz brillante del sol centelleaba sobre Lake Ontario, iluminando los parques del vecindario donde los niños jugaban bajo la calidez de la tarde. La ciudad se sentía excepcionalmente alegre, pero todo nuestro mundo estaba allí mismo en nuestros brazos. En el momento en que te sostuvimos por primera vez, nos llenó una ola de pura gratitud. Miramos la costa de Toronto bañada por el sol, sabiendo que nuestra familia finalmente estaba completa.`;
+        } else if (isWarsaw) {
+          storyText = `Un sol radiante bañaba las fachadas históricas del Old Town, reflejándose en las aguas del Vistula River, donde las familias paseaban juntas en el aire cálido de la tarde. Warsaw se sentía brillante y acogedora, pero nuestros pensamientos estaban completamente en el interior. En el momento en que finalmente te sostuvimos cerca, sentimos una esperanza increíble para el futuro. Fuiste nuestra felicidad tan esperada, y tu llegada hizo de esa tarde soleada el día más importante de nuestras vidas.`;
+        } else if (isLondon) {
+          storyText = `Un sol inusualmente cálido se abrió paso entre las nubes, iluminando las antiguas fachadas de ladrillo y las concurridas calles de London. El River Thames centelleaba bajo la luz de la tarde, y los parques locales estaban llenos de personas disfrutando del sol. Sin embargo, dentro de nuestra habitación, lo único que nos importaba eras tú. Cuando finalmente te sostuvimos, la ciudad iluminada por el sol se convirtió en un telón de fondo silencioso. Cambiaste nuestras vidas para siempre en ese día brillante.`;
+        } else if (isParis) {
+          storyText = `Un cálido sol bañaba las avenidas de Paris y brillaba en el River Seine, donde las parejas paseaban cerca de los viejos puestos de libros. La ciudad estaba luminosa y llena de energía, pero nuestro mundo se enfocaba por completo en una sola habitación. Cuando te tomamos en brazos por primera vez, el hermoso día afuera se convirtió en un susurro lejano. Al mirar tu carita, supimos que nuestra mayor alegría estaba justo aquí con nosotros.`;
+        } else {
+          const tempF = Math.round((tempMax * 9) / 5 + 32);
+          const tempC = Math.round(tempMax);
+          storyText = `El día que naciste comenzó con un amanecer despejado a las ${sunrise} en ${city}, ${country}, dando paso a una tarde brillante y soleada. Una suave brisa de ${Math.round(windSpeed)} km/h agitaba el aire, y la temperatura alcanzó unos agradables ${tempC}°C (${tempF}°F). Pero nuestra atención estaba por completo en el pequeño bebé que descansaba en nuestras manos. En el momento en que te sostuvimos contra nuestro pecho, el hermoso clima de afuera pasó a un segundo plano ante la increíble alegría de verte por primera vez.`;
+        }
+
+        return {
+          theme: "Un comienzo soleado",
+          quote: "El sol brillaba, pero tú eras la verdadera luz en nuestras vidas.",
+          story: storyText,
+          metricLabel: "",
+          metricValue: ""
+        };
+      } else {
+        let storyText = "";
+        if (isNY) {
+          storyText = `Un cielo gris y tranquilo colgaba bajo sobre la isla, con vapor subiendo de las calles y viajeros bajando en las entradas del metro. La intensa energía de la ciudad estaba en pleno apogeo, pero nuestra atención estaba por completo dentro de nuestra habitación. En el momento en que abriste los ojos por primera vez, todo el ruidoso bullicio de la ciudad se disolvió en un silencio profundo y reconfortante. Nos sentamos juntos, abrazándote, sintiéndonos increíblemente agradecidos de que por fin estuvieras aquí.`;
+        } else if (isChicago) {
+          storyText = `Un cielo fresco y nublado cubría la ciudad, con una brisa constante que soplaba desde Lake Michigan y agitaba los árboles a lo largo de la orilla. Los viajeros en el centro de Chicago caminaban a paso ligero bajo el aire fresco, pero nuestro mundo se había detenido por completo. Cuando te sostuvimos en nuestros brazos por primera vez, todo el frío del aire se desvaneció. Al mirar tus manos pequeñitas, sentimos una calidez inmediata y abrumadora que siempre recordaremos.`;
+        } else if (isWarsaw) {
+          storyText = `Un tranquilo cielo gris se extendía sobre la ciudad, proyectando una luz calma sobre los muros de ladrillo del Old Town. A lo largo del Vistula River, Warsaw se movía a su ritmo constante de siempre. Pero dentro de nuestra habitación de hospital, un nuevo capítulo estaba comenzando. Cuando se abrieron tus ojos y te abrazamos de cerca por primera vez, una profunda sensación de gratitud llenó la habitación. Miramos tus pequeños rasgos de recién nacido, sabiendo que nuestras vidas nunca volverían a ser las mismas.`;
+        } else if (isToronto) {
+          storyText = `Un cielo tranquilo y nublado se asentaba sobre los vecindarios, trayendo aire templado del lago y una atmósfera de calma a las calles de la ciudad. A lo largo de la costa de Lake Ontario, la gente pasaba y compartía sonrisas discretas, pero adentro nos preparábamos para una vida de amor. Cuando finalmente llegaste, la tarde gris de afuera se desvaneció por completo. Te sostuvimos cerca y escuchamos tu pequeña respiración, absolutamente cautivados por ti.`;
+        } else if (isLondon) {
+          storyText = `Un cielo gris pesado y clásico se asentaba sobre London, proyectando una luz suave sobre las calles y edificios históricos. El River Thames fluía silenciosamente debajo de los puentes, constante y tranquilo. Dentro de nuestra habitación de hospital, estábamos completamente absortos en tu llegada. En el momento en que te sostuvimos por primera vez, el día nublado de afuera se olvidó por completo. Te sostuvimos cerca, escuchando tu respiración suave, sabiendo que la mayor aventura de nuestra familia acababa de comenzar.`;
+        } else if (isParis) {
+          storyText = `Un cielo gris delicado colgaba sobre los tejados históricos, proyectando una luz calma a través de las avenidas de Paris. Cerca del River Seine, el día estaba nublado y templado, pero dentro de nuestra habitación todo se sentía luminoso y cálido. En el segundo en que tus ojos se abrieron levemente y te abrazamos de cerca, la tarde nublada de afuera desapareció de nuestras mentes. Nos sentamos en el silencio, abrazándote con fuerza, dándonu cuenta de lo afortunados que éramos de tenerte.`;
+        } else {
+          const tempF = Math.round((tempMax * 9) / 5 + 32);
+          const tempC = Math.round(tempMax);
+          storyText = `Un cielo nublado cubría el firmamento sobre ${city}, ${country} mientras la luz del día entraba alrededor de las ${sunrise}. Un viento fresco a ${Math.round(windSpeed)} km/h resonaba por las calles, y era un día templado de ${tempC}°C (${tempF}°F). Sin embargo, dentro de nuestra tranquila habitación de hospital, el clima gris del exterior quedó completamente olvidado. En el instante en que te acunamos en nuestros brazos y miramos tus pequeños dedos, nos llenamos de una calidez profunda y duradera. Tu llegada convirtió un día gris cualquiera en el momento más inolvidable de nuestras vidas.`;
+        }
+
+        return {
+          theme: "Una bienvenida serena",
+          quote: "Afuera había un día nublado y tranquilo, pero nuestro mundo nunca había brillado tanto.",
+          story: storyText,
+          metricLabel: "",
+          metricValue: ""
+        };
+      }
+    }
 
     if (isRainy) {
       let storyText = "";
@@ -597,7 +923,7 @@ export default function BirthWeatherStory() {
       } else if (isWarsaw) {
         storyText = `Brilliant sunshine bathed the historic facades of the Old Town, reflecting off the waters of the Vistula River where families strolled together in the warm afternoon air. Warsaw felt bright and welcoming, but our thoughts were entirely inside. The moment we finally held you close, we felt an incredible hope for the future. You were our long-awaited happiness, and your arrival made that sunny afternoon the most important day of our lives.`;
       } else if (isLondon) {
-        storyText = `An unusually warm sunshine broke through the clouds, lighting up the old brick facades and busy streets of London. The River Thames was sparkling in the afternoon light, and local parks were filled with people soaking up the sun. Yet inside our room, the only thing we cared about was you. When we finally held you, the sunlit city outside became a quiet backdrop. You changed our lives forever on that bright day.`;
+        storyText = `An unusually warm sunshine broke through the clouds, lighting up the old brick facades and busy streets of London. The River Thames was sparkling in the afternoon light, and local parks were filled with people soaking up the sun. Yet inside our room, the only thing we cared about was you. When we finally held you, the sunlit city outside became a quiet backdrop. You changed our lives forever on that bright day.`
       } else if (isParis) {
         storyText = `Warm sunlight bathed the avenues of Paris and gleamed off the River Seine where couples strolled near old bookstalls. The city was bright and full of energy, but our world was focused entirely on a single room. When we first held you in our arms, the beautiful day outside became a distant whisper. Looking at your tiny face, we knew that our greatest joy was right here with us.`;
       } else {
@@ -649,14 +975,14 @@ export default function BirthWeatherStory() {
     setErrorMessage(null);
 
     if (!birthDate) {
-      setErrorMessage("Please select a valid birth date.");
+      setErrorMessage(t.errNoDate);
       return;
     }
 
     // Direct string extraction to avoid JavaScript local timezone offset shifts
     const segments = birthDate.split("-");
     if (segments.length !== 3) {
-      setErrorMessage("Please select a valid birth date.");
+      setErrorMessage(t.errNoDate);
       return;
     }
 
@@ -665,7 +991,7 @@ export default function BirthWeatherStory() {
     const dayNum = parseInt(segments[2], 10);
 
     if (isNaN(yearNum) || isNaN(monthNum) || isNaN(dayNum)) {
-      setErrorMessage("Please enter a valid birth date.");
+      setErrorMessage(t.errNoDate);
       return;
     }
 
@@ -680,12 +1006,12 @@ export default function BirthWeatherStory() {
       (yearNum === currentYear && monthNum > currentMonth) ||
       (yearNum === currentYear && monthNum === currentMonth && dayNum > currentDay)
     ) {
-      setErrorMessage("Are they a time traveler? The birth date cannot be in the future!");
+      setErrorMessage(t.errFutureDate);
       return;
     }
 
     if (yearNum < 1940) {
-      setErrorMessage("Alas! Historical weather archives are only available back to 1940. Please enter a birth date from 1940 onwards.");
+      setErrorMessage(t.errYearLimit);
       return;
     }
 
@@ -731,7 +1057,7 @@ export default function BirthWeatherStory() {
           
           if (!geoResp.ok) {
             console.error(`Geocoding request failed with status: ${geoResp.status}`);
-            setErrorMessage("We couldn't find that city. Please enter the city and country in English (for example: Warsaw, Poland or Munich, Germany).");
+            setErrorMessage(t.errNoCity);
             setIsLoadingStory(false);
             return;
           }
@@ -776,7 +1102,7 @@ export default function BirthWeatherStory() {
 
             if (uniqueMatches.length === 0) {
               console.warn(`Geocoding search returned no names matching query for input: "${typedCity}"`);
-              setErrorMessage("We couldn't find that city. Please enter the city and country in English (for example: Warsaw, Poland or Munich, Germany).");
+              setErrorMessage(t.errNoCity);
               setIsLoadingStory(false);
               return;
             }
@@ -794,18 +1120,18 @@ export default function BirthWeatherStory() {
               // Ambiguity found! Set the suggestions, show the dropdown so the user can see options, and show an error prompt.
               setSuggestions(uniqueMatches.slice(0, 5));
               setShowDropdown(true);
-              setErrorMessage(`Multiple matches found for "${typedCity}". Please select your specific birth city from the suggestions list below to continue.`);
+              setErrorMessage(t.errMultipleMatches.replace("{city}", typedCity));
               setIsLoadingStory(false);
               return;
             }
           } else {
             console.warn(`Geocoding search returned no results for input: "${typedCity}"`);
-            setErrorMessage("We couldn't find that city. Please enter the city and country in English (for example: Warsaw, Poland or Munich, Germany).");
+            setErrorMessage(t.errNoCity);
             setIsLoadingStory(false);
             return;
           }
         } else {
-          setErrorMessage("Please specify a birth city & country.");
+          setErrorMessage(t.errEmptyCity);
           setIsLoadingStory(false);
           return;
         }
@@ -863,10 +1189,10 @@ export default function BirthWeatherStory() {
         }
       }
 
-      const generatedStory = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0, cityName, countryName, windSpeed, sunrise, admin1Name);
+      const generatedStory = generateBirthStory(finalWeatherCode, tempMax, rainSum > 0 ? 80 : 0, cityName, countryName, windSpeed, sunrise, admin1Name, lang);
 
       // Save formatted readable representation (e.g. Sep 2, 2026) instead of numeric representation
-      const formattedDate = `${MONTHS_ABBR[monthNum - 1]} ${dayNum}, ${yearStr}`;
+      const formattedDate = `${t.months[monthNum - 1]} ${dayNum}, ${yearStr}`;
 
       setRevealResult({
         city: cityName,
@@ -884,7 +1210,7 @@ export default function BirthWeatherStory() {
 
     } catch (err) {
       console.error(err);
-      setErrorMessage("Open-Meteo archive is recovering state. Please check your network and retry in a few moments!");
+      setErrorMessage(t.errApiRecovery);
     } finally {
       setIsLoadingStory(false);
     }
@@ -1024,7 +1350,7 @@ export default function BirthWeatherStory() {
         ctx.font = "bold 18px 'JetBrains Mono', 'Courier New', monospace";
         ctx.textAlign = "left";
         ctx.textBaseline = "middle";
-        ctx.fillText("WEATHER KEEPSAKE CERTIFICATE", 160, 160);
+        ctx.fillText(t.certificateHeader.toUpperCase(), 160, 160);
 
         // City Name Title (Georgia bold italic)
         ctx.fillStyle = "#FFFFFF";
@@ -1050,7 +1376,7 @@ export default function BirthWeatherStory() {
         ctx.strokeStyle = "rgba(232, 158, 130, 0.25)";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        const themeText = `THEME: ${revealResult.story.theme.toUpperCase()}`;
+        const themeText = `${t.themeLabel.toUpperCase()}: ${revealResult.story.theme.toUpperCase()}`;
         ctx.font = "bold 18px 'JetBrains Mono', 'Courier New', monospace";
         const themeWidth = ctx.measureText(themeText).width + 30;
         drawRoundRect(ctx, 130, 350, themeWidth, 44, 22);
@@ -1062,7 +1388,7 @@ export default function BirthWeatherStory() {
 
         ctx.fillStyle = "rgba(255, 255, 255, 0.65)";
         ctx.font = "bold 20px 'JetBrains Mono', 'Courier New', monospace";
-        ctx.fillText(`DATE: ${revealResult.date}`, 130 + themeWidth + 24, 372);
+        ctx.fillText(`${t.dateLabel.toUpperCase()}: ${revealResult.date}`, 130 + themeWidth + 24, 372);
 
         // 5. CENTERED PETIT WEATHER SNAPSHOT TRAY (Replacing upper-right box with full-width luxury snapshot)
         ctx.fillStyle = "rgba(255, 255, 255, 0.03)";
@@ -1092,15 +1418,15 @@ export default function BirthWeatherStory() {
         // Column 1: Condition
         ctx.fillStyle = "#E89E82";
         ctx.font = "bold 13px 'JetBrains Mono', 'Courier New', monospace";
-        ctx.fillText("CONDITION", 232, 465);
+        ctx.fillText(t.conditionHeader.toUpperCase(), 232, 465);
         ctx.fillStyle = "#FFFFFF";
         ctx.font = "bold 19px 'Inter', 'system-ui', sans-serif";
-        ctx.fillText(getWeatherConditionText(revealResult.weatherCode), 232, 512);
+        ctx.fillText(getWeatherConditionText(revealResult.weatherCode, lang), 232, 512);
 
         // Column 2: Temperature (Visually emphasized)
         ctx.fillStyle = "#E89E82";
         ctx.font = "bold 13px 'JetBrains Mono', 'Courier New', monospace";
-        ctx.fillText("TEMPERATURE", 437, 465);
+        ctx.fillText(t.temperatureHeader.toUpperCase(), 437, 465);
         ctx.fillStyle = "#E89E82";
         ctx.font = "bold 30px 'Inter', 'system-ui', sans-serif";
         const tempSnapStr = `${Math.round(revealResult.tempMax)}°C / ${Math.round((revealResult.tempMax * 9) / 5 + 32)}°F`;
@@ -1109,7 +1435,7 @@ export default function BirthWeatherStory() {
         // Column 3: Max Wind Speed
         ctx.fillStyle = "#E89E82";
         ctx.font = "bold 13px 'JetBrains Mono', 'Courier New', monospace";
-        ctx.fillText("MAX WIND SPEED", 642, 465);
+        ctx.fillText(t.windSpeedHeader.toUpperCase(), 642, 465);
         ctx.fillStyle = "#FFFFFF";
         ctx.font = "bold 18px 'Inter', 'system-ui', sans-serif";
         const windSnapStr = `${Math.round(revealResult.windSpeed)} km/h / ${Math.round(revealResult.windSpeed * 0.621371)} mph`;
@@ -1118,7 +1444,7 @@ export default function BirthWeatherStory() {
         // Column 4: Sunrise
         ctx.fillStyle = "#E89E82";
         ctx.font = "bold 13px 'JetBrains Mono', 'Courier New', monospace";
-        ctx.fillText("SUNRISE TIME", 847, 465);
+        ctx.fillText(t.sunriseHeader.toUpperCase(), 847, 465);
         ctx.fillStyle = "#FFFFFF";
         ctx.font = "bold 18px 'Inter', 'system-ui', sans-serif";
         ctx.fillText(revealResult.sunrise, 847, 512);
@@ -1144,7 +1470,7 @@ export default function BirthWeatherStory() {
 
         ctx.fillStyle = "#D48D71";
         ctx.font = "bold 15px 'JetBrains Mono', 'Courier New', monospace";
-        ctx.fillText("THE SKY'S WELCOME", 160, quoteBoxY + 50);
+        ctx.fillText(t.skysWelcome.toUpperCase(), 160, quoteBoxY + 50);
 
         ctx.fillStyle = "#FFFFFF";
         ctx.font = "italic 34px 'Georgia', 'Times New Roman', serif";
@@ -1182,13 +1508,13 @@ export default function BirthWeatherStory() {
         <div className="space-y-6 text-center md:text-left w-full">
           <div>
             <span className="text-[10px] uppercase font-mono tracking-widest text-[#D48D71] dark:text-[#E89E82] font-extrabold block mb-1">
-              Tiny Date. Big Memory.
+              {t.tinyTag}
             </span>
             <h2 className="font-serif italic font-extrabold text-3xl sm:text-4xl leading-tight text-[#3D2C2E] dark:text-[#FEFAF6]">
-              What was the weather when your baby was born?
+              {t.formTitle}
             </h2>
             <p className="text-[1.1rem] md:text-[1.15rem] italic text-[#7A6363] dark:text-slate-400 font-serif mt-3 leading-relaxed">
-              Before the sleepless nights, snack negotiations, and mysterious sticky fingerprints, there was a single day. Discover the weather that welcomed your child into the world.
+              {t.formSubtitle}
             </p>
           </div>
 
@@ -1202,11 +1528,51 @@ export default function BirthWeatherStory() {
             )}
 
             <div className="space-y-4">
+              {/* Language Selector */}
+              <div className="birth-form-field space-y-1.5">
+                <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-400 font-extrabold flex items-center gap-1.5">
+                  <BookOpen size={12} />
+                  <span>{t.fieldLanguage}</span>
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    id="lang-btn-en"
+                    onClick={() => {
+                      setLang("en");
+                      localStorage.setItem("parent_weather_lang", "en");
+                    }}
+                    className={`flex-1 py-2 text-xs font-mono rounded-xl border font-bold transition cursor-pointer ${
+                      lang === "en"
+                        ? "bg-[#3D2C2E] text-white border-[#3D2C2E] dark:bg-[#E89E82] dark:text-[#2B1D1F] dark:border-[#E89E82]"
+                        : "bg-[#F9F1EB] dark:bg-[#1E1415] text-[#7A6363] dark:text-slate-400 border-transparent hover:bg-[#F0E4DA] dark:hover:bg-[#3B282A]"
+                    }`}
+                  >
+                    English
+                  </button>
+                  <button
+                    type="button"
+                    id="lang-btn-es"
+                    onClick={() => {
+                      setLang("es");
+                      localStorage.setItem("parent_weather_lang", "es");
+                    }}
+                    className={`flex-1 py-2 text-xs font-mono rounded-xl border font-bold transition cursor-pointer ${
+                      lang === "es"
+                        ? "bg-[#3D2C2E] text-white border-[#3D2C2E] dark:bg-[#E89E82] dark:text-[#2B1D1F] dark:border-[#E89E82]"
+                        : "bg-[#F9F1EB] dark:bg-[#1E1415] text-[#7A6363] dark:text-slate-400 border-transparent hover:bg-[#F0E4DA] dark:hover:bg-[#3B282A]"
+                    }`}
+                  >
+                    Español
+                  </button>
+                </div>
+              </div>
+
               {/* Birth Date Input */}
               <div className="birth-form-field space-y-1.5 focus-within:text-[#D48D71]">
                 <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-400 font-extrabold flex items-center gap-1.5">
                   <Calendar size={12} />
-                  <span>Birth Date (MM/DD/YYYY)</span>
+                  <span>{t.fieldBirthDate}</span>
                 </label>
                 <div className="relative w-full block box-border">
                   <input
@@ -1226,13 +1592,13 @@ export default function BirthWeatherStory() {
               <div ref={dropdownRef} className="birth-form-field space-y-1.5 focus-within:text-[#D48D71]">
                 <label className="text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-slate-400 font-extrabold flex items-center gap-1.5">
                   <Search size={12} />
-                  <span>Birth City & Country (in English)</span>
+                  <span>{t.fieldBirthCity}</span>
                 </label>
                 <div className="relative w-full block box-border">
                   <input
                     type="text"
                     required
-                    placeholder="Examples: New York, United States • Warsaw, Poland • Paris, France"
+                    placeholder={t.cityPlaceholder}
                     value={typedCity}
                     onChange={(e) => {
                       setTypedCity(e.target.value);
@@ -1288,7 +1654,7 @@ export default function BirthWeatherStory() {
                 </AnimatePresence>
 
                 <p className="text-[10.5px] leading-relaxed text-slate-400 dark:text-slate-500 font-sans pt-0.5 select-none">
-                  Please enter city and country names in English. Local spellings such as Polska, Deutschland, España, or Italia may not be recognized.
+                  {t.cityHelper}
                 </p>
               </div>
             </div>
@@ -1303,18 +1669,18 @@ export default function BirthWeatherStory() {
                 {isLoadingStory ? (
                   <>
                     <RefreshCw size={14} className="animate-spin text-[#D48D71] dark:text-[#2B1D1F]" />
-                    <span>Scanning the heavens...</span>
+                    <span>{t.btnRevealLoading}</span>
                   </>
                 ) : (
                   <>
                     <ChevronRight size={14} />
-                    <span>Reveal the weather story</span>
+                    <span>{t.btnRevealNormal}</span>
                   </>
                 )}
               </button>
 
               <p className="text-[10.5px] text-center text-slate-400 dark:text-slate-500 font-sans tracking-wide">
-                Powered by historical weather archives and location data.
+                {t.trustLine}
               </p>
             </div>
           </form>
@@ -1345,7 +1711,7 @@ export default function BirthWeatherStory() {
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-5 gap-4">
                       <div>
                         <span className="text-[9px] font-mono tracking-widest text-[#E89E82] uppercase bg-[#E89E82]/10 border border-[#E89E82]/20 px-2.5 py-0.5 rounded-full font-bold">
-                          Weather Keepsake Certificate
+                          {t.certificateHeader}
                         </span>
                         <h3 className="font-serif italic font-extrabold text-2xl sm:text-3xl text-white mt-1.5 font-sans leading-tight">
                           Austin, Texas
@@ -1357,7 +1723,7 @@ export default function BirthWeatherStory() {
                       
                       <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
                         <div className="text-right">
-                          <span className="text-xs font-mono font-bold text-slate-300 block">WEATHER ON YOUR ARRIVAL</span>
+                          <span className="text-xs font-mono font-bold text-slate-300 block">{t.weatherOnArrival}</span>
                           <p className="font-serif font-extrabold text-xl sm:text-2xl text-white">
                             21°C / 70°F
                           </p>
@@ -1371,25 +1737,25 @@ export default function BirthWeatherStory() {
                     {/* Compact Weather Snapshot Block */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-white/[0.03] border border-white/10 rounded-2xl p-3.5 text-center my-1 select-none">
                       <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r">
-                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Condition</span>
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">{t.conditionHeader}</span>
                         <span className="text-[11px] font-bold text-white leading-tight truncate max-w-[110px]">
-                          Gentle Sunshine
+                          {getWeatherConditionText(0, lang)}
                         </span>
                       </div>
                       <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r">
-                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Temperature</span>
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">{t.temperatureHeader}</span>
                         <span className="text-[15px] font-extrabold text-[#E89E82] leading-tight">
                           21°C / 70°F
                         </span>
                       </div>
                       <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r text-center">
-                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Wind Speed</span>
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">{t.windSpeedHeader}</span>
                         <span className="text-[11px] font-bold text-white leading-tight">
                           12 km/h / 7 mph
                         </span>
                       </div>
                       <div className="flex flex-col items-center justify-center py-1">
-                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Sunrise</span>
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">{t.sunriseHeader}</span>
                         <span className="text-[11px] font-bold text-white leading-tight">
                           7:28 AM
                         </span>
@@ -1400,20 +1766,20 @@ export default function BirthWeatherStory() {
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-mono uppercase tracking-widest font-extrabold text-[#E89E82] bg-[#E89E82]/15 px-3 py-1 rounded-full border border-[#E89E82]/25">
-                          Theme: Wrapped in Warmth
+                          {t.themeLabel}: {t.exampleTheme}
                         </span>
-                        <span className="text-xs text-slate-500 font-mono">Date: Oct 14, 2021</span>
+                        <span className="text-xs text-slate-500 font-mono">{t.dateLabel}: {t.months[9]} 14, 2021</span>
                       </div>
                       <p className="text-sm text-slate-300 font-sans leading-relaxed tracking-wide">
-                        Bright afternoon sunshine spread across Austin, lighting up the neighborhood and casting yellow beams across the limestone ridges. It was a warm day outside, but our focus was entirely in our arms. The moment we cradled you, we felt an immense sense of gratitude that filled our hearts. The sunny day was beautiful, but you were the real daylight in our lives, bringing a warmth we will carry forever.
+                        {t.exampleStory}
                       </p>
                     </div>
 
                     {/* Short bold Quote */}
                     <div className="bg-white/[0.03] border-l-2 border-[#E89E82] p-4 rounded-r-xl">
-                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">THE SKY'S WELCOME</p>
+                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">{t.skysWelcome}</p>
                       <p className="font-serif italic text-white text-md sm:text-lg leading-snug">
-                        “Among clouds, rain, and sunlight, you were always the brightest part of the day.”
+                        “{t.exampleQuote}”
                       </p>
                     </div>
                   </div>
@@ -1422,7 +1788,7 @@ export default function BirthWeatherStory() {
                 {/* Example Tag Badge hover overlay */}
                 <div className="absolute top-3 -right-3 rotate-6 bg-[#D48D71] text-xs font-mono font-bold text-white px-3 py-1.5 rounded-xl shadow-md border border-white/10 pointer-events-none z-20 flex items-center gap-1 uppercase tracking-wider scale-90">
                   <Baby size={12} />
-                  <span>Reference Idea</span>
+                  <span>{t.referenceIdea}</span>
                 </div>
               </motion.div>
             ) : (
@@ -1437,7 +1803,7 @@ export default function BirthWeatherStory() {
                 {/* Your Authentic Weather Keepsake Badge overlay */}
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#F9F1EB] dark:bg-[#1E1415] border border-[#F0E4DA] dark:border-[#3B282A] px-5 py-1.5 rounded-full text-[10px] font-mono tracking-widest uppercase text-[#D48D71] dark:text-[#E89E82] font-extrabold flex items-center gap-1 z-30 shadow-sm">
                   <BookOpen size={12} />
-                  <span>Your Authentic Weather Keepsake</span>
+                  <span>{t.authenticKeepsake}</span>
                 </div>
 
                 <div className="w-full rounded-[36px] bg-[#0E1321] text-[#FEFAF6] p-8 shadow-2xl border border-slate-800 relative overflow-hidden">
@@ -1449,7 +1815,7 @@ export default function BirthWeatherStory() {
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-white/10 pb-5 gap-4">
                       <div>
                         <span className="text-[9px] font-mono tracking-widest text-[#E89E82] uppercase bg-[#E89E82]/10 border border-[#E89E82]/20 px-2.5 py-0.5 rounded-full font-bold">
-                          Weather Keepsake Certificate
+                          {t.certificateHeader}
                         </span>
                         <h3 className="font-serif italic font-extrabold text-2xl sm:text-3xl text-white mt-1.5 font-sans leading-tight">
                           {revealResult.city}
@@ -1462,7 +1828,7 @@ export default function BirthWeatherStory() {
                       {/* Meteorological snapshot */}
                       <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
                         <div className="text-right">
-                          <span className="text-xs font-mono font-bold text-slate-300 block">WEATHER ON YOUR ARRIVAL</span>
+                          <span className="text-xs font-mono font-bold text-slate-300 block">{t.weatherOnArrival}</span>
                           <p className="font-serif font-extrabold text-xl sm:text-2xl text-white">
                             {Math.round(revealResult.tempMax)}°C / {Math.round((revealResult.tempMax * 9) / 5 + 32)}°F
                           </p>
@@ -1476,25 +1842,25 @@ export default function BirthWeatherStory() {
                     {/* Compact Weather Snapshot Block */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-white/[0.03] border border-white/10 rounded-2xl p-3.5 text-center my-1 select-none">
                       <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r">
-                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Condition</span>
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">{t.conditionHeader}</span>
                         <span className="text-[11px] font-bold text-white leading-tight truncate max-w-[110px]">
-                          {getWeatherConditionText(revealResult.weatherCode)}
+                          {getWeatherConditionText(revealResult.weatherCode, lang)}
                         </span>
                       </div>
                       <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r">
-                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Temperature</span>
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">{t.temperatureHeader}</span>
                         <span className="text-[15px] font-extrabold text-[#E89E82] leading-tight">
                           {Math.round(revealResult.tempMax)}°C / {Math.round((revealResult.tempMax * 9) / 5 + 32)}°F
                         </span>
                       </div>
                       <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r text-center">
-                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Wind Speed</span>
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">{t.windSpeedHeader}</span>
                         <span className="text-[11px] font-bold text-white leading-tight">
                           {Math.round(revealResult.windSpeed)} km/h / {Math.round(revealResult.windSpeed * 0.621371)} mph
                         </span>
                       </div>
                       <div className="flex flex-col items-center justify-center py-1">
-                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">Sunrise</span>
+                        <span className="text-[8px] font-mono tracking-wider text-[#E89E82] uppercase mb-0.5">{t.sunriseHeader}</span>
                         <span className="text-[11px] font-bold text-white leading-tight">
                           {revealResult.sunrise}
                         </span>
@@ -1505,9 +1871,9 @@ export default function BirthWeatherStory() {
                     <div className="space-y-4">
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-mono uppercase tracking-widest font-extrabold text-[#E89E82] bg-[#E89E82]/15 px-3 py-1 rounded-full border border-[#E89E82]/25">
-                          Theme: {revealResult.story.theme}
+                          {t.themeLabel}: {revealResult.story.theme}
                         </span>
-                        <span className="text-xs text-slate-500 font-mono">Date: {revealResult.date}</span>
+                        <span className="text-xs text-slate-500 font-mono">{t.dateLabel}: {revealResult.date}</span>
                       </div>
                       <p className="text-sm md:text-base text-slate-300 font-sans leading-relaxed tracking-wide">
                         {revealResult.story.story}
@@ -1516,7 +1882,7 @@ export default function BirthWeatherStory() {
 
                     {/* Full-width Quote banner inside Card container */}
                     <div className="bg-white/[0.03] border-l-2 border-[#E89E82] p-4 rounded-r-xl">
-                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">THE SKY'S WELCOME</p>
+                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">{t.skysWelcome}</p>
                       <p className="font-serif italic text-white text-md sm:text-lg leading-snug">
                         “{revealResult.story.quote}”
                       </p>
@@ -1535,17 +1901,17 @@ export default function BirthWeatherStory() {
                     {isGeneratingImage ? (
                       <>
                         <RefreshCw className="animate-spin text-[#1E1415]" size={14} />
-                        <span>Crafting Keepsake...</span>
+                        <span>{t.downloadButtonLoading}</span>
                       </>
                     ) : (
                       <>
                         <Download size={14} className="stroke-[2.5]" />
-                        <span>Download Keepsake</span>
+                        <span>{t.downloadButton}</span>
                       </>
                     )}
                   </button>
                   <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono tracking-wider uppercase text-center mt-1">
-                    Optimized for Instagram (4:5 vertical), Facebook, and baby memory albums
+                    {t.downloadOptimized}
                   </p>
                 </div>
               </motion.div>
