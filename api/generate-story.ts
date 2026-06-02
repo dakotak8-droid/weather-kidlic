@@ -264,15 +264,15 @@ function getOfflineBackupStory(params: {
   } else {
     if (isRainy) {
       const variants = [
-        `A gentle rain drifted across ${params.city} on the day of your arrival. Streets shimmered beneath fresh raindrops while umbrellas moved quietly through the afternoon. The steady rhythm of rainfall softened the noise of everyday life, giving the day an unexpected sense of calm. Temperatures hovered around ${tempC}°C (${tempF}°F) as the weather settled into a peaceful pattern with wind speed at ${windKn} km/h (${windMph} mph). It wasn't a dramatic storm or a day people would long remember, yet for us it became unforgettable. While the rain traced silver lines across windows and rooftops, a brand-new chapter quietly began.`,
+        `Light rain drifted across ${params.city} throughout the afternoon with steady temperatures around ${tempC}°C (${tempF}°F). Umbrellas appeared along busy avenues, and water gathered quietly on rooftops as a breeze of ${windKn} km/h (${windMph} mph) rustled through the trees. The rhythmic sound of rainfall softened the city’s usual noise, casting a quiet calm over parks and neighborhoods as daily life continued. For most people, it was simply an ordinary rainy day. For one family, however, it became a date they would always remember.`,
         
-        `A soft drizzle descended over ${params.city} on the day of your arrival. Pavements and asphalt streets shimmered under the gentle, steady downpour, reflecting the city lights under overcast skies. Outside, commuters carrying umbrellas moved with a quiet, synchronized grace through the avenues. The temperature remained cool, hovering around ${tempC}°C (${tempF}°F) with a light breeze of ${windKn} km/h (${windMph} mph). It was an unassuming, quiet day for the busy city outside, but the soft tapping of rain against the glass provided a peaceful backdrop for a beautiful, unforgettable new beginning.`,
+        `A fresh spring rain washed over the streets of ${params.city}, leaving pavements shimmering under overcast skies. With temperatures holding at ${tempC}°C (${tempF}°F) and wind pacing at ${windKn} km/h (${windMph} mph), the air smelled of wet earth and clean stones. Commuters carrying umbrellas moved quickly past glowing shop windows while headlights cast long reflections on the wet asphalt. For most people, it was simply another ordinary rainy day. For one family, however, it became a date worth remembering.`,
         
-        `Passing rain showers swept across ${params.city} on the day of your arrival, leaving quiet reflections on wet roadways and pavements. Wind at ${windKn} km/h (${windMph} mph) carried the fresh scent of raindrops, while clouds settled low over the cityscape. The temperature marked a steady ${tempC}°C (${tempF}°F), matching the cool, tranquil atmosphere of the day. While people sought shelter and watched the rainfall from covered windows, a serene and gentle quietness took over. It was an ordinary rainy day to the rest of the world, but to us, it was when a wonderful new story quietly commenced.`,
+        `An evening rain descended over the rooftops of ${params.city}, softening the city outline against a deep iron-grey sky. Temperatures cooled to ${tempC}°C (${tempF}°F) while a gentle breeze of ${windKn} km/h (${windMph} mph) carried mist across the streets. Streetlights flickered to life, reflecting in silver pools along empty walkways where water gathered. Inside warm cafes, people watched droplets crawl down the glass. For most people, it was simply an ordinary evening of rain. For one family, however, it became a date they would always remember.`,
         
-        `The steady tapping of rain on the rooftops of ${params.city} created a peaceful, rhythmic melody on the day of your arrival. A thick, atmospheric layer of clouds hung low over the buildings, softening the city's lines. The temperature held steady at ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Outside, umbrellas painted a moving, colorful picture on the glistening streets. Inside, the rhythmic sound of falling rain created an unexpected sense of calm, transforming a gray day into a beautiful, quiet setting for a brand-new life to emerge.`,
+        `Passing rain showers swept quickly across ${params.city}, carried by a gusty wind of ${windKn} km/h (${windMph} mph). Temperatures remained cool at ${tempC}°C (${tempF}°F) as dramatic cloud formations rolled over the city rooftops. Between brief bursts of water, wet asphalt streets glistened beneath a soft, diffuse light that settled over local parks and neighborhoods. Pedestrians sheltered under storefront awnings while watching the storm patterns transition. For most people, it was simply an ordinary day of passing weather. For one family, however, it became a date worth remembering.`,
         
-        `A fresh rain washed over the neighborhoods of ${params.city} on the day you arrived, bringing a cool clarity to the streets. Fresh raindrops hung like pearls from trees and awnings, and the avenues glistened with soft reflections. The temperature was mild at ${tempC}°C (${tempF}°F), accompanied by a gentle wind of ${windKn} km/h (${windMph} mph). While passing showers softened the city's usual busy pace, they brought a deep feeling of peaceful transition and hope. It was a beautiful, tranquil rainy day—a perfect and quiet background where our favorite memory was cast.`
+        `Steady, quiet rainfall enveloped ${params.city} that day, turning the streets into a canvas of soft slate and grey. With temperatures registering ${tempC}°C (${tempF}°F) and wind blowing gently at ${windKn} km/h (${windMph} mph), silver raindrops lined every windowpane and balcony. The steady patter of moisture created an unexpected calm, slowing the city’s rapid morning pace down to a peaceful murmur as umbrellas moved quietly through the quiet city atmosphere. For most people, it was simply another ordinary rainy day. For one family, however, it became a date they would always remember.`
       ];
 
       const randomIndex = Math.floor(Math.random() * variants.length);
@@ -419,24 +419,35 @@ Your task is to generate an authentic personal story, a themed title, and a simp
 Mandatory Constraints:
 1. STRICT NO-CLICHÉ NEGATIVE FILTER (CRITICAL):
    - You are STRICTLY FORBIDDEN from using any greeting card cliches, Hallmark-card language, or exaggerated sentimentality.
-   - You must NEVER use any of the following phrases or their direct equivalents in Spanish:
-     * "everything changed" / "todo cambió" / "cambió todo"
+   - You must NEVER use any of the following phrases or their direct equivalents in Spanish/other languages:
      * "holding you for the first time" / "sostenerte por primera vez" / "tenerte en brazos por primera vez"
      * "first cuddle" / "primer abrazo" / "primer cuddle" / "primer acurruco"
+     * "everything changed" / "todo cambió" / "cambió todo"
+     * "our world changed" / "nuestro mundo cambió"
+     * "brand-new chapter" / "nuevo capítulo"
+     * "filled our hearts" / "llenó nuestros corazones"
+     * "magical moment" / "momento mágico"
+     * "journey began" / "comenzó el viaje"
+     * "tiny face" / "carita"
+     * "sacred moment" / "momento sagrado"
+     * "our lives were never the same" / "nuestras vidas nunca volvieron a ser las mismas"
      * "our universe" / "nuestro universo"
-     * "our quiet room" / "nuestra habitación silenciosa" / "nuestra silenciosa habitación" / "en el silencio de nuestra habitación"
-     * "joy washed over us" / "la alegría nos inundó" / "inundó nuestros corazones de alegría"
-     * "the world continued outside" / "el mundo afuera continuaba" / "afuera el mundo continuaba" / "mientras el mundo afuera continuaba"
+     * "our quiet room" / "nuestra habitación silenciosa"
+     * "joy washed over us" / "la alegría nos inundó"
+     * "the world continued outside" / "el mundo afuera continuaba"
      * "nothing else mattered" / "nada más importaba"
-     * "focus narrowed" / "el enfoque se redujo" / "nuestro enfoque se estrechó"
-     * "everything faded into the background" / "todo lo demás se desvaneció" / "todo se desvaneció en el fondo"
-   - Avoid common hospital clichés (such as endless corridors, soft-soled shoes, beeping machines). Instead, focus on real, quiet human details.
+     * "focus narrowed" / "el enfoque se redujo"
+     * "everything faded into the background" / "todo lo demás se desvaneció"
+   - Avoid common hospital clichés (such as endless corridors, soft-soled shoes, beeping machines) and all Hallmark-style sentimentality.
+   - Avoid making assumptions about parents' emotions. Write as if describing an authentic day preserved in a weather archive.
 
-2. AUTHENTIC PARENT STORY NARRATIVE STYLE (YEARS LATER):
-   - The story must sound like a real parent telling their child the story years later. Use a down-to-earth, natural, warm, and conversational voice.
-   - Keep the story length strictly between 70 and 100 words. This size limit is a hard physical keepsake layout constraint.
-   - The emotional focus should be on anticipation, relief, deep gratitude, gentle curiosity, and remembering specific small details.
-   - Contrast an ordinary, indifferent day outside with the meaningful, indelible personal memory inside.
+2. GENUINE HISTORICAL WEATHER KEEPSAKE NARRATIVE STYLE (CRITICAL):
+   - Focus primarily on the actual weather, atmosphere, city environment, season, and daily life. Weather must be treated as the main character.
+   - The ratio should be 80% weather and atmosphere, and 20% emotion/warmth.
+   - Keep the story length strictly between 80 and 120 words. This size limit is a hard physical keepsake layout constraint.
+   - STRUCTURE:
+     1. The story should begin by describing the weather conditions in the city (such as rain, clouds, streets, rooftops, umbrellas, wind, temperature, how the city felt).
+     2. End with a simple, grounded observation that for most people it was an ordinary day, but for one family it became a date worth remembering / they would always remember.
 
 3. WEATHER AS BACKGROUND CONTEXT ONLY:
    - Treat weather strictly as factual, sensory background context of the day, not as a poetic metaphor or an emotional driver. Keep all weather descriptions completely objective.
@@ -449,8 +460,8 @@ Mandatory Constraints:
      * City: ${city} (Region: ${region || "None"}, Country: ${country})
 
 4. STYLISH, MEMORABLE QUOTE & SIMPLE THEME:
-   - QUOTE: Generate exactly one short, simple, natural, and memorable sentence. It must feel like an authentic, heartfelt reminder spoken by a parent later in life, entirely free of greeting-card fluff or dramatic poetry.
-   - THEME: Generate a clean, weather-based title of 3 to 6 words. It must remain strictly factual and weather-oriented, NOT poetic or flowery (e.g., "A Sunny Day in ${city}", "Cloudy Skies in ${city}").
+   - THEME: If the weather is rainy, the theme title MUST be exactly "A Rainy Arrival" (or "Una llegada con lluvia" in Spanish). Otherwise, generate a clean, weather-based title of 3 to 6 words. It must remain strictly factual and weather-oriented, NOT poetic or flowery (e.g., "A Sunny Day in ${city}", "Cloudy Skies in ${city}").
+   - QUOTE: If the weather is rainy and requested in English, the quote MUST be exactly: "The rain arrived softly, as if the city had paused for a moment." Otherwise, generate exactly one short, simple, natural, and memorable sentence. It must feel like an authentic, heartfelt reminder spoken by a parent later in life, entirely free of greeting-card fluff or dramatic poetry.
 
 5. STRICT LANGUAGE REQUIREMENT:
    - The requested language is: "${language}".
@@ -460,7 +471,7 @@ Response JSON Schema (Keep exactly unchanged):
 You must output a JSON object containing:
 - theme: string (3-6 words, weather-based, factual title)
 - quote: string (exactly 1 short, simple, memorable sentence)
-- story: string (the completed narrative memory, strictly between 70 and 100 words formatted as a single paragraph)
+- story: string (the completed narrative memory, strictly between 80 and 120 words formatted as a single paragraph)
 - quality_check: an object containing:
   - language_consistent: boolean (is it 100% written in the requested language?)
   - weather_consistent: boolean (does it accurately incorporate the provided weather data?)
