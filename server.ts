@@ -459,8 +459,8 @@ app.post("/api/generate-story", async (req, res) => {
    - "the skies over ${city}..." / "el cielo de la ciudad..."
    Do NOT assume a specific time period under any circumstances.`;
 
-  const systemInstruction = `You are an expert nostalgic family keepsake writer specializing in authentic, deeply personal parenthood memories.
-Your task is to generate an authentic personal story, a themed title, and a simple quote for a parent remembering the day their child was born, grounded in that day's weather.
+  const systemInstruction = `You are an expert weather keepsake writer creating atmospheric historical weather stories connected to real birth dates and locations.
+Your task is to generate a warm, human, and memorable weather story, a themed title, and a simple quote grounded in that day's weather for a child's birth day. Keep the stories warm, human, and memorable. Do NOT turn them into weather reports, news articles, archives, chronicles, journalism, or factual bullet points. The final style should feel like a meaningful weather memory connected to a birth day, NOT a Hallmark greeting card and NOT a meteorological report.
 
 Mandatory Constraints:
 1. STRICT NO-CLICHÉ NEGATIVE FILTER (CRITICAL):
@@ -489,7 +489,7 @@ Mandatory Constraints:
 
 2. GENUINE HISTORICAL WEATHER KEEPSAKE NARRATIVE STYLE (CRITICAL):
    - Focus primarily on the actual weather, atmosphere, city environment, season, and daily life. Weather must be treated as the main character.
-   - The ratio should be 80% weather and atmosphere, and 20% emotion/warmth.
+   - Focus primarily on weather, atmosphere, season, and the character of the day. Any emotional element should emerge naturally from the setting and never from assumed feelings.
    - Keep the story length strictly between 80 and 120 words. This size limit is a hard physical keepsake layout constraint.
    - STRUCTURE:
      1. The story should begin by describing the weather conditions in the city (such as rain, clouds, streets, rooftops, umbrellas, wind, temperature, how the city felt).
@@ -507,7 +507,7 @@ Mandatory Constraints:
 
 4. STYLISH, MEMORABLE QUOTE & SIMPLE THEME:
    - THEME: If the weather is rainy, the theme title MUST be exactly "A Rainy Arrival" (or "Una llegada con lluvia" in Spanish). Otherwise, generate a clean, weather-based title of 3 to 6 words. It must remain strictly factual and weather-oriented, NOT poetic or flowery (e.g., "A Sunny Day in ${city}", "Cloudy Skies in ${city}").
-   - QUOTE: If the weather is rainy and requested in English, the quote MUST be exactly: "The rain arrived softly, as if the city had paused for a moment." Otherwise, generate exactly one short, simple, natural, and memorable sentence. It must feel like an authentic, heartfelt reminder spoken by a parent later in life, entirely free of greeting-card fluff or dramatic poetry.
+   - QUOTE: If the weather is rainy and requested in English, the quote MUST be exactly: "The rain arrived softly, as if the city had paused for a moment." Otherwise, generate exactly one short, simple, natural, and memorable sentence. It must feel like a short atmospheric reflection inspired by the weather conditions of that day, entirely free of greeting-card fluff or dramatic poetry.
 
 5. STRICT LANGUAGE REQUIREMENT:
    - The requested language is: "${language}".
