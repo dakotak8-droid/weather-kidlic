@@ -963,8 +963,8 @@ export default function BirthWeatherStory() {
       if (isRainy) {
         return {
           theme: "Una llegada con lluvia",
-          quote: "Para todos los demás fue solo un día de lluvia más. Para nosotros fue el día que cambió todo.",
-          story: `El día comenzó con una lluvia constante sobre ${city}, con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Mientras la gente afuera corría bajo sus paraguas apresurando el paso, nuestra habitación era un refugio de absoluta calma. Cuidarte y acurrucarte en tu primer abrazo nos trajo una paz infinita y el alivio de tenerte al fin con nosotros. La lluvia caía afuera, pero adentro nuestro mundo comenzaba de nuevo.`,
+          quote: "Para todos los demás fue solo un día de lluvia más. Para nosotros, fue cuando comenzó nuestro mundo.",
+          story: `El día de tu llegada, una lluvia apacible cubrió ${city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera, la gente caminaba deprisa bajo sus paraguas, pero en el silencio de nuestra habitación el tiempo pareció detenerse. Sostenerte en brazos por primera vez nos llenó de un alivio inmenso y de una profunda emoción. Al abrazarte en ese primer y cálido encuentro de ojos, contemplando tu carita, supimos que nuestro mundo renacía con una alegría inexplicable. Es un recuerdo entrañable que guardaremos siempre en el corazón.`,
           metricLabel: "",
           metricValue: "",
         };
@@ -972,8 +972,8 @@ export default function BirthWeatherStory() {
       if (isSnowy) {
         return {
           theme: "Una bienvenida con nieve",
-          quote: "Mientras la nieve cubría la ciudad para todos los demás, nuestro mundo se llenaba de calidez.",
-          story: `El día comenzó con una capa ligera de nieve cubriendo las calles de ${city}, con un frío de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). En la habitación, el ambiente era cálido y silencioso, ajeno por completo al invierno exterior. Cuando por fin te tuvimos en brazos por primera vez, un alivio inmenso inundó nuestros corazones. El mundo afuera continuaba en silencio bajo el manto blanco, mientras nosotros vivíamos el instante más feliz de nuestras vidas.`,
+          quote: "Mientras la nieve cubría la ciudad, nuestra habitación se llenaba de la calidez más perfecta.",
+          story: `El día de tu llegada, un manto de nieve cubrió las calles de ${city} en medio de un frío de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Mientras el exterior permanecía en un pacífico silencio blanco, nuestra habitación se inundó de una calidez mágica. Al tenerte entre nuestros brazos por primera vez, experimentamos una mezcla perfecta de asombro, alivio y felicidad absoluta. Recibir tu primer abrazo y contemplar lo perfecto que eras nos llenó el alma enteramente. Es un instante sagrado que vivirá guardado en nuestra memoria para siempre.`,
           metricLabel: "",
           metricValue: "",
         };
@@ -981,8 +981,8 @@ export default function BirthWeatherStory() {
       if (isSunny) {
         return {
           theme: "Un inicio soleado",
-          quote: "El sol brilló para toda la ciudad como un día cualquiera, pero nuestra luz ya estaba en nuestros brazos.",
-          story: `El día comenzó con un cielo despejado e iluminado sobre ${city}, con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Abajo en las calles, la gente continuaba con su ajetreado ritmo de siempre, pero arriba todo era paz y silencio. Sostener tu pequeña mano por primera vez nos llenó de un amor profundo y de una alegría indescriptible. El sol brillaba afuera, pero nuestra verdadera luz estaba ya en nuestros brazos.`,
+          quote: "El sol brilló para toda la ciudad, pero nuestra verdadera luz estaba en nuestros brazos.",
+          story: `El día de tu llegada, un sol brillante iluminó todo ${city} alcanzando los ${tempC}°C (${tempF}°F) con viento a ${windKn} km/h (${windMph} mph). Afuera, la ciudad continuaba con su ajetreado ritmo diario, pero en nuestra habitación la vida cobró un nuevo sentido. Sostener tu pequeña mano por primera vez nos inundó de un alivio inmenso y un asombro infinito. Al envolverte en tu primer abrazo y mirar tu pequeña carita por fin, sentimos una alegría indescriptible. El sol brillaba afuera, pero nuestra verdadera luz estaba ya en nuestros brazos.`,
           metricLabel: "",
           metricValue: "",
         };
@@ -990,8 +990,8 @@ export default function BirthWeatherStory() {
       // Default Cloudy
       return {
         theme: "Un día nublado y tranquilo",
-        quote: "Para todos los demás fue solo un día nublado más. Para nosotros fue el día que cambió todo.",
-        story: `El día comenzó con nubes tranquilas cubriendo el cielo de ${city}, con una temperatura de ${tempC}°C (${tempF}°F) y una brisa de ${windKn} km/h (${windMph} mph). Mientras las personas afuera seguían con sus vidas comunes, en nuestra habitación de hospital el tiempo pareció detenerse por completo. Al abrazarte por primera vez, sentimos un alivio inmenso y una felicidad inexplicable. El cielo gris no importaba; todo nuestro universo se había reducido al espacio seguro de nuestros brazos.`,
+        quote: "El cielo gris no importaba; todo nuestro universo se había reducido al espacio de nuestro abrazo.",
+        story: `El día de tu llegada, nubes pacíficas vistieron de gris el cielo de ${city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera todo seguía su rutina normal, pero en nuestra habitación el universo se redujo a la calma más pura. Cargarte por primera vez nos trajo un alivio profundo y un asombro desbordante. Al acurrucarte en tu primer abrazo y contemplarte en silencio, el corazón se nos llenó de una alegría sin límites. Fue el momento en que todo comenzó de nuevo para nosotros.`,
         metricLabel: "",
         metricValue: "",
       };
@@ -1000,7 +1000,7 @@ export default function BirthWeatherStory() {
         return {
           theme: "A Rainy Arrival",
           quote: "It was just another rainy day for everyone else. For us, it was the day everything changed.",
-          story: `The day began with a gentle rain falling across ${city}, with a temperature of ${tempC}°C (${tempF}°F) and a wind of ${windKn} km/h (${windMph} mph). While people hurried down the streets under a canopy of umbrellas, our quiet room felt safe and warm. Holding you close for your first cuddle brought an incredible wave of happiness and relief. Outside, the world carried on as usual, but in our arms, everything changed.`,
+          story: `On the day of your arrival, a gentle rain washed over ${city}, where temperatures stayed around ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Outside, people hurried past under umbrellas, but inside our quiet room, time seemed to stand still. Holding you for the first time filled us with an exquisite sense of relief and wonder. Looking at your beautiful tiny face during our very first cuddle, all our worries dissolved into pure joy. It was a cozy, sacred moment we will carry in our hearts forever.`,
           metricLabel: "",
           metricValue: "",
         };
@@ -1008,8 +1008,8 @@ export default function BirthWeatherStory() {
       if (isSnowy) {
         return {
           theme: "A Snowy Welcome",
-          quote: "While snow blanketed the city for everyone else, our world became warm and perfect.",
-          story: `The day began with a quiet blanket of snow covering ${city}, with a freezing temperature of ${tempC}°C (${tempF}°F) and wind of ${windKn} km/h (${windMph} mph). Inside our heated hospital room, the world outside faded away as we held you for the very first time. Feeling your soft breathing brought a deep sense of peace and relief. The wintry landscape outside was cold, but our hearts were filled with pure warmth.`,
+          quote: "While snow carpeted the city outside, our world was filled with pure, perfect warmth.",
+          story: `On the day of your arrival, soft winter snow blanketed ${city}, bringing a quiet chill of ${tempC}°C (${tempF}°F) and wind at ${windKn} km/h (${windMph} mph). While the streets outside fell silent under the white canopy, our room was illuminated by a deep, warm glow. Holding you for the first time brought a wave of absolute wonder, joy, and profound relief. Everything else faded as we cradled you in our very first cuddle, marveling at how perfect you were. It was a sacred moment we will cherish in our hearts forever.`,
           metricLabel: "",
           metricValue: "",
         };
@@ -1017,8 +1017,8 @@ export default function BirthWeatherStory() {
       if (isSunny) {
         return {
           theme: "A Sunny Beginning",
-          quote: "The sun rose for the city just like any other day, but our light was finally in our arms.",
-          story: `The day began with a bright, sunny sky over ${city}, with a temperature of ${tempC}°C (${tempF}°F) and a soft breeze of ${windKn} km/h (${windMph} mph). While everyone else hurried about their busy lives, we sat together in our warm, sunlit room. Holding you in our arms for that first cuddle brought an overwhelming feeling of happiness and relief. The sunshine filled the room, but our true light had just arrived.`,
+          quote: "The sun rose for the city just like any other day, but our true light was finally in our arms.",
+          story: `On the day of your arrival, clear sunshine bathed ${city}, warming the day to ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Outside, the streets were lively, but inside our quiet world, everything changed. Holding you in our arms for the first time filled us with a breathless sense of relief and wonder. Looking at your beautiful tiny face during our very first cuddle, our hearts overflowed with pure joy. The sunshine filled the room, but our ultimate light was finally in our arms. It was a sparkling moment we carry with us forever.`,
           metricLabel: "",
           metricValue: "",
         };
@@ -1026,8 +1026,8 @@ export default function BirthWeatherStory() {
       // Default Cloudy
       return {
         theme: "A Quiet Cloudy Day",
-        quote: "It was just another cloudy day for everyone else. For us, it was the day everything changed.",
-        story: `The day began with quiet clouds drifting over the skyline of ${city}, at a temperature of ${tempC}°C (${tempF}°F) and a wind of ${windKn} km/h (${windMph} mph). While the bustling streets went on with their everyday affairs outside, our hospital room felt like a peaceful retreat. Cradling you for that first beautiful embrace brought an immense, heartwarming relief. The day was completely ordinary for the world, but in our arms, looking at your tiny face, everything changed.`,
+        quote: "The grey skies didn't matter; our entire universe had settled inside our quiet room.",
+        story: `On the day of your arrival, a quiet grey sky softened the horizon over ${city}, with temperatures at ${tempC}°C (${tempF}°F) and wind at ${windKn} km/h (${windMph} mph). Outside, the city continued its usual busy rhythm, but inside our room, everything changed. Holding you for the first time made the world feel small, tender, and incredibly peaceful. As we breathed in your sweet scent during our first cuddle, a wave of profound relief and joy washed over us. It was a beautiful moment we will carry with us forever.`,
         metricLabel: "",
         metricValue: "",
       };
