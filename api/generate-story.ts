@@ -1,13 +1,5 @@
-import express from "express";
-import path from "path";
-import { createServer as createViteServer } from "vite";
+import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { GoogleGenAI, Type } from "@google/genai";
-
-const app = express();
-const PORT = 3000;
-
-// Middleware
-app.use(express.json());
 
 // Lazy client loaded only when needed
 let aiClient: GoogleGenAI | null = null;
@@ -121,32 +113,6 @@ function applyTimeOfArrival(story: string, lang: 'en' | 'es', birthTime?: string
   }
 }
 
-function getThemeForEmptyTime(weatherCode: number, lang: 'en' | 'es'): string {
-  const isRainy = [51, 53, 55, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(weatherCode);
-  const isSnowy = [71, 73, 75, 77, 85, 86].includes(weatherCode);
-  const isSunny = [0, 1].includes(weatherCode);
-  const isCloudy = [2, 3, 45, 48].includes(weatherCode);
-
-  if (lang === "es") {
-    if (isRainy) return "Una llegada con lluvia";
-    if (isSnowy) return "Una bienvenida con nieve";
-    if (isSunny) return "Un inicio soleado";
-    if (isCloudy) return "Un día nublado y tranquilo";
-    return "Una llegada pacífica";
-  } else {
-    if (isRainy) return "A Rainy Arrival";
-    if (isSnowy) return "A Snowy Welcome";
-    if (isSunny) return "A Sunny Beginning";
-    if (isCloudy) return "A Quiet Cloudy Day";
-    return "A Peaceful Arrival";
-  }
-}
-
-function getCorrectTheme(weatherCode: number, lang: 'en' | 'es', birthTime?: string): string {
-  // Always use timeless and elegant themes, never forcing time-of-day wording
-  return getThemeForEmptyTime(weatherCode, lang);
-}
-
 function makeStoryTimeNeutral(story: string, lang: 'en' | 'es'): string {
   if (lang === "es") {
     let s = story;
@@ -242,94 +208,13 @@ function makeStoryTimeNeutral(story: string, lang: 'en' | 'es'): string {
   }
 }
 
-// -------------------------------------------------------------
-// SECURE BACKUP STORIES GENERATOR (Meets all rules and avoids clichés)
-// -------------------------------------------------------------
-function getOfflineBackupStory(params: {
-  city: string;
-  country: string;
-  region?: string;
-  tempMax: number;
-  weatherCode: number;
-  weatherText: string;
-  windSpeed: number;
-  sunrise: string;
-  birthDate: string;
-  birthTime?: string;
-  lang: "en" | "es";
-}): { theme: string; quote: string; story: string } {
-  const isRainy = [51, 53, 55, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(params.weatherCode);
-  const isSnowy = [71, 73, 75, 77, 85, 86].includes(params.weatherCode);
-  const isSunny = [0, 1].includes(params.weatherCode);
-
-  const tempF = Math.round((params.tempMax * 9) / 5 + 32);
-  const tempC = Math.round(params.tempMax);
-  const windKn = Math.round(params.windSpeed);
-  const windMph = Math.round(params.windSpeed * 0.621371);
-
-  if (params.lang === "es") {
-    if (isRainy) {
-      return {
-        theme: "Una llegada con lluvia",
-        quote: "Para todos los demás fue solo un día de lluvia más. Para nosotros, fue cuando comenzó nuestro mundo.",
-        story: `El día de tu llegada, una lluvia apacible cubrió ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera, la gente caminaba deprisa bajo sus paraguas, pero en el silencio de nuestra habitación el tiempo pareció detenerse. Sostenerte en brazos por primera vez nos llenó de un alivio inmenso y de una profunda emoción. Al abrazarte en ese primer y cálido encuentro de ojos, contemplando tu carita, supimos que nuestro mundo renacía con una alegría inexplicable. Es un recuerdo entrañable que guardaremos siempre en el corazón.`,
-      };
-    }
-    if (isSnowy) {
-      return {
-        theme: "Una bienvenida con nieve",
-        quote: "Mientras la nieve cubría la ciudad, nuestra habitación se llenaba de la calidez más perfecta.",
-        story: `El día de tu llegada, un manto de nieve cubrió las calles de ${params.city} en medio de un frío de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Mientras el exterior permanecía en un pacífico silencio blanco, nuestra habitación se inundó de una calidez mágica. Al tenerte entre nuestros brazos por primera vez, experimentamos una mezcla perfecta de asombro, alivio y felicidad absoluta. Recibir tu primer abrazo y contemplar lo perfecto que eras nos llenó el alma enteramente. Es un instante sagrado que vivirá guardado en nuestra memoria para siempre.`,
-      };
-    }
-    if (isSunny) {
-      return {
-        theme: "Un inicio soleado",
-        quote: "El sol brilló para toda la ciudad, pero nuestra verdadera luz estaba en nuestros brazos.",
-        story: `El día de tu llegada, un sol brillante iluminó todo ${params.city} alcanzando los ${tempC}°C (${tempF}°F) con viento a ${windKn} km/h (${windMph} mph). Afuera, la ciudad continuaba con su ajetreado ritmo diario, pero en nuestra habitación la vida cobró un nuevo sentido. Sostener tu pequeña mano por primera vez nos inundó de un alivio inmenso y un asombro infinito. Al envolverte en tu primer abrazo y mirar tu pequeña carita por fin, sentimos una alegría indescriptible. El sol brillaba afuera, pero nuestra verdadera luz estaba ya en nuestros brazos.`,
-      };
-    }
-    // Default Cloudy
-    return {
-      theme: "Un día nublado y tranquilo",
-      quote: "El cielo gris no importaba; todo nuestro universo se había reducido al espacio de nuestro abrazo.",
-      story: `El día de tu llegada, nubes pacíficas vistieron de gris el cielo de ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera todo seguía su rutina normal, pero en nuestra habitación el universo se redujo a la calma más pura. Cargarte por primera vez nos trajo un alivio profundo y un asombro desbordante. Al acurrucarte en tu primer abrazo y contemplarte en silencio, el corazón se nos llenó de una alegría sin límites. Fue el momento en que todo comenzó de nuevo para nosotros.`,
-    };
-  } else {
-    if (isRainy) {
-      return {
-        theme: "A Rainy Arrival",
-        quote: "It was just another rainy day for everyone else. For us, it was the day everything changed.",
-        story: `On the day of your arrival, a gentle rain washed over ${params.city}, where temperatures stayed around ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Outside, people hurried past under umbrellas, but inside our quiet room, time seemed to stand still. Holding you for the first time filled us with an exquisite sense of relief and wonder. Looking at your beautiful tiny face during our very first cuddle, all our worries dissolved into pure joy. It was a cozy, sacred moment we will carry in our hearts forever.`,
-      };
-    }
-    if (isSnowy) {
-      return {
-        theme: "A Snowy Welcome",
-        quote: "While snow carpeted the city outside, our world was filled with pure, perfect warmth.",
-        story: `On the day of your arrival, soft winter snow blanketed ${params.city}, bringing a quiet chill of ${tempC}°C (${tempF}°F) and wind at ${windKn} km/h (${windMph} mph). While the streets outside fell silent under the white canopy, our room was illuminated by a deep, warm glow. Holding you for the first time brought a wave of absolute wonder, joy, and profound relief. Everything else faded as we cradled you in our very first cuddle, marveling at how perfect you were. It was a sacred moment we will cherish in our hearts forever.`,
-      };
-    }
-    if (isSunny) {
-      return {
-        theme: "A Sunny Beginning",
-        quote: "The sun rose for the city just like any other day, but our true light was finally in our arms.",
-        story: `On the day of your arrival, clear sunshine bathed ${params.city}, warming the day to ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Outside, the streets were lively, but inside our quiet world, everything changed. Holding you in our arms for the first time filled us with a breathless sense of relief and wonder. Looking at your beautiful tiny face during our very first cuddle, our hearts overflowed with pure joy. The sunshine filled the room, but our ultimate light was finally in our arms. It was a sparkling moment we carry with us forever.`,
-      };
-    }
-    // Default Cloudy
-    return {
-      theme: "A Quiet Cloudy Day",
-      quote: "The grey skies didn't matter; our entire universe had settled inside our quiet room.",
-      story: `On the day of your arrival, a quiet grey sky softened the horizon over ${params.city}, with temperatures at ${tempC}°C (${tempF}°F) and wind at ${windKn} km/h (${windMph} mph). Outside, the city continued its usual busy rhythm, but inside our room, everything changed. Holding you for the first time made the world feel small, tender, and incredibly peaceful. As we breathed in your sweet scent during our first cuddle, a wave of profound relief and joy washed over us. It was a beautiful moment we will carry with us forever.`,
-    };
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Only allow POST
+  if (req.method !== "POST") {
+    res.status(405).json({ error: "Method not allowed. Use POST." });
+    return;
   }
-}
 
-// -------------------------------------------------------------
-// MAIN SYSTEM PROPAGATING API ROOT
-// -------------------------------------------------------------
-app.post("/api/generate-story", async (req, res) => {
   const {
     city,
     country,
@@ -343,8 +228,6 @@ app.post("/api/generate-story", async (req, res) => {
     birthTime,
     lang,
   } = req.body;
-
-
 
   if (!city) {
     res.status(400).json({ error: "Missing required parameter: city" });
@@ -436,7 +319,7 @@ Mandatory Constraints:
      * Weather condition: ${weatherText} (weatherCode ${weatherCode})
      * Wind speed: ${windSpeed} km/h (appx ${Math.round(windSpeed * 0.621371)} mph)
      * Date: ${birthDate}
-     * City: ${city} (Region: ${region || 'None'}, Country: ${country})
+     * City: ${city} (Region: ${region || "None"}, Country: ${country})
 
 4. STYLISH, MEMORABLE QUOTE & SIMPLE THEME:
    - QUOTE: Generate exactly one short, simple, natural, and memorable sentence. It must feel like an authentic, heartfelt reminder spoken by a parent later in life, entirely free of greeting-card fluff or dramatic poetry.
@@ -468,7 +351,7 @@ You must output a JSON object containing:
       console.log(`Querying Gemini (Attempt ${attempts + 1}) for story in ${language}...`);
       const response = await ai.models.generateContent({
         model: "gemini-3.5-flash",
-        contents: `Generate an authentic parent memory matching the system instruction for ${city}, ${country} (${region || ''}) with weather ${weatherText} (Max Temp ${tempMax}°C, Wind ${windSpeed} km/h) on ${birthDate}.`,
+        contents: `Generate an authentic parent memory matching the system instruction for ${city}, ${country} (${region || ""}) with weather ${weatherText} (Max Temp ${tempMax}°C, Wind ${windSpeed} km/h) on ${birthDate}.`,
         config: {
           systemInstruction: systemInstruction,
           responseMimeType: "application/json",
@@ -500,7 +383,7 @@ You must output a JSON object containing:
       if (parsed.theme && parsed.quote && parsed.story) {
         const qCheck = parsed.quality_check || {};
         const isPassed = qCheck.language_consistent && qCheck.weather_consistent && qCheck.time_consistent && qCheck.city_consistent && qCheck.structure_consistent;
-        
+
         if (isPassed) {
           console.log("Gemini self-validation quality check passed on attempt " + (attempts + 1));
           finalJson = parsed;
@@ -521,7 +404,7 @@ You must output a JSON object containing:
     if (!birthTime) {
       finalStory = makeStoryTimeNeutral(finalStory, lang === "es" ? "es" : "en");
     }
-    res.json({
+    res.status(200).json({
       theme: finalJson.theme,
       quote: finalJson.quote,
       story: finalStory,
@@ -531,29 +414,4 @@ You must output a JSON object containing:
     console.error("All Gemini attempts failed or timed out.");
     res.status(500).json({ error: "Gemini failed to generate story." });
   }
-});
-
-// Serve static elements or start Vite
-async function startServer() {
-  if (process.env.NODE_ENV !== "production") {
-    console.log("Development mode: Integrating Vite server middleware");
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
-    });
-    app.use(vite.middlewares);
-  } else {
-    console.log("Production mode: Serving static files from ./dist");
-    const distPath = path.join(process.cwd(), "dist");
-    app.use(express.static(distPath));
-    app.get("*", (req, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
-    });
-  }
-
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server starting on host http://0.0.0.0:${PORT}`);
-  });
 }
-
-startServer();
