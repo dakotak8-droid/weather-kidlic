@@ -676,7 +676,7 @@ You must output a JSON object containing:
       console.log(`Querying Gemini (Attempt ${attempts + 1}) for story in ${language}...`);
       const response = await ai.models.generateContent({
         model: "gemini-3.5-flash",
-        contents: `Generate an authentic parent memory matching the system instruction for ${city}, ${country} (${region || ""}) with weather ${weatherText} (Max Temp ${tempMax}°C, Wind ${windSpeed} km/h) on ${birthDate}.`,
+        contents: `Generate an atmospheric historical weather memory centered on the weather conditions, season, sky, city atmosphere, and character of the day. The weather is the primary subject. The birth is only a brief historical fact. Follow the system instruction for ${city}, ${country} (${region || ""}) with weather ${weatherText} (Max Temp ${tempMax}°C, Wind ${windSpeed} km/h) on ${birthDate}.`,
         config: {
           systemInstruction: systemInstruction,
           responseMimeType: "application/json",
