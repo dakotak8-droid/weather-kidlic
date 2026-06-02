@@ -560,6 +560,39 @@ FINAL STORY BALANCE
 
 The weather must remain the dominant subject from the first sentence to the last sentence.
 
+ABSOLUTE WRITING RULES
+
+The story MUST NEVER contain:
+- On the day of your arrival
+- Holding you for the first time
+- first cuddle
+- first embrace
+- sweet scent
+- tiny face
+- everything changed
+- our universe
+- our hearts
+- relief washed over us
+- carry forever
+- beautiful moment
+- inside our room
+- we held you
+- our little one
+- precious baby
+- miracle
+- bundle of joy
+
+The narrator must NOT speak as a parent.
+The narrator must NOT describe physical contact with a baby.
+The narrator must NOT describe emotions, tears, gratitude, relief, love, affection, cuddles, hugs, embraces, or family feelings.
+
+Instead:
+Focus on atmosphere, weather, season, sky, light, wind, clouds, rain, temperature, sounds of the city, and the character of the day.
+Write like a historical weather storyteller creating an atmospheric memory.
+
+Weather should be 90% of the story.
+Human element should be subtle and indirect.
+
 Mandatory Constraints:
 1. STRICTLY FORBIDDEN PHRASES AND THEMES (CRITICAL):
    - You are STRICTLY FORBIDDEN from using any greeting card cliches, Hallmark-card language, or exaggerated sentimentality.
