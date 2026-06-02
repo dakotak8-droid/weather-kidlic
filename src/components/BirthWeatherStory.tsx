@@ -939,7 +939,6 @@ export default function BirthWeatherStory() {
     }
   };
 
-  // Human storytelling generator based on weather parameters and city geography
   const generateBirthStory = (
     weatherCode: number,
     tempMax: number,
@@ -955,177 +954,83 @@ export default function BirthWeatherStory() {
     const isSnowy = [71, 73, 75, 77, 85, 86].includes(weatherCode);
     const isSunny = [0, 1].includes(weatherCode);
 
-    const cityLower = city.toLowerCase();
-    const isNY = cityLower.includes("new york") || cityLower.includes("nyc");
-    const isChicago = cityLower.includes("chicago");
-    const isWarsaw = cityLower.includes("warsaw") || cityLower.includes("warszawa");
-    const isToronto = cityLower.includes("toronto");
-    const isLondon = cityLower.includes("london");
-    const isParis = cityLower.includes("paris");
-
     const tempF = Math.round((tempMax * 9) / 5 + 32);
     const tempC = Math.round(tempMax);
     const windKn = Math.round(windSpeed);
     const windMph = Math.round(windSpeed * 0.621371);
 
-    // Dynamic month-based date format
-    const formattedDate = lang === "es" ? "el día en que naciste" : "the day you were born";
-
     if (lang === "es") {
       if (isRainy) {
-        let story = "";
-        let theme = "Un día de lluvia";
-        let quote = "La lluvia afuera era constante, pero nosotros estábamos concentrados en conocerte.";
-
-        if (isNY) {
-          story = `La mañana comenzó con una llovizna sobre Nueva York, con una temperatura de ${tempC}°C (${tempF}°F). En el hospital todo estaba en silencio y los enfermeros se movían despacio por el pasillo, mientras nosotros te sosteníamos por primera vez en brazos. Afuera era un día gris más de rutina, pero en nuestra habitación todo se sentía completamente diferente.`;
-        } else if (isChicago) {
-          story = `Llovía de manera constante sobre Chicago, con un viento de ${windKn} km/h (${windMph} mph) y una temperatura de ${tempC}°C (${tempF}°F). Mucha gente apuraba el paso bajo los paraguas afuera, pero en nuestra habitación del hospital el ambiente era de pura calma. Pasamos la mañana mirando tu carita, asombrados de que por fin estuvieras aquí.`;
-        } else if (isWarsaw) {
-          story = `Varsovia amaneció con una llovizna a las ${sunrise} y una temperatura de ${tempC}°C (${tempF}°F). Mientras la gente seguía con su ritmo habitual bajo la lluvia gris de afuera, nosotros estábamos en el hospital contando tus pequeños dedos. Todavía recordamos con mucha claridad el sonido de las gotas contra el vidrio.`;
-        } else if (isParis) {
-          story = `Una llovizna ligera caía sobre París, con una temperatura de ${tempC}°C (${tempF}°F) y una brisa de ${windKn} km/h (${windMph} mph). Los médicos y enfermeras entraban con pasos sigilosos mientras te sosteníamos por primera vez. Afuera el día transcurría despacio para todos, pero para nosotros fue el momento en que todo cambió.`;
-        } else if (isLondon) {
-          story = `Una llovizna caía sobre Londres a las ${sunrise}, dejando las calles mojadas y tranquilas a ${tempC}°C (${tempF}°F). Mientras todos los demás continuaban su ritmo habitual bajo la llovizna, nosotros estábamos en el hospital escuchando tus respiraciones tranquilas de recién nacido. Fue una mañana ordinaria para el resto de la ciudad, pero para nosotros quedó guardada en el corazón.`;
-        } else if (isToronto) {
-          story = `Una lluvia caía sobre Toronto, con una temperatura de ${tempC}°C (${tempF}°F) y un viento de ${windKn} km/h (${windMph} mph). La habitación del hospital era un lugar cálido y silencioso. Nos pasamos las horas mirándote dormir y aprendiendo a sostenerte con cuidado, ignorando por completo el mal clima de afuera.`;
-        } else {
-          story = `La mañana en que naciste en ${city} fue bastante húmeda y lluviosa, con una temperatura de ${tempC}°C (${tempF}°F) y un viento de ${windKn} km/h (${windMph} mph). El hospital estaba tranquilo y el personal se movía con pasos suaves por los pasillos. La lluvia caía de forma constante, pero nosotros estábamos totalmente concentrados en verte y en cargarte por primera vez.`;
-        }
-
-        return { theme, quote, story, metricLabel: "", metricValue: "" };
+        return {
+          theme: "Una llegada con lluvia",
+          quote: "Para todos los demás fue solo un día de lluvia más. Para nosotros fue el día que cambió todo.",
+          story: `El día comenzó con una lluvia constante sobre ${city}, con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Mientras la gente afuera corría bajo sus paraguas apresurando el paso, nuestra habitación era un refugio de absoluta calma. Cuidarte y acurrucarte en tu primer abrazo nos trajo una paz infinita y el alivio de tenerte al fin con nosotros. La lluvia caía afuera, pero adentro nuestro mundo comenzaba de nuevo.`,
+          metricLabel: "",
+          metricValue: "",
+        };
       }
-
       if (isSnowy) {
-        let story = "";
-        let theme = "Un día de nieve";
-        let quote = "Hacía mucho frío afuera, pero nosotros estábamos concentrados en darte la bienvenida.";
-
-        if (isNY) {
-          story = `Nueva York amaneció con un frío intenso de ${tempC}°C (${tempF}°F) y nieve cayendo despacio afuera. El hospital estaba templado y acogedor, con el radiador de la habitación zumbando suavemente de fondo. Cubierto con mantas de algodón, te tomamos en brazos por primera vez mientras mirábamos la tregua silenciosa del invierno a través de la ventana.`;
-        } else if (isChicago) {
-          story = `Hacía un frío cortante en Chicago, con una temperatura de ${tempC}°C (${tempF}°F) y un viento de ${windKn} km/h (${windMph} mph) arrastrando nieve por las calles. Mientras la tormenta seguía afuera, el hospital se sentía como un refugio perfectamente seguro y cálido. Nos turnábamos para cargarte y mirar tu carita, completamente tranquilos frente al invierno exterior.`;
-        } else if (isWarsaw) {
-          story = `Varsovia amaneció cubierta de nieve, con el sol asomando a las ${sunrise} tras nubes heladas a ${tempC}°C (${tempF}°F). El movimiento exterior avanzaba lento sobre el manto blanco, pero en nuestra habitación del hospital el tiempo parecía haberse detenido por completo. Sostenerte por primera vez nos trajo una inmensa tranquilidad.`;
-        } else {
-          story = `Una capa ligera de nieve cubría las calles de ${city} la mañana en que naciste, con ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). El hospital estaba tranquilo y templado. Mientras la nieve caía afuera sin hacer ruido, nosotros pasamos las primeras horas simplemente mirándote la carita y sosteniéndote con cuidado en brazos.`;
-        }
-
-        return { theme, quote, story, metricLabel: "", metricValue: "" };
+        return {
+          theme: "Una bienvenida con nieve",
+          quote: "Mientras la nieve cubría la ciudad para todos los demás, nuestro mundo se llenaba de calidez.",
+          story: `El día comenzó con una capa ligera de nieve cubriendo las calles de ${city}, con un frío de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). En la habitación, el ambiente era cálido y silencioso, ajeno por completo al invierno exterior. Cuando por fin te tuvimos en brazos por primera vez, un alivio inmenso inundó nuestros corazones. El mundo afuera continuaba en silencio bajo el manto blanco, mientras nosotros vivíamos el instante más feliz de nuestras vidas.`,
+          metricLabel: "",
+          metricValue: "",
+        };
       }
-
       if (isSunny) {
-        let story = "";
-        let theme = "Un día soleado";
-        let quote = "El clima afuera estaba despejado, pero todo nuestro interés estaba puesto en ti.";
-
-        if (isNY) {
-          story = `La mañana en que naciste en Nueva York fue despejada y soleada, con una temperatura de ${tempC}°C (${tempF}°F). Mientras todos los demás seguían con su prisa diaria abajo en la calle, nosotros pasamos una tarde sumamente pacífica en la habitación, contándote los dedos y mirándote dormir.`;
-        } else if (isChicago) {
-          story = `Chicago tuvo un día soleado de ${tempC}°C (${tempF}°F), con sol y una brisa de ${windKn} km/h (${windMph} mph). En el hospital el movimiento transcurría con normalidad, pero en nuestra habitación las horas avanzaron a otro ritmo. Sostener tu pequeña mano por primera vez con el sol entrando por la ventana es un momento del que todavía solemos hablar hoy en día.`;
-        } else if (isWarsaw) {
-          story = `Varsovia amaneció con cielos despejados desde las ${sunrise} y una temperatura de ${tempC}°C (${tempF}°F). La luz inundaba la habitación del hospital, donde todo estaba en calma y silencio. Nos sentamos junto a la ventana para mirarte y abrazarte por primera vez en un día tan luminoso.`;
-        } else {
-          story = `Un día soleado y despejado nos recibió en ${city} cuando naciste, con cielos azules, una brisa a ${windKn} km/h (${windMph} mph) y una temperatura de ${tempC}°C (${tempF}°F). La gente caminaba tranquila por afuera, mientras nosotros estábamos en el hospital enfocados únicamente en aprender a sostenerte y en cuidarte.`;
-        }
-
-        return { theme, quote, story, metricLabel: "", metricValue: "" };
+        return {
+          theme: "Un inicio soleado",
+          quote: "El sol brilló para toda la ciudad como un día cualquiera, pero nuestra luz ya estaba en nuestros brazos.",
+          story: `El día comenzó con un cielo despejado e iluminado sobre ${city}, con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Abajo en las calles, la gente continuaba con su ajetreado ritmo de siempre, pero arriba todo era paz y silencio. Sostener tu pequeña mano por primera vez nos llenó de un amor profundo y de una alegría indescriptible. El sol brillaba afuera, pero nuestra verdadera luz estaba ya en nuestros brazos.`,
+          metricLabel: "",
+          metricValue: "",
+        };
       }
-
       // Default Cloudy
-      let story = "";
-      let theme = "Un día nublado";
-      let quote = "Afuera era un día gris común y corriente. Para nosotros fue la primera vez que te vimos.";
-
-      if (isNY) {
-        story = `El cielo sobre Nueva York estaba gris y completamente tranquilo, apagando el ruido habitual de la ciudad a ${tempC}°C (${tempF}°F). Mientras todo continuaba con su rutina de siempre afuera, en nuestra habitación de hospital el ambiente era de pura calma. Te quedaste dormido sosteniendo nuestro dedo, y en ese momento nos olvidamos por completo de cualquier otra cosa.`;
-      } else if (isChicago) {
-        story = `Nubes grises y bajas cubrían Chicago, empujadas por un viento constante de ${windKn} km/h (${windMph} mph) a ${tempC}°C (${tempF}°F). En el hospital las enfermeras hacían sus rondas correspondientes, y nosotros pasamos la tarde simplemente mirándote respirar. El día gris afuera no importaba nada; toda nuestra atención estaba concentrada en ti.`;
-      } else if (isWarsaw) {
-        story = `Un cielo gris y cubierto cubría Varsovia desde la salida del sol a las ${sunrise}, con una temperatura de ${tempC}°C (${tempF}°F). En el hospital todo estaba muy silencioso mientras te pasábamos con cuidado de unos brazos a otros. La rutina de la ciudad siguió su curso habitual, pero a nosotros nos quedó guardado ese momento de paz para siempre.`;
-      } else {
-        story = `Un cielo gris y tranquilo cubría ${city} el día en que naciste, con una brisa a ${windKn} km/h (${windMph} mph) y una temperatura de ${tempC}°C (${tempF}°F). Afuera el día transcurría despacio y sin novedades particulares, mientras que adentro pasábamos las horas conociéndote de cerca. Sostenerte por primera vez fue un momento de gran alivio y tranquilidad.`;
-      }
-
-      return { theme, quote, story, metricLabel: "", metricValue: "" };
+      return {
+        theme: "Un día nublado y tranquilo",
+        quote: "Para todos los demás fue solo un día nublado más. Para nosotros fue el día que cambió todo.",
+        story: `El día comenzó con nubes tranquilas cubriendo el cielo de ${city}, con una temperatura de ${tempC}°C (${tempF}°F) y una brisa de ${windKn} km/h (${windMph} mph). Mientras las personas afuera seguían con sus vidas comunes, en nuestra habitación de hospital el tiempo pareció detenerse por completo. Al abrazarte por primera vez, sentimos un alivio inmenso y una felicidad inexplicable. El cielo gris no importaba; todo nuestro universo se había reducido al espacio seguro de nuestros brazos.`,
+        metricLabel: "",
+        metricValue: "",
+      };
     } else {
-      // English
       if (isRainy) {
-        let story = "";
-        let theme = "A Rainy Morning";
-        let quote = "Outside, it was raining steadily, but we barely noticed. We were focused on meeting you for the first time.";
-
-        if (isNY) {
-          story = `The morning began with a drizzle in New York, with a temperature of ${tempC}°C (${tempF}°F). Inside the hospital room, we barely registered the damp weather outside. Nurses moved quietly through the hallways while we held you for the first time. For everyone else in the city, it was just another routine workday, but in our room, everything felt completely different.`;
-        } else if (isChicago) {
-          story = `A rain was falling across Chicago, with the wind blowing at ${windKn} km/h (${windMph} mph) under a temperature of ${tempC}°C (${tempF}°F). Inside our hospital room, everything was quiet. We spent the morning simply studying your face, trying to process that you were finally here. The cold, wet Chicago weather outside didn't worry us at all.`;
-        } else if (isWarsaw) {
-          story = `It was quiet and grey in Warsaw, with rain falling outside at ${tempC}°C (${tempF}°F) as the sun rose behind clouds at ${sunrise}. While the city continued its usual wet routine, we were safe inside our room, staring at your tiny fingers. We still remember clearly the quiet sound of droplets beating against the glass window.`;
-        } else if (isParis) {
-          story = `A drizzle fell across Paris under a temperature of ${tempC}°C (${tempF}°F) with a wind of ${windKn} km/h (${windMph} mph). The hospital staff worked quietly, and we felt an immense sense of relief holding you at last. While people hurried past the clinic windows under the rain, our entire attention was focused on holding your tiny hand.`;
-        } else if (isLondon) {
-          story = `A drizzle was falling outside in London, leaving the streets wet and quiet at ${tempC}°C (${tempF}°F) as the sun rose at ${sunrise}. While the day carried on as usual for the rest of the world, our attention was completely focused on you, listening to your faint breathing in that calm hospital room.`;
-        } else if (isToronto) {
-          story = `A rain fell over Toronto at ${tempC}°C (${tempF}°F), with wind blowing at ${windKn} km/h (${windMph} mph). Inside the hospital, our room felt safe and quiet. We were completely distracted from the weather outside, busy studying every tiny detail of your hands and feet.`;
-        } else {
-          story = `The morning you were born in ${city} was rainy, with the thermometer showing ${tempC}°C (${tempF}°F) and a wind of ${windKn} km/h (${windMph} mph). The hospital hallways were quiet, and the staff was moving around with soft footsteps. It was raining steadily across the area, but we were focused only on holding you in our arms for the first time.`;
-        }
-
-        return { theme, quote, story, metricLabel: "", metricValue: "" };
+        return {
+          theme: "A Rainy Arrival",
+          quote: "It was just another rainy day for everyone else. For us, it was the day everything changed.",
+          story: `The day began with a gentle rain falling across ${city}, with a temperature of ${tempC}°C (${tempF}°F) and a wind of ${windKn} km/h (${windMph} mph). While people hurried down the streets under a canopy of umbrellas, our quiet room felt safe and warm. Holding you close for your first cuddle brought an incredible wave of happiness and relief. Outside, the world carried on as usual, but in our arms, everything changed.`,
+          metricLabel: "",
+          metricValue: "",
+        };
       }
-
       if (isSnowy) {
-        let story = "";
-        let theme = "Snow Outside";
-        let quote = "It was freezing cold outside, but our attention was completely focused on meeting you.";
-
-        if (isNY) {
-          story = `A fresh layer of snow was covering New York on the chilly winter morning you were born, with temperatures around ${tempC}°C (${tempF}°F). The hospital room was nicely heated, and the radiator hummed quietly in the corner while we held you close. We still remember looking out at the falling snow through the window while you slept.`;
-        } else if (isChicago) {
-          story = `The wind was blowing cold at ${windKn} km/h (${windMph} mph) with fresh snow drifting outside in Chicago at a freezing ${tempC}°C (${tempF}°F). Inside our hospital room, however, it was wonderfully quiet and warm. We took turns cradling you in our arms, and the winter chill outside became just a quiet backdrop to our first afternoon together.`;
-        } else if (isWarsaw) {
-          story = `A fresh snow had fallen over Warsaw, and the morning sun rose behind cold clouds at ${sunrise} with a chilly temperature of ${tempC}°C (${tempF}°F). The city outside followed its quiet winter routine, but inside our room, everything moved at a much slower pace. Holding you against our chest for the first time is a moment of calm we still talk about today.`;
-        } else {
-          story = `A quiet blanket of snow was settling over the streets of ${city} on the morning you were born, with the temperature hovering at ${tempC}°C (${tempF}°F) and the wind blowing at ${windKn} km/h (${windMph} mph). The hospital room was warm and still. While the world outside was cold and white, we spent the first hours just holding you and making sure you were comfortable.`;
-        }
-
-        return { theme, quote, story, metricLabel: "", metricValue: "" };
+        return {
+          theme: "A Snowy Welcome",
+          quote: "While snow blanketed the city for everyone else, our world became warm and perfect.",
+          story: `The day began with a quiet blanket of snow covering ${city}, with a freezing temperature of ${tempC}°C (${tempF}°F) and wind of ${windKn} km/h (${windMph} mph). Inside our heated hospital room, the world outside faded away as we held you for the very first time. Feeling your soft breathing brought a deep sense of peace and relief. The wintry landscape outside was cold, but our hearts were filled with pure warmth.`,
+          metricLabel: "",
+          metricValue: "",
+        };
       }
-
       if (isSunny) {
-        let story = "";
-        let theme = "A Sunny Day";
-        let quote = "The weather outside was bright and clear, but the best part was holding you for the first time.";
-
-        if (isNY) {
-          story = `New York was experiencing a bright, sunny morning when you arrived, with a temperature of ${tempC}°C (${tempF}°F). While the rest of the city below was caught up in the usual daily rush, we spent the afternoon in our quiet room, counting your toes and watching you sleep peacefully.`;
-        } else if (isChicago) {
-          story = `The weather in Chicago was sunny and clear, with a temperature of ${tempC}°C (${tempF}°F) and a breeze of ${windKn} km/h (${windMph} mph). Inside the hospital, we barely noticed the day outside. We were far too busy holding you close. Watching the morning sun stream through the window onto your tiny hand is a memory we will always cherish.`;
-        } else if (isWarsaw) {
-          story = `Warsaw was bathed in clear sunshine on the day you were born, with a temperature of ${tempC}°C (${tempF}°F) as the sun rose at ${sunrise}. In our hospital room, the nurses worked quietly, and everything was peaceful. We sat close to the window where the natural light was brightest to take a few simple photos of your first hours.`;
-        } else {
-          story = `A sunny, clear day welcomed us in ${city} when you were born, with blue skies and a breeze blowing at ${windKn} km/h (${windMph} mph) under a temperature of ${tempC}°C (${tempF}°F). People were walking through the parks outside, while we were in the hospital, focused entirely on learning how to feed you and keep you warm.`;
-        }
-
-        return { theme, quote, story, metricLabel: "", metricValue: "" };
+        return {
+          theme: "A Sunny Beginning",
+          quote: "The sun rose for the city just like any other day, but our light was finally in our arms.",
+          story: `The day began with a bright, sunny sky over ${city}, with a temperature of ${tempC}°C (${tempF}°F) and a soft breeze of ${windKn} km/h (${windMph} mph). While everyone else hurried about their busy lives, we sat together in our warm, sunlit room. Holding you in our arms for that first cuddle brought an overwhelming feeling of happiness and relief. The sunshine filled the room, but our true light had just arrived.`,
+          metricLabel: "",
+          metricValue: "",
+        };
       }
-
       // Default Cloudy
-      let story = "";
-      let theme = "A Quiet Cloudy Day";
-      let quote = "It was just a regular cloudy day for everyone else, but not for us.";
-
-      if (isNY) {
-        story = `The sky over New York was calm and grey, softening the usual rush of the city at a temperature of ${tempC}°C (${tempF}°F). Inside our hospital room, the speed of the day slowed to an absolute standstill. You fell asleep holding onto our pinky finger, and we just sat there in silence, looking at your tiny face.`;
-      } else if (isChicago) {
-        story = `Overcast clouds blanketed Chicago, carried by a steady wind of ${windKn} km/h (${windMph} mph) at ${tempC}°C (${tempF}°F). Outside, the streets were quiet, and inside we spent the afternoon holding you close. There was a simple, peaceful feeling in the room as we took turns cradling our new baby.`;
-      } else if (isWarsaw) {
-        story = `A quiet, cloudy sky covered Warsaw on the morning you were born, with the sun rising behind grey clouds at ${sunrise} and temperature at ${tempC}°C (${tempF}°F). The city carried on as usual, while our entire attention was focused on you, listening to your soft breathing in a very peaceful room.`;
-      } else {
-        story = `A quiet, overcast sky covered ${city} on the day you were born, with a wind blowing at ${windKn} km/h (${windMph} mph) and a temperature of ${tempC}°C (${tempF}°F). While the weather outside was slow and grey, we spent the hours getting to know you. Having you in our arms for the first time brought an immense sense of relief—a moment we still remember clearly today.`;
-      }
-
-      return { theme, quote, story, metricLabel: "", metricValue: "" };
+      return {
+        theme: "A Quiet Cloudy Day",
+        quote: "It was just another cloudy day for everyone else. For us, it was the day everything changed.",
+        story: `The day began with quiet clouds drifting over the skyline of ${city}, at a temperature of ${tempC}°C (${tempF}°F) and a wind of ${windKn} km/h (${windMph} mph). While the bustling streets went on with their everyday affairs outside, our hospital room felt like a peaceful retreat. Cradling you for that first beautiful embrace brought an immense, heartwarming relief. The day was completely ordinary for the world, but in our arms, looking at your tiny face, everything changed.`,
+        metricLabel: "",
+        metricValue: "",
+      };
     }
   };
 
