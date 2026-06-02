@@ -744,43 +744,43 @@ export default function BirthWeatherStory() {
       return {
         nameEn: "Late Night",
         nameEs: "Noche tardía",
-        phraseEn: "in the late night you arrived",
-        phraseEs: "en la noche tardía en que llegaste",
+        phraseEn: "during the quiet early hours when you arrived",
+        phraseEs: "durante las tranquilas horas de la madrugada cuando llegaste",
       };
     } else if (hours >= 6 && hours < 9) {
       return {
         nameEn: "Early Morning",
         nameEs: "Mañana temprano",
-        phraseEn: "in the early morning you arrived",
-        phraseEs: "en la mañana temprano en que llegaste",
+        phraseEn: "on a peaceful early morning when you arrived",
+        phraseEs: "en una mañana temprano y apacible cuando llegaste",
       };
     } else if (hours >= 9 && hours < 12) {
       return {
         nameEn: "Morning",
         nameEs: "Mañana",
-        phraseEn: "on the morning you arrived",
-        phraseEs: "en la mañana en que llegaste",
+        phraseEn: "during the morning when you arrived",
+        phraseEs: "durante la mañana cuando llegaste",
       };
     } else if (hours >= 12 && hours < 17) {
       return {
         nameEn: "Afternoon",
         nameEs: "Tarde",
-        phraseEn: "that afternoon",
-        phraseEs: "aquella tarde",
+        phraseEn: "during the afternoon when you arrived",
+        phraseEs: "durante la tarde cuando llegaste",
       };
     } else if (hours >= 17 && hours < 20) {
       return {
         nameEn: "Evening",
         nameEs: "Atardecer",
-        phraseEn: "on a peaceful evening",
-        phraseEs: "en un atardecer pacífico",
+        phraseEn: "during the evening when you arrived",
+        phraseEs: "durante el atardecer cuando llegaste",
       };
     } else {
       return {
         nameEn: "Night",
         nameEs: "Noche",
-        phraseEn: "late that night",
-        phraseEs: "en la noche de tu llegada",
+        phraseEn: "during the night when you arrived",
+        phraseEs: "durante la noche cuando llegaste",
       };
     }
   };
@@ -789,122 +789,33 @@ export default function BirthWeatherStory() {
     const period = getPeriodInfo(birthTime);
     if (!period) return story;
 
-    if (lang === "es") {
-      if (period.nameEs === "Noche tardía") {
-        return story
-          .replace(/La mañana comenzó con/gi, "La madrugada comenzó con")
-          .replace(/la mañana en que naciste/gi, "la madrugada en que naciste")
-          .replace(/La mañana en que naciste/gi, "La madrugada en que naciste")
-          .replace(/la mañana/gi, "la madrugada")
-          .replace(/una mañana/gi, "una madrugada")
-          .replace(/Pasamos la mañana/gi, "Pasamos las silenciosas horas de la madrugada")
-          .replace(/el día/gi, "la madrugada")
-          .replace(/amaneció con/gi, "comenzó de madrugada con")
-          .replace(/amaneció cubierta/gi, "se cubrió de madrugada");
-      } else if (period.nameEs === "Mañana temprano") {
-        return story
-          .replace(/La mañana comenzó con/gi, "La mañana temprano comenzó con")
-          .replace(/la mañana en que naciste/gi, "la mañana temprano en que naciste")
-          .replace(/La mañana en que naciste/gi, "La mañana temprano en que naciste")
-          .replace(/la mañana/gi, "la mañana temprano")
-          .replace(/una mañana/gi, "una mañana temprano")
-          .replace(/Pasamos la mañana/gi, "Pasamos la mañana temprano de tu llegada")
-          .replace(/amaneció con/gi, "comenzó muy de mañana con")
-          .replace(/amaneció cubierta/gi, "se cubrió al amanecer");
-      } else if (period.nameEs === "Mañana") {
-        return story
-          .replace(/La mañana comenzó con/gi, "La mañana en que llegaste comenzó con")
-          .replace(/la mañana en que naciste/gi, "la mañana en que llegaste")
-          .replace(/La mañana en que naciste/gi, "La mañana en que llegaste");
-      } else if (period.nameEs === "Tarde") {
-        return story
-          .replace(/La mañana comenzó con/gi, "La tarde comenzó con")
-          .replace(/la mañana en que naciste/gi, "la tarde en que naciste")
-          .replace(/La mañana en que naciste/gi, "La tarde en que naciste")
-          .replace(/la mañana/gi, "la tarde")
-          .replace(/una mañana/gi, "una tarde")
-          .replace(/Pasamos la mañana/gi, "Pasamos la tarde")
-          .replace(/el día/gi, "la tarde")
-          .replace(/amaneció con/gi, "comenzó por la tarde con")
-          .replace(/amaneció cubierta/gi, "se cubrió por la tarde");
-      } else if (period.nameEs === "Atardecer") {
-        return story
-          .replace(/La mañana comenzó con/gi, "El atardecer comenzó con")
-          .replace(/la mañana en que naciste/gi, "el atardecer en que naciste")
-          .replace(/La mañana en que naciste/gi, "El atardecer en que naciste")
-          .replace(/la mañana/gi, "el atardecer")
-          .replace(/una mañana/gi, "un atardecer")
-          .replace(/Pasamos la mañana/gi, "Pasamos el atardecer")
-          .replace(/el día/gi, "el atardecer")
-          .replace(/amaneció con/gi, "se llenó en el atardecer con")
-          .replace(/amaneció cubierta/gi, "se vistió en el atardecer");
-      } else if (period.nameEs === "Noche") {
-        return story
-          .replace(/La mañana comenzó con/gi, "La noche comenzó con")
-          .replace(/la mañana en que naciste/gi, "la noche en que naciste")
-          .replace(/La mañana en que naciste/gi, "La noche en que naciste")
-          .replace(/la mañana/gi, "la noche")
-          .replace(/una mañana/gi, "una noche")
-          .replace(/Pasamos la mañana/gi, "Pasamos la noche")
-          .replace(/el día/gi, "la noche")
-          .replace(/amaneció con/gi, "se envolvió por la noche con")
-          .replace(/amaneció cubierta/gi, "se cubrió por la noche");
-      }
-    } else {
-      if (period.nameEn === "Late Night") {
-        return story
-          .replace(/The morning began with/gi, "The late night began with")
-          .replace(/the morning you were born/gi, "the late night you were born")
-          .replace(/chilly winter morning/gi, "chilly winter late night")
-          .replace(/sunny morning/gi, "clear late night")
-          .replace(/spent the morning/gi, "spent the late night hours")
-          .replace(/the day you were born/gi, "the late night you arrived")
-          .replace(/on the day/gi, "on that late night");
-      } else if (period.nameEn === "Early Morning") {
-        return story
-          .replace(/The morning began with/gi, "The early morning began with")
-          .replace(/the morning you were born/gi, "the early morning you were born")
-          .replace(/chilly winter morning/gi, "chilly winter early morning")
-          .replace(/sunny morning/gi, "sunny early morning")
-          .replace(/spent the morning/gi, "spent the early morning")
-          .replace(/the day you were born/gi, "the early morning you arrived")
-          .replace(/on the day/gi, "on the early morning");
-      } else if (period.nameEn === "Morning") {
-        return story
-          .replace(/The morning began with/gi, "On the morning you arrived, it began with")
-          .replace(/the morning you were born/gi, "the morning you arrived")
-          .replace(/on the day/gi, "on the morning you arrived");
-      } else if (period.nameEn === "Afternoon") {
-        return story
-          .replace(/The morning began with/gi, "The afternoon began with")
-          .replace(/the morning you were born/gi, "the afternoon you were born")
-          .replace(/chilly winter morning/gi, "chilly winter afternoon")
-          .replace(/sunny morning/gi, "sunny afternoon")
-          .replace(/spent the morning/gi, "spent the afternoon")
-          .replace(/the day you were born/gi, "the afternoon you arrived")
-          .replace(/on the day/gi, "on the afternoon");
-      } else if (period.nameEn === "Evening") {
-        return story
-          .replace(/The morning began with/gi, "The evening began with")
-          .replace(/the morning you were born/gi, "the evening you were born")
-          .replace(/chilly winter morning/gi, "chilly winter evening")
-          .replace(/sunny morning/gi, "sunny evening")
-          .replace(/spent the morning/gi, "spent the evening")
-          .replace(/the day you were born/gi, "the evening you arrived")
-          .replace(/on the day/gi, "on the evening");
-      } else if (period.nameEn === "Night") {
-        return story
-          .replace(/The morning began with/gi, "The night began with")
-          .replace(/the morning you were born/gi, "the night you were born")
-          .replace(/chilly winter morning/gi, "cold winter night")
-          .replace(/sunny morning/gi, "night")
-          .replace(/spent the morning/gi, "spent the night")
-          .replace(/the day you were born/gi, "the night you arrived")
-          .replace(/on the day/gi, "on the night");
-      }
-    }
+    // Step 1: Neutralize the story first to clean up existing generic time of day references
+    const neutralized = makeStoryTimeNeutral(story, lang);
 
-    return story;
+    // Step 2: Inject the specific birth time phrase at key structure anchors
+    if (lang === "es") {
+      const phraseEs = period.phraseEs;
+      let s = neutralized;
+      s = s.replace(/El día comenzó con/gi, `El día comenzó, ${phraseEs}, con`);
+      s = s.replace(/El día en que naciste, con/gi, `El día en que naciste, ${phraseEs}, con`);
+      s = s.replace(/El día en que naciste/gi, `El día en que naciste, ${phraseEs},`);
+      s = s.replace(/el día en que naciste/gi, `el día en que naciste, ${phraseEs},`);
+      s = s.replace(/cuando naciste, con/gi, `cuando arribaste, ${phraseEs}, con`);
+      s = s.replace(/cuando naciste/gi, `cuando llegaste, ${phraseEs},`);
+      s = s.replace(/El día de tu llegada comenzó con/gi, `El día de tu llegada comenzó, ${phraseEs}, con`);
+      s = s.replace(/el día de tu llegada comenzó con/gi, `el día de tu llegada comenzó, ${phraseEs}, con`);
+      s = s.replace(/comenzó el día con/gi, `comenzó el día, ${phraseEs}, con`);
+      return s;
+    } else {
+      const phraseEn = period.phraseEn;
+      let s = neutralized;
+      s = s.replace(/The day began with/gi, `The day began ${phraseEn}, with`);
+      s = s.replace(/On the day you were born in/gi, `On the day you were born, ${phraseEn}, the weather in`);
+      s = s.replace(/the day you were born/gi, `the day you were born, ${phraseEn}`);
+      s = s.replace(/The day you were born/gi, `The day you were born, ${phraseEn}`);
+      s = s.replace(/when you were born/gi, `when you arrived, ${phraseEn}`);
+      return s;
+    }
   };
 
   const getThemeForEmptyTime = (weatherCode: number, lang: 'en' | 'es'): string => {
@@ -918,114 +829,19 @@ export default function BirthWeatherStory() {
       if (isSnowy) return "Una bienvenida con nieve";
       if (isSunny) return "Un inicio soleado";
       if (isCloudy) return "Un día nublado y tranquilo";
-      return "Un día suave de primavera";
+      return "Una llegada pacífica";
     } else {
       if (isRainy) return "A Rainy Arrival";
       if (isSnowy) return "A Snowy Welcome";
       if (isSunny) return "A Sunny Beginning";
       if (isCloudy) return "A Quiet Cloudy Day";
-      return "A Gentle Spring Day";
-    }
-  };
-
-  const getThemeForProvidedTime = (weatherCode: number, hours: number, lang: 'en' | 'es'): string => {
-    const isRainy = [51, 53, 55, 61, 63, 65, 66, 67, 80, 81, 82, 95, 96, 99].includes(weatherCode);
-    const isSnowy = [71, 73, 75, 77, 85, 86].includes(weatherCode);
-    const isSunny = [0, 1].includes(weatherCode);
-    const isCloudy = [2, 3, 45, 48].includes(weatherCode);
-
-    if (hours >= 0 && hours < 6) { // Late Night
-      if (lang === "es") {
-        if (isRainy) return "Una noche lluviosa tardía";
-        if (isSnowy) return "Nieve bajo las estrellas";
-        if (isSunny) return "Bajo el cielo nocturno";
-        if (hours === 0) return "Bienvenida de medianoche";
-        return "Una noche tardía y tranquila";
-      } else {
-        if (isRainy) return "A Rainy Late Night";
-        if (isSnowy) return "Snow Beneath the Stars";
-        if (isSunny) return "Under the Night Sky";
-        if (hours === 0) return "A Midnight Welcome";
-        return "A Quiet Late Night";
-      }
-    } else if (hours >= 6 && hours < 9) { // Early Morning
-      if (lang === "es") {
-        if (isRainy) return "Primera luz con lluvia";
-        if (isSnowy) return "Primera luz con nieve";
-        if (isSunny) return "Una llegada al amanecer";
-        return "Un amanecer tranquilo";
-      } else {
-        if (isRainy) return "First Light and Rain";
-        if (isSnowy) return "First Light and Snow";
-        if (isSunny) return "An Early Morning Arrival";
-        return "A Quiet Early Morning";
-      }
-    } else if (hours >= 9 && hours < 12) { // Morning
-      if (lang === "es") {
-        if (isRainy) return "Una mañana lluviosa";
-        if (isSnowy) return "Una mañana de nieve";
-        if (isSunny) return "Sol de la mañana";
-        return "Una mañana tranquila";
-      } else {
-        if (isRainy) return "A Rainy Morning";
-        if (isSnowy) return "A Snowy Morning";
-        if (isSunny) return "Morning Sunshine";
-        return "A Quiet Morning";
-      }
-    } else if (hours >= 12 && hours < 17) { // Afternoon
-      if (lang === "es") {
-        if (isRainy) return "Una tarde lluviosa";
-        if (isSnowy) return "Una tarde de nieve";
-        if (isSunny) return "Tarde dorada";
-        return "Una tarde suave";
-      } else {
-        if (isRainy) return "A Rainy Afternoon";
-        if (isSnowy) return "A Snowy Afternoon";
-        if (isSunny) return "Golden Afternoon";
-        return "A Gentle Afternoon";
-      }
-    } else if (hours >= 17 && hours < 20) { // Evening
-      if (lang === "es") {
-        if (isRainy) return "Lluvia al atardecer";
-        if (isSnowy) return "Nieve al atardecer";
-        if (isSunny) return "Un atardecer dorado";
-        return "Un atardecer tranquilo";
-      } else {
-        if (isRainy) return "Evening Rain";
-        if (isSnowy) return "An Evening Snow";
-        if (isSunny) return "A Golden Evening";
-        return "A Quiet Evening";
-      }
-    } else { // Night
-      if (lang === "es") {
-        if (isRainy) return "Una noche lluviosa";
-        if (isSnowy) return "Una noche de nieve";
-        if (isSunny) return "Bajo el cielo nocturno";
-        if (hours === 23) return "Bienvenida de medianoche";
-        return "Una noche tranquila";
-      } else {
-        if (isRainy) return "A Rainy Night";
-        if (isSnowy) return "A Snowy Night";
-        if (isSunny) return "Under the Night Sky";
-        if (hours === 23) return "A Midnight Welcome";
-        return "A Quiet Night";
-      }
+      return "A Peaceful Arrival";
     }
   };
 
   const getCorrectTheme = (weatherCode: number, lang: 'en' | 'es', birthTime?: string): string => {
-    if (!birthTime) {
-      return getThemeForEmptyTime(weatherCode, lang);
-    }
-    const parts = birthTime.split(":");
-    if (parts.length < 2) {
-      return getThemeForEmptyTime(weatherCode, lang);
-    }
-    const hours = parseInt(parts[0], 10);
-    if (isNaN(hours)) {
-      return getThemeForEmptyTime(weatherCode, lang);
-    }
-    return getThemeForProvidedTime(weatherCode, hours, lang);
+    // Always use timeless and elegant themes, never forcing time-of-day wording
+    return getThemeForEmptyTime(weatherCode, lang);
   };
 
   const makeStoryTimeNeutral = (story: string, lang: 'en' | 'es'): string => {
