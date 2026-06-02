@@ -331,10 +331,23 @@ function getOfflineBackupStory(params: {
       };
     }
     // Default Cloudy
+    const variants = [
+      `A quiet blanket of overcast clouds settled low over the horizon of ${params.city}. Throughout the day, the temperature rested at a steady ${tempC}°C (${tempF}°F) while a light breeze of ${windKn} km/h (${windMph} mph) rustled through parks and along building fronts. Beneath the diffuse slate-grey sky, the usual sharp outline of the skyline was beautifully softened, and streetlights glowed early on the avenues. Daily traffic moved patiently through the quiet neighborhoods. For most people it was simply another cloudy day. For one family, it became a date worth remembering.`,
+      
+      `A vast, iron-grey canopy of clouds shrouded the sky over ${params.city}, creating a cool, unified shade across the streets and public squares. Temperatures hovered around ${tempC}°C (${tempF}°F) with wind blowing at ${windKn} km/h (${windMph} mph), sweeping dry leaves along the stone pavements. The soft, shadowless light gave the local parks and brick facades an archival, timeless quality as residents went about their errands in sweaters and coats. For most people it was simply another cloudy day. For one family, it became a date worth remembering.`,
+      
+      `Thick, dense grey clouds wrapped the buildings of ${params.city} in a peaceful and protective mist. The wind paced gently at ${windKn} km/h (${windMph} mph) underneath an overcast sky, keeping the daytime temperature locked at a cool ${tempC}°C (${tempF}°F). Across the city, local street corners, shop windows, and historic avenues appeared quiet and calm, illuminated by the smooth, glare-free light filtering through the clouds above. For most people it was simply another cloudy day. For one family, it became a date worth remembering.`,
+      
+      `High-altitude grey clouds uniform in texture stretched coast to coast over the sky of ${params.city}. Air temperatures remained cool but steady at ${tempC}°C (${tempF}°F) with wind speeds of ${windKn} km/h (${windMph} mph) carrying a crisp, seasonal freshness through the streets. Under this calm slate canopy, the city’s busy thoroughfares slowed to a quiet mutter, and rooftops took on a soft, silver-toned sheen in the early afternoon gloom. For most people it was simply another cloudy day. For one family, it became a date worth remembering.`,
+      
+      `A quiet layer of stratocumulus clouds blanketed the rooftops of ${params.city} from dawn until dusk. Outside, temperatures measured ${tempC}°C (${tempF}°F) with a steady, atmospheric wind blowing at ${windKn} km/h (${windMph} mph), creating a crisp feeling in the air. The lack of direct sunshine painted the city in soft, classic shades of slate and charcoal, lending an elegant, historic mood to the regular bustle of the urban avenues. For most people it was simply another cloudy day. For one family, it became a date worth remembering.`
+    ];
+
+    const randomIndex = Math.floor(Math.random() * variants.length);
     return {
       theme: "A Quiet Cloudy Day",
-      quote: "The grey skies didn't matter; our entire universe had settled inside our quiet room.",
-      story: `On the day of your arrival, a quiet grey sky softened the horizon over ${params.city}, with temperatures at ${tempC}°C (${tempF}°F) and wind at ${windKn} km/h (${windMph} mph). Outside, the city continued its busy rhythm, but in our room, the steady overcast clouds created an unexpected sense of comfort and shield. The soft, diffuse light framed a peaceful oasis where our new journey quietly emerged. It was a calm and peaceful grey day, a quiet, reassuring beginning that we carry in our hearts forever.`,
+      quote: "A quiet canopy of clouds hung low, softening the city's sights and sounds.",
+      story: variants[randomIndex],
     };
   }
 }
