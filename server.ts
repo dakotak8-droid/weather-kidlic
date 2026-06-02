@@ -270,43 +270,43 @@ function getOfflineBackupStory(params: {
   if (params.lang === "es") {
     if (isRainy) {
       return {
-        theme: "Una llegada con lluvia",
+        theme: "Una jornada de lluvia",
         quote: "La lluvia llegó suavemente, como si la ciudad se hubiera detenido por un momento.",
-        story: `El día de tu llegada, una lluvia apacible cubrió ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera, la gente caminaba despacio bajo sus paraguas, mientras los reflejos plateados del agua dibujaban líneas en los tejados y calles. En ese ambiente sereno de lluvia constante, el ritmo cotidiano disminuyó y se respiró una inesperada calma. Un nuevo camino se abría de forma discreta, marcando un día que recordaríamos con profunda gratitud.`,
+        story: `Durante esa jornada, una lluvia apacible cubrió ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera, la gente caminaba despacio bajo sus paraguas, mientras los reflejos plateados del agua dibujaban líneas en los tejados y calles. En ese ambiente sereno de lluvia constante, el ritmo cotidiano disminuyó y se respiró una inesperada calma. Ese mismo día se registró un nacimiento en la ciudad, en medio del murmullo constante del agua cayendo.`,
       };
     }
     if (isSnowy) {
       return {
-        theme: "Una bienvenida con nieve",
-        quote: "Mientras la nieve cubría la ciudad, un silencio blanco y acogedor nos envolvía.",
-        story: `El día de tu llegada, un manto de nieve cubrió las calles de ${params.city} en medio de un frío de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Mientras el exterior permanecía en un pacífico silencio blanco, nuestras vidas cobraron un sentido de asombro y tranquilidad absoluta. Es un instante sagrado que vivirá guardado en nuestra memoria para siempre.`,
+        theme: "Un día cubierto de nieve",
+        quote: "Mientras la nieve cubría la ciudad, el silencio blanco envolvía las calles.",
+        story: `En esa fecha invernal, un manto de nieve cubrió las calles de ${params.city} en medio de un frío de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). El exterior permanecía en un pacífico silencio blanco que amortiguaba el sonido del tráfico. En esta tranquila jornada de invierno, se registró el nacimiento de un niño en la ciudad, mientras los copos seguían descendiendo con suavidad sobre los tejados.`,
       };
     }
     if (isSunny) {
       return {
-        theme: "Un inicio soleado",
+        theme: "Un despejado día soleado",
         quote: "El sol brilló con calma, iluminando las calles de la ciudad.",
-        story: `El día de tu llegada, un sol brillante iluminó todo ${params.city} alcanzando los ${tempC}°C (${tempF}°F) con viento a ${windKn} km/h (${windMph} mph). Afuera, la ciudad continuaba con su ritmo diario bajo una luz dorada y despejada. En la quietud de ese momento cálido, un nuevo capítulo comenzó con una alegría discreta y un sentimiento de inmensa calma. Podíamos contemplar un inicio luminoso bajo un cielo perfectamente azul.`,
+        story: `Durante esa jornada despejada, un sol brillante iluminó todo ${params.city} alcanzando los ${tempC}°C (${tempF}°F) con viento a ${windKn} km/h (${windMph} mph). Afuera, la gente transitaba con calma y los edificios reflejaban la luz cálida de la tarde. En medio de este ambiente tranquilo y despejado, tuvo lugar el nacimiento de un niño en la ciudad, mientras el cielo continuaba perfectamente azul hasta el atardecer.`,
       };
     }
     // Default Cloudy
     return {
       theme: "Un día nublado y tranquilo",
       quote: "El cielo gris trajo una calma reconfortante a toda la ciudad.",
-      story: `El día de tu llegada, nubes pacíficas vistieron de gris el cielo de ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera todo seguía su ritmo habitual, pero entre las sombras suaves y la luz difusa, encontramos un oasis de paz donde todo comenzó con tranquilidad y esperanza.`,
+      story: `Durante esa fecha, nubes pacíficas vistieron de gris el cielo de ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera todo seguía su marcha habitual bajo la luz difusa, mientras un viento suave mecía las ramas en los parques. En esa misma jornada gris, se registró un nacimiento en la ciudad, integrándose silenciosamente en la historia local.`,
     };
   } else {
     if (isRainy) {
       const variants = [
-        `Light rain drifted across ${params.city} throughout the afternoon with steady temperatures around ${tempC}°C (${tempF}°F). Umbrellas appeared along busy avenues, and water gathered quietly on rooftops as a breeze of ${windKn} km/h (${windMph} mph) rustled through the trees. The rhythmic sound of rainfall softened the city’s usual noise, casting a quiet calm over parks and neighborhoods as daily life continued. For most people, it was simply an ordinary rainy day. For one family, however, it became a date they would always remember.`,
+        `Light rain drifted across ${params.city} throughout the afternoon with steady temperatures around ${tempC}°C (${tempF}°F). Umbrellas appeared along busy avenues, and water gathered quietly on rooftops as a breeze of ${windKn} km/h (${windMph} mph) rustled through the trees. The rhythmic sound of rainfall softened the city’s usual noise, casting a quiet calm over parks and neighborhoods as daily life continued. On this date, a child was born in the city, registered quietly in the municipal logs as the rain continued to fall.`,
         
-        `A fresh spring rain washed over the streets of ${params.city}, leaving pavements shimmering under overcast skies. With temperatures holding at ${tempC}°C (${tempF}°F) and wind pacing at ${windKn} km/h (${windMph} mph), the air smelled of wet earth and clean stones. Commuters carrying umbrellas moved quickly past glowing shop windows while headlights cast long reflections on the wet asphalt. For most people, it was simply another ordinary rainy day. For one family, however, it became a date worth remembering.`,
+        `A fresh spring rain washed over the streets of ${params.city}, leaving pavements shimmering under overcast skies. With temperatures holding at ${tempC}°C (${tempF}°F) and wind pacing at ${windKn} km/h (${windMph} mph), the air smelled of wet earth and clean stones. Commuters carrying umbrellas moved quickly past glowing shop windows while headlights cast long reflections on the wet asphalt. On this date, a child's birth occurred in the city, documented as a simple historical event on a damp afternoon.`,
         
-        `An evening rain descended over the rooftops of ${params.city}, softening the city outline against a deep iron-grey sky. Temperatures cooled to ${tempC}°C (${tempF}°F) while a gentle breeze of ${windKn} km/h (${windMph} mph) carried mist across the streets. Streetlights flickered to life, reflecting in silver pools along empty walkways where water gathered. Inside warm cafes, people watched droplets crawl down the glass. For most people, it was simply an ordinary evening of rain. For one family, however, it became a date they would always remember.`,
+        `An evening rain descended over the rooftops of ${params.city}, softening the city outline against a deep iron-grey sky. Temperatures cooled to ${tempC}°C (${tempF}°F) while a gentle breeze of ${windKn} km/h (${windMph} mph) carried mist across the streets. Streetlights flickered to life, reflecting in silver pools along empty walkways where water gathered. Inside warm cafes, people watched droplets crawl down the glass. On this date, a birth was recorded in the city as evening fell across the rain-swept neighborhoods.`,
         
-        `Passing rain showers swept quickly across ${params.city}, carried by a gusty wind of ${windKn} km/h (${windMph} mph). Temperatures remained cool at ${tempC}°C (${tempF}°F) as dramatic cloud formations rolled over the city rooftops. Between brief bursts of water, wet asphalt streets glistened beneath a soft, diffuse light that settled over local parks and neighborhoods. Pedestrians sheltered under storefront awnings while watching the storm patterns transition. For most people, it was simply an ordinary day of passing weather. For one family, however, it became a date worth remembering.`,
+        `Passing rain showers swept quickly across ${params.city}, carried by a gusty wind of ${windKn} km/h (${windMph} mph). Temperatures remained cool at ${tempC}°C (${tempF}°F) as dramatic cloud formations rolled over the city rooftops. Between brief bursts of water, wet asphalt streets glistened beneath a soft, diffuse light that settled over local parks and neighborhoods. Pedestrians sheltered under storefront awnings while watching the storm patterns transition. On this date, the quiet birth of a child took place, adding a small human element to the atmospheric records.`,
         
-        `Steady, quiet rainfall enveloped ${params.city} that day, turning the streets into a canvas of soft slate and grey. With temperatures registering ${tempC}°C (${tempF}°F) and wind blowing gently at ${windKn} km/h (${windMph} mph), silver raindrops lined every windowpane and balcony. The steady patter of moisture created an unexpected calm, slowing the city’s rapid morning pace down to a peaceful murmur as umbrellas moved quietly through the quiet city atmosphere. For most people, it was simply another ordinary rainy day. For one family, however, it became a date they would always remember.`
+        `Steady, quiet rainfall enveloped ${params.city} that day, turning the streets into a canvas of soft slate and grey. With temperatures registering ${tempC}°C (${tempF}°F) and wind blowing gently at ${windKn} km/h (${windMph} mph), silver raindrops lined every windowpane and balcony. The steady patter of moisture created an unexpected calm, slowing the city’s rapid morning pace down to a peaceful murmur as umbrellas moved quietly through the quiet city atmosphere. On this date, a child's birth was registered, coinciding with a day of continuous autumn rainfall.`
       ];
 
       const randomIndex = Math.floor(Math.random() * variants.length);
@@ -318,29 +318,29 @@ function getOfflineBackupStory(params: {
     }
     if (isSnowy) {
       return {
-        theme: "A Snowy Welcome",
-        quote: "While snow carpeted the city outside, our room was filled with pure, perfect warmth.",
-        story: `On the day of your arrival, soft winter snow blanketed ${params.city}, bringing a quiet chill of ${tempC}°C (${tempF}°F) and wind at ${windKn} km/h (${windMph} mph). While the streets outside fell silent under the white canopy, our quiet room was warmed by an unexpected glow. In the stillness of that snowy morning, a beautiful new window of our lives quietly opened. It was a peaceful, snowy setting—a gentle beginning that we will cherish in our memories forever.`,
+        theme: "A Snowy Winter Day",
+        quote: "While snow carpeted the city outside, the streets fell into a quiet, frozen stillness.",
+        story: `During that winter afternoon, soft snow blanketed ${params.city}, bringing a chill of ${tempC}°C (${tempF}°F) and a gentle wind at ${windKn} km/h (${windMph} mph). While the streets outside fell silent under the white canopy, office buildings and houses kept their lights glowing. On this calm, snowy day, a birth was recorded in the city as flakes continued to gather quietly on the rooftops and pavements.`,
       };
     }
     if (isSunny) {
       return {
-        theme: "A Sunny Beginning",
-        quote: "The sun rose for the city just like any other day, but our true light was finally in our arms.",
-        story: `On the day of your arrival, clear sunshine bathed ${params.city}, warming the day to ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Outside, the streets were lively, and gold sunlight danced across the buildings of the entire city. In our room, the bright beams caught a peaceful, timeless stillness as a beautiful new chapter began. The sunshine filled the room, casting warm shadows over a day we will carry with us forever. It was a golden, bright start under perfectly clear skies.`,
+        theme: "A Sunny Afternoon",
+        quote: "The sun rose for the city just like any other day, casting bright golden light across the streets.",
+        story: `During that clear afternoon, bright sunshine bathed ${params.city}, warming the day to ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Outside, walkways were lively with pedestrians, and gold light danced across the brick building facades. On this brisk, sunny day, a child was born in the city, adding a quiet human event to an otherwise ordinary, sun-filled historic date.`,
       };
     }
     // Default Cloudy
     const variants = [
-      `A quiet blanket of overcast clouds settled low over the horizon of ${params.city}. Throughout the day, the temperature rested at a steady ${tempC}°C (${tempF}°F) while a light breeze of ${windKn} km/h (${windMph} mph) rustled through parks and along building fronts. Beneath the diffuse slate-grey sky, the usual sharp outline of the skyline was beautifully softened, and streetlights glowed early on the avenues. Daily traffic moved patiently through the quiet neighborhoods. For most people it was simply another cloudy day. For one family, it became a date worth remembering.`,
+      `A quiet blanket of overcast clouds settled low over the horizon of ${params.city}. Throughout the day, the temperature rested at a steady ${tempC}°C (${tempF}°F) while a light breeze of ${windKn} km/h (${windMph} mph) rustled through parks and along building fronts. Beneath the diffuse slate-grey sky, the usual sharp outline of the skyline was beautifully softened, and streetlights glowed early on the avenues. Daily traffic moved patiently through the quiet neighborhoods. On this date, a child was born in the city, marked quietly in history under the calm overcast canopy.`,
       
-      `A vast, iron-grey canopy of clouds shrouded the sky over ${params.city}, creating a cool, unified shade across the streets and public squares. Temperatures hovered around ${tempC}°C (${tempF}°F) with wind blowing at ${windKn} km/h (${windMph} mph), sweeping dry leaves along the stone pavements. The soft, shadowless light gave the local parks and brick facades an archival, timeless quality as residents went about their errands in sweaters and coats. For most people it was simply another cloudy day. For one family, it became a date worth remembering.`,
+      `A vast, iron-grey canopy of clouds shrouded the sky over ${params.city}, creating a cool, unified shade across the streets and public squares. Temperatures hovered around ${tempC}°C (${tempF}°F) with wind blowing at ${windKn} km/h (${windMph} mph), sweeping dry leaves along the stone pavements. The soft, shadowless light gave the local parks and brick facades an archival, timeless quality as residents went about their errands in sweaters and coats. On this date, a birth occurred in the city, joining the gentle, quiet rhythm of the grey afternoon.`,
       
-      `Thick, dense grey clouds wrapped the buildings of ${params.city} in a peaceful and protective mist. The wind paced gently at ${windKn} km/h (${windMph} mph) underneath an overcast sky, keeping the daytime temperature locked at a cool ${tempC}°C (${tempF}°F). Across the city, local street corners, shop windows, and historic avenues appeared quiet and calm, illuminated by the smooth, glare-free light filtering through the clouds above. For most people it was simply another cloudy day. For one family, it became a date worth remembering.`,
+      `Thick, dense grey clouds wrapped the buildings of ${params.city} in a peaceful and protective mist. The wind paced gently at ${windKn} km/h (${windMph} mph) underneath an overcast sky, keeping the daytime temperature locked at a cool ${tempC}°C (${tempF}°F). Across the city, local street corners, shop windows, and historic avenues appeared quiet and calm, illuminated by the smooth, glare-free light filtering through the clouds above. On this cloud-covered date, a birth was recorded here, an understated human moment under the vast grey skies.`,
       
-      `High-altitude grey clouds uniform in texture stretched coast to coast over the sky of ${params.city}. Air temperatures remained cool but steady at ${tempC}°C (${tempF}°F) with wind speeds of ${windKn} km/h (${windMph} mph) carrying a crisp, seasonal freshness through the streets. Under this calm slate canopy, the city’s busy thoroughfares slowed to a quiet mutter, and rooftops took on a soft, silver-toned sheen in the early afternoon gloom. For most people it was simply another cloudy day. For one family, it became a date worth remembering.`,
+      `High-altitude grey clouds uniform in texture stretched coast to coast over the sky of ${params.city}. Air temperatures remained cool but steady at ${tempC}°C (${tempF}°F) with wind speeds of ${windKn} km/h (${windMph} mph) carrying a crisp, seasonal freshness through the streets. Under this calm slate canopy, the city’s busy thoroughfares slowed to a quiet mutter, and rooftops took on a soft, silver-toned sheen in the early afternoon gloom. On this date, a child was born in the city, its entry noted alongside the stable weather patterns of the afternoon.`,
       
-      `A quiet layer of stratocumulus clouds blanketed the rooftops of ${params.city} from dawn until dusk. Outside, temperatures measured ${tempC}°C (${tempF}°F) with a steady, atmospheric wind blowing at ${windKn} km/h (${windMph} mph), creating a crisp feeling in the air. The lack of direct sunshine painted the city in soft, classic shades of slate and charcoal, lending an elegant, historic mood to the regular bustle of the urban avenues. For most people it was simply another cloudy day. For one family, it became a date worth remembering.`
+      `A quiet layer of stratocumulus clouds blanketed the rooftops of ${params.city} from dawn until dusk. Outside, temperatures measured ${tempC}°C (${tempF}°F) with a steady, atmospheric wind blowing at ${windKn} km/h (${windMph} mph), creating a crisp feeling in the air. The lack of direct sunshine painted the city in soft, classic shades of slate and charcoal, lending an elegant, historic mood to the regular bustle of the urban avenues. On this date, a birth was entered into the local registry, framed by the quiet shade of a cloud-swept sky.`
     ];
 
     const randomIndex = Math.floor(Math.random() * variants.length);
