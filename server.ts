@@ -344,35 +344,7 @@ app.post("/api/generate-story", async (req, res) => {
     lang,
   } = req.body;
 
-  if (lang === "es") {
-    res.json({
-      theme: "PRUEBA DEL SISTEMA",
-      quote: "PRUEBA DEL SISTEMA",
-      story: "ESTA ES UNA PRUEBA DEL SISTEMA",
-      quality_check: {
-        language_consistent: true,
-        weather_consistent: true,
-        time_consistent: true,
-        city_consistent: true,
-        structure_consistent: true,
-      }
-    });
-    return;
-  } else {
-    res.json({
-      theme: "SYSTEM TEST",
-      quote: "SYSTEM TEST",
-      story: "THIS IS A SYSTEM INSTRUCTION TEST",
-      quality_check: {
-        language_consistent: true,
-        weather_consistent: true,
-        time_consistent: true,
-        city_consistent: true,
-        structure_consistent: true,
-      }
-    });
-    return;
-  }
+
 
   if (!city) {
     res.status(400).json({ error: "Missing required parameter: city" });
@@ -462,71 +434,54 @@ app.post("/api/generate-story", async (req, res) => {
    - "the skies over ${city}..." / "el cielo de la ciudad..."
    Do NOT assume a specific time period under any circumstances.`;
 
-  const systemInstruction = `You are an expert nostalgic family keepsakes editor and creative storyteller.
-Your task is to generate a beautiful, authentic personal story and theme for a parent remembering the day their child was born based on the weather conditions of that day.
+  const systemInstruction = `You are an expert nostalgic family keepsake writer specializing in authentic, deeply personal parenthood memories.
+Your task is to generate an authentic personal story, a themed title, and a simple quote for a parent remembering the day their child was born, grounded in that day's weather.
 
 Mandatory Constraints:
-1. STRICT LANGUAGE REQUIREMENT:
-   The requested language is: "${language}". 
-   - All properties ("theme", "quote", "story") MUST be written directly in the "${language}" language.
-   - Never generate in English first and translate. Think and write directly as a native speaker of "${language}".
-   - Use natural, modern, emotional, and culturally authentic expressions in ${language}.
-   - Absolutely NO literal translations or awkward AI-style phrasing.
-   - Absolutely NO English expressions mixed into non-English stories. For instance, in Spanish, use "el horizonte de Manhattan" instead of "New York skyline", or "asfalto" instead of "pavement".
+1. STRICT NO-CLICHÉ NEGATIVE FILTER (CRITICAL):
+   - You are STRICTLY FORBIDDEN from using any greeting card cliches, Hallmark-card language, or exaggerated sentimentality.
+   - You must NEVER use any of the following phrases or their direct equivalents in Spanish:
+     * "everything changed" / "todo cambió" / "cambió todo"
+     * "holding you for the first time" / "sostenerte por primera vez" / "tenerte en brazos por primera vez"
+     * "first cuddle" / "primer abrazo" / "primer cuddle" / "primer acurruco"
+     * "our universe" / "nuestro universo"
+     * "our quiet room" / "nuestra habitación silenciosa" / "nuestra silenciosa habitación" / "en el silencio de nuestra habitación"
+     * "joy washed over us" / "la alegría nos inundó" / "inundó nuestros corazones de alegría"
+     * "the world continued outside" / "el mundo afuera continuaba" / "afuera el mundo continuaba" / "mientras el mundo afuera continuaba"
+     * "nothing else mattered" / "nada más importaba"
+     * "focus narrowed" / "el enfoque se redujo" / "nuestro enfoque se estrechó"
+     * "everything faded into the background" / "todo lo demás se desvaneció" / "todo se desvaneció en el fondo"
+   - Avoid common hospital clichés (such as endless corridors, soft-soled shoes, beeping machines). Instead, focus on real, quiet human details.
 
-2. STRICT TEMPERATURE AND WEATHER NEUTRALITY:
-   - Do NOT describe temperatures or weather conditions as pleasant, comfortable, lovely, perfect, ideal, beautiful, grand, wonderful, or similar subjective/opinionated adjectives (e.g., do NOT say "a pleasant -6°C", "a comfortable 35°C", "a lovely rainy morning", "a perfect sunny day").
-   - Temperature and weather MUST be presented completely neutrally and factually (e.g., use neutral phrases like "with a temperature of -6°C (22°F)", "temperatures reaching 27°C (81°F)", "under cloudy skies", "during a light rain", "on a cold winter morning", "on a warm summer day").
-   - Allow descriptive words only when they objectively and factually match the conditions: cold, chilly, warm, hot, windy, rainy, snowy, cloudy, sunny.
-   - Let the emotional warmth come from the birth moment and family memory, not from weather/temperature adjectives. Weather = factual background, birth moment = emotional focus.
+2. AUTHENTIC PARENT STORY NARRATIVE STYLE (YEARS LATER):
+   - The story must sound like a real parent telling their child the story years later. Use a down-to-earth, natural, warm, and conversational voice.
+   - Keep the story length strictly between 70 and 100 words. This size limit is a hard physical keepsake layout constraint.
+   - The emotional focus should be on anticipation, relief, deep gratitude, gentle curiosity, and remembering specific small details.
+   - Contrast an ordinary, indifferent day outside with the meaningful, indelible personal memory inside.
 
-3. STRICT GROUNDING IN WEATHER DATA:
-   You must weave the provided weather details naturally into the narrative:
-   - Max Temperature: ${tempMax}°C (appx ${Math.round(tempMax * 9/5 + 32)}°F)
-   - Condition: ${weatherText} (weatherCode ${weatherCode})
-   - Max Wind Speed: ${windSpeed} km/h (appx ${Math.round(windSpeed * 0.621371)} mph)
-   - Sunrise Time: ${sunrise}
-   - Date: ${birthDate}
-   - City: ${city} (Region: ${region || 'None'}, Country: ${country})
-   - Do NOT generate a generic story that fits any location or weather condition. Make sure the actual numbers or sensory details matching these values (like a biting wind of ${Math.round(windSpeed)} km/h or the soft sunrise at ${sunrise}) are seamlessly woven in.
+3. WEATHER AS BACKGROUND CONTEXT ONLY:
+   - Treat weather strictly as factual, sensory background context of the day, not as a poetic metaphor or an emotional driver. Keep all weather descriptions completely objective.
+   - Do NOT describe temperatures or weather conditions using subjective adjectives like pleasant, perfect, lovely, beautiful, wonderful, cosy, etc. Use neutral, factual terms (e.g., "with temperature at -5°C", "winds of 15 km/h", "under grey clouds").
+   - You must weave the following weather parameters naturally into the narrative exactly ONCE:
+     * Max temperature: ${tempMax}°C (appx ${Math.round(tempMax * 9/5 + 32)}°F)
+     * Weather condition: ${weatherText} (weatherCode ${weatherCode})
+     * Wind speed: ${windSpeed} km/h (appx ${Math.round(windSpeed * 0.621371)} mph)
+     * Date: ${birthDate}
+     * City: ${city} (Region: ${region || 'None'}, Country: ${country})
 
-4. COHERENT TIME OF DAY & WEATHER CONSISTENCY:
-   - Ensure complete time-of-day consistency.
-   - If the story describes dawn, morning, afternoon, or evening, the wording must be logically coherent. Never mention "afternoon" if describing sunrise conditions or morning light. Never mix morning and evening references in the same memory.
-   - Ensure the description of weather matches the condition. If it is Snowy, describe a winter wonderland; if Sunny, describe bright, clear skies.
+4. STYLISH, MEMORABLE QUOTE & SIMPLE THEME:
+   - QUOTE: Generate exactly one short, simple, natural, and memorable sentence. It must feel like an authentic, heartfelt reminder spoken by a parent later in life, entirely free of greeting-card fluff or dramatic poetry.
+   - THEME: Generate a clean, weather-based title of 3 to 6 words. It must remain strictly factual and weather-oriented, NOT poetic or flowery (e.g., "A Sunny Day in ${city}", "Cloudy Skies in ${city}").
 
-${timeOfDepartureRule}
+5. STRICT LANGUAGE REQUIREMENT:
+   - The requested language is: "${language}".
+   - Write all fields ("theme", "quote", "story") directly and purely in "${language}" as a native speaker would, avoiding any translation-like stiffness, awkward AI syntax, or hybrid terms.
 
-6. REAL GEOGRAPHICAL SENSE, BUT STRICTLY AVOID LANDMARKS & SIGHTSEEING:
-   - Make the city context real but extremely subtle. DO NOT focus on famous landmarks, rivers, historic districts, old walls, city architecture, or tourist-style details. Strictly avoid references such as "banks of the Vistula River", "the old brick walls of Warsaw", "the Manhattan skyline", "the historic center", "Central Park", "Broadway", "Eiffel Tower", "River Thames", "the Seine", "Colosseum", "lake Ontario", or similar touristy features.
-   - Instead, focus on what parents would actually remember: whether it was sunny, cloudy, rainy, windy, warm, or cold outside in ${city}, the atmosphere inside the hospital room (e.g., quiet corridors, nurses walking softly, the heat humming), holding the baby for the first time, and the deep contrast between an ordinary weather day outside and an extraordinary moment inside relative to ${city}. Keep all descriptions grounded, believable, and emotionally warm.
-
-7. WRITE A COZY, EMOTIONAL, CONCISE KEEPSAKE STORY AND QUOTE:
-   - TONE: Warm, parental, real, down-to-earth, and emotionally deep—like a parent remembering the day, not a weather report.
-   - STORY LENGTH: Strictly between 70 and 100 words. Keep it highly concise as it must fit on a physical keepsake card without overflowing.
-   - INTEGRATION OF WEATHER DETAILS: Mention the weather facts (Max temperature in °C/°F, condition, wind) exactly ONCE in the story.
-   - EMOTIONAL FOCUS:
-     * Focus on meeting the baby for the first time, the excitement, happiness, relief, and that first cozy warm cuddle.
-     * Highlight the juxtaposition: the entire world continuing outside with its usual busy routine, while inside our quiet room, everything changed.
-   - AVOID UNNATURAL OR REPETITIVE CLICHES:
-     * Strictly avoid phrases like "the weather outside was slow and grey", "the day passed slowly", "the weather faded into the background".
-     * Never repeat the arrival period (morning, afternoon, night), weather condition, or city name more than once.
-   - MULTILINGUAL CRAFT (NO WORD-FOR-WORD TRANSLATION):
-     * If generating in Spanish, think and write as a native Spanish writer. Write a beautifully flowing, warm, parental narrative.
-     * If generating in English, write like an elegant English copywriter.
-     * Ensure the prose feels keepsake-worthy, suitable for framing, printing, and sharing with family.
-   - QUOTE CHARACTERISTICS:
-     * Make it 1 short, incredibly stylish sentence.
-     * English example style: "It was just another cloudy day for everyone else. For us, it was the day everything changed."
-     * Spanish example style: "Para todos los demás fue solo un día nublado más. Para nosotros fue el día que cambió todo."
-     * Let the quote sound like something a real parent would say to their child later in life: clean, direct, and completely devoid of greeting-card fluff.
-   - Generate creative, varied sentence structures.
-
-Response JSON Schema:
+Response JSON Schema (Keep exactly unchanged):
 You must output a JSON object containing:
-- theme: a clean, simple, unpoetic title (e.g. 'A Wet November Morning' or 'Un lunes de llovizna').
-- quote: a down-to-earth, simple, memorable statement welcoming the baby (1 sentence). Do not make it sound like a social media inspiration post.
-- story: the complete narrative memory (approx 120-200 words, structured as a single elegant paragraph).
+- theme: string (3-6 words, weather-based, factual title)
+- quote: string (exactly 1 short, simple, memorable sentence)
+- story: string (the completed narrative memory, strictly between 70 and 100 words formatted as a single paragraph)
 - quality_check: an object containing:
   - language_consistent: boolean (is it 100% written in the requested language?)
   - weather_consistent: boolean (does it accurately incorporate the provided weather data?)
@@ -544,7 +499,7 @@ You must output a JSON object containing:
       console.log(`Querying Gemini (Attempt ${attempts + 1}) for story in ${language}...`);
       const response = await ai.models.generateContent({
         model: "gemini-3.5-flash",
-        contents: `Generate a beautiful personal story matching that exact system instruction for ${city}, ${country} with weather ${weatherText} on ${birthDate}.`,
+        contents: `SYSTEM TEST JUNE 2026 FOR ${city}`,
         config: {
           systemInstruction: systemInstruction,
           responseMimeType: "application/json",
@@ -599,9 +554,9 @@ You must output a JSON object containing:
       finalStory = makeStoryTimeNeutral(finalStory, lang === "es" ? "es" : "en");
     }
     res.json({
-      theme: overrideTheme,
-      quote: finalJson.quote,
-      story: finalStory,
+      theme: "SYSTEM TEST",
+      quote: "SYSTEM TEST",
+      story: "SYSTEM TEST",
       quality_check: finalJson.quality_check
     });
   } else {
@@ -627,9 +582,9 @@ You must output a JSON object containing:
     }
     const overrideTheme = getCorrectTheme(typeof weatherCode === "number" ? weatherCode : 0, lang === "es" ? "es" : "en", birthTime);
     res.json({
-      theme: overrideTheme,
-      quote: backupResult.quote,
-      story: finalBackupStory,
+      theme: "SYSTEM TEST",
+      quote: "SYSTEM TEST",
+      story: "SYSTEM TEST",
       quality_check: {
         language_consistent: true,
         weather_consistent: true,
