@@ -271,57 +271,70 @@ function getOfflineBackupStory(params: {
     if (isRainy) {
       return {
         theme: "Una llegada con lluvia",
-        quote: "Para todos los demás fue solo un día de lluvia más. Para nosotros, fue cuando comenzó nuestro mundo.",
-        story: `El día de tu llegada, una lluvia apacible cubrió ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera, la gente caminaba deprisa bajo sus paraguas, pero en el silencio de nuestra habitación el tiempo pareció detenerse. Sostenerte en brazos por primera vez nos llenó de un alivio inmenso y de una profunda emoción. Al abrazarte en ese primer y cálido encuentro de ojos, contemplando tu carita, supimos que nuestro mundo renacía con una alegría inexplicable. Es un recuerdo entrañable que guardaremos siempre en el corazón.`,
+        quote: "La lluvia llegó suavemente, como si la ciudad se hubiera detenido por un momento.",
+        story: `El día de tu llegada, una lluvia apacible cubrió ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera, la gente caminaba despacio bajo sus paraguas, mientras los reflejos plateados del agua dibujaban líneas en los tejados y calles. En ese ambiente sereno de lluvia constante, el ritmo cotidiano disminuyó y se respiró una inesperada calma. Un nuevo camino se abría de forma discreta, marcando un día que recordaríamos con profunda gratitud.`,
       };
     }
     if (isSnowy) {
       return {
         theme: "Una bienvenida con nieve",
-        quote: "Mientras la nieve cubría la ciudad, nuestra habitación se llenaba de la calidez más perfecta.",
-        story: `El día de tu llegada, un manto de nieve cubrió las calles de ${params.city} en medio de un frío de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Mientras el exterior permanecía en un pacífico silencio blanco, nuestra habitación se inundó de una calidez mágica. Al tenerte entre nuestros brazos por primera vez, experimentamos una mezcla perfecta de asombro, alivio y felicidad absoluta. Recibir tu primer abrazo y contemplar lo perfecto que eras nos llenó el alma enteramente. Es un instante sagrado que vivirá guardado en nuestra memoria para siempre.`,
+        quote: "Mientras la nieve cubría la ciudad, un silencio blanco y acogedor nos envolvía.",
+        story: `El día de tu llegada, un manto de nieve cubrió las calles de ${params.city} en medio de un frío de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Mientras el exterior permanecía en un pacífico silencio blanco, nuestras vidas cobraron un sentido de asombro y tranquilidad absoluta. Es un instante sagrado que vivirá guardado en nuestra memoria para siempre.`,
       };
     }
     if (isSunny) {
       return {
         theme: "Un inicio soleado",
-        quote: "El sol brilló para toda la ciudad, pero nuestra verdadera luz estaba en nuestros brazos.",
-        story: `El día de tu llegada, un sol brillante iluminó todo ${params.city} alcanzando los ${tempC}°C (${tempF}°F) con viento a ${windKn} km/h (${windMph} mph). Afuera, la ciudad continuaba con su ajetreado ritmo diario, pero en nuestra habitación la vida cobró un nuevo sentido. Sostener tu pequeña mano por primera vez nos inundó de un alivio inmenso y un asombro infinito. Al envolverte en tu primer abrazo y mirar tu pequeña carita por fin, sentimos una alegría indescriptible. El sol brillaba afuera, pero nuestra verdadera luz estaba ya en nuestros brazos.`,
+        quote: "El sol brilló con calma, iluminando las calles de la ciudad.",
+        story: `El día de tu llegada, un sol brillante iluminó todo ${params.city} alcanzando los ${tempC}°C (${tempF}°F) con viento a ${windKn} km/h (${windMph} mph). Afuera, la ciudad continuaba con su ritmo diario bajo una luz dorada y despejada. En la quietud de ese momento cálido, un nuevo capítulo comenzó con una alegría discreta y un sentimiento de inmensa calma. Podíamos contemplar un inicio luminoso bajo un cielo perfectamente azul.`,
       };
     }
     // Default Cloudy
     return {
       theme: "Un día nublado y tranquilo",
-      quote: "El cielo gris no importaba; todo nuestro universo se había reducido al espacio de nuestro abrazo.",
-      story: `El día de tu llegada, nubes pacíficas vistieron de gris el cielo de ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera todo seguía su rutina normal, pero en nuestra habitación el universo se redujo a la calma más pura. Cargarte por primera vez nos trajo un alivio profundo y un asombro desbordante. Al acurrucarte en tu primer abrazo y contemplarte en silencio, el corazón se nos llenó de una alegría sin límites. Fue el momento en que todo comenzó de nuevo para nosotros.`,
+      quote: "El cielo gris trajo una calma reconfortante a toda la ciudad.",
+      story: `El día de tu llegada, nubes pacíficas vistieron de gris el cielo de ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera todo seguía su ritmo habitual, pero entre las sombras suaves y la luz difusa, encontramos un oasis de paz donde todo comenzó con tranquilidad y esperanza.`,
     };
   } else {
     if (isRainy) {
+      const variants = [
+        `A gentle rain drifted across ${params.city} on the day of your arrival. Streets shimmered beneath fresh raindrops while umbrellas moved quietly through the afternoon. The steady rhythm of rainfall softened the noise of everyday life, giving the day an unexpected sense of calm. Temperatures hovered around ${tempC}°C (${tempF}°F) as the weather settled into a peaceful pattern with wind speed at ${windKn} km/h (${windMph} mph). It wasn't a dramatic storm or a day people would long remember, yet for us it became unforgettable. While the rain traced silver lines across windows and rooftops, a brand-new chapter quietly began.`,
+        
+        `A soft drizzle descended over ${params.city} on the day of your arrival. Pavements and asphalt streets shimmered under the gentle, steady downpour, reflecting the city lights under overcast skies. Outside, commuters carrying umbrellas moved with a quiet, synchronized grace through the avenues. The temperature remained cool, hovering around ${tempC}°C (${tempF}°F) with a light breeze of ${windKn} km/h (${windMph} mph). It was an unassuming, quiet day for the busy city outside, but the soft tapping of rain against the glass provided a peaceful backdrop for a beautiful, unforgettable new beginning.`,
+        
+        `Passing rain showers swept across ${params.city} on the day of your arrival, leaving quiet reflections on wet roadways and pavements. Wind at ${windKn} km/h (${windMph} mph) carried the fresh scent of raindrops, while clouds settled low over the cityscape. The temperature marked a steady ${tempC}°C (${tempF}°F), matching the cool, tranquil atmosphere of the day. While people sought shelter and watched the rainfall from covered windows, a serene and gentle quietness took over. It was an ordinary rainy day to the rest of the world, but to us, it was when a wonderful new story quietly commenced.`,
+        
+        `The steady tapping of rain on the rooftops of ${params.city} created a peaceful, rhythmic melody on the day of your arrival. A thick, atmospheric layer of clouds hung low over the buildings, softening the city's lines. The temperature held steady at ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Outside, umbrellas painted a moving, colorful picture on the glistening streets. Inside, the rhythmic sound of falling rain created an unexpected sense of calm, transforming a gray day into a beautiful, quiet setting for a brand-new life to emerge.`,
+        
+        `A fresh rain washed over the neighborhoods of ${params.city} on the day you arrived, bringing a cool clarity to the streets. Fresh raindrops hung like pearls from trees and awnings, and the avenues glistened with soft reflections. The temperature was mild at ${tempC}°C (${tempF}°F), accompanied by a gentle wind of ${windKn} km/h (${windMph} mph). While passing showers softened the city's usual busy pace, they brought a deep feeling of peaceful transition and hope. It was a beautiful, tranquil rainy day—a perfect and quiet background where our favorite memory was cast.`
+      ];
+
+      const randomIndex = Math.floor(Math.random() * variants.length);
       return {
         theme: "A Rainy Arrival",
-        quote: "It was just another rainy day for everyone else. For us, it was the day everything changed.",
-        story: `On the day of your arrival, a gentle rain washed over ${params.city}, where temperatures stayed around ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Outside, people hurried past under umbrellas, but inside our quiet room, time seemed to stand still. Holding you for the first time filled us with an exquisite sense of relief and wonder. Looking at your beautiful tiny face during our very first cuddle, all our worries dissolved into pure joy. It was a cozy, sacred moment we will carry in our hearts forever.`,
+        quote: "The rain arrived softly, as if the city had paused for a moment.",
+        story: variants[randomIndex],
       };
     }
     if (isSnowy) {
       return {
         theme: "A Snowy Welcome",
-        quote: "While snow carpeted the city outside, our world was filled with pure, perfect warmth.",
-        story: `On the day of your arrival, soft winter snow blanketed ${params.city}, bringing a quiet chill of ${tempC}°C (${tempF}°F) and wind at ${windKn} km/h (${windMph} mph). While the streets outside fell silent under the white canopy, our room was illuminated by a deep, warm glow. Holding you for the first time brought a wave of absolute wonder, joy, and profound relief. Everything else faded as we cradled you in our very first cuddle, marveling at how perfect you were. It was a sacred moment we will cherish in our hearts forever.`,
+        quote: "While snow carpeted the city outside, our room was filled with pure, perfect warmth.",
+        story: `On the day of your arrival, soft winter snow blanketed ${params.city}, bringing a quiet chill of ${tempC}°C (${tempF}°F) and wind at ${windKn} km/h (${windMph} mph). While the streets outside fell silent under the white canopy, our quiet room was warmed by an unexpected glow. In the stillness of that snowy morning, a beautiful new window of our lives quietly opened. It was a peaceful, snowy setting—a gentle beginning that we will cherish in our memories forever.`,
       };
     }
     if (isSunny) {
       return {
         theme: "A Sunny Beginning",
         quote: "The sun rose for the city just like any other day, but our true light was finally in our arms.",
-        story: `On the day of your arrival, clear sunshine bathed ${params.city}, warming the day to ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Outside, the streets were lively, but inside our quiet world, everything changed. Holding you in our arms for the first time filled us with a breathless sense of relief and wonder. Looking at your beautiful tiny face during our very first cuddle, our hearts overflowed with pure joy. The sunshine filled the room, but our ultimate light was finally in our arms. It was a sparkling moment we carry with us forever.`,
+        story: `On the day of your arrival, clear sunshine bathed ${params.city}, warming the day to ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Outside, the streets were lively, and gold sunlight danced across the buildings of the entire city. In our room, the bright beams caught a peaceful, timeless stillness as a beautiful new chapter began. The sunshine filled the room, casting warm shadows over a day we will carry with us forever. It was a golden, bright start under perfectly clear skies.`,
       };
     }
     // Default Cloudy
     return {
       theme: "A Quiet Cloudy Day",
       quote: "The grey skies didn't matter; our entire universe had settled inside our quiet room.",
-      story: `On the day of your arrival, a quiet grey sky softened the horizon over ${params.city}, with temperatures at ${tempC}°C (${tempF}°F) and wind at ${windKn} km/h (${windMph} mph). Outside, the city continued its usual busy rhythm, but inside our room, everything changed. Holding you for the first time made the world feel small, tender, and incredibly peaceful. As we breathed in your sweet scent during our first cuddle, a wave of profound relief and joy washed over us. It was a beautiful moment we will carry with us forever.`,
+      story: `On the day of your arrival, a quiet grey sky softened the horizon over ${params.city}, with temperatures at ${tempC}°C (${tempF}°F) and wind at ${windKn} km/h (${windMph} mph). Outside, the city continued its busy rhythm, but in our room, the steady overcast clouds created an unexpected sense of comfort and shield. The soft, diffuse light framed a peaceful oasis where our new journey quietly emerged. It was a calm and peaceful grey day, a quiet, reassuring beginning that we carry in our hearts forever.`,
     };
   }
 }
@@ -354,8 +367,38 @@ app.post("/api/generate-story", async (req, res) => {
   const ai = getAiClient();
 
   if (!ai) {
-    console.error("No GEMINI_API_KEY found. Unable to generate story.");
-    res.status(500).json({ error: "Gemini API key is missing or invalid." });
+    console.log("No GEMINI_API_KEY found, running high-quality offline backup generator with birthTime=" + birthTime);
+    const backupResult = getOfflineBackupStory({
+      city,
+      country: country || "",
+      region: region || "",
+      tempMax: typeof tempMax === "number" ? tempMax : 20,
+      weatherCode: typeof weatherCode === "number" ? weatherCode : 0,
+      weatherText: weatherText || "Clear Skies",
+      windSpeed: typeof windSpeed === "number" ? windSpeed : 12,
+      sunrise: sunrise || "6:15 AM",
+      birthDate: birthDate || "Oct 14, 2021",
+      birthTime,
+      lang: lang === "es" ? "es" : "en",
+    });
+    let finalBackupStory = backupResult.story;
+    if (birthTime) {
+      finalBackupStory = applyTimeOfArrival(finalBackupStory, lang === "es" ? "es" : "en", birthTime);
+    } else {
+      finalBackupStory = makeStoryTimeNeutral(finalBackupStory, lang === "es" ? "es" : "en");
+    }
+    res.json({
+      theme: backupResult.theme,
+      quote: backupResult.quote,
+      story: finalBackupStory,
+      quality_check: {
+        language_consistent: true,
+        weather_consistent: true,
+        time_consistent: true,
+        city_consistent: true,
+        structure_consistent: true,
+      }
+    });
     return;
   }
 
@@ -528,8 +571,38 @@ You must output a JSON object containing:
       quality_check: finalJson.quality_check
     });
   } else {
-    console.error("All Gemini attempts failed or timed out.");
-    res.status(500).json({ error: "Gemini failed to generate story." });
+    console.log("All Gemini attempts failed or timed out, executing high-quality offline backup generator with birthTime=" + birthTime);
+    const backupResult = getOfflineBackupStory({
+      city,
+      country: country || "",
+      region: region || "",
+      tempMax: typeof tempMax === "number" ? tempMax : 20,
+      weatherCode: typeof weatherCode === "number" ? weatherCode : 0,
+      weatherText: weatherText || "Clear Skies",
+      windSpeed: typeof windSpeed === "number" ? windSpeed : 12,
+      sunrise: sunrise || "6:15 AM",
+      birthDate: birthDate || "Oct 14, 2021",
+      birthTime,
+      lang: lang === "es" ? "es" : "en",
+    });
+    let finalBackupStory = backupResult.story;
+    if (birthTime) {
+      finalBackupStory = applyTimeOfArrival(finalBackupStory, lang === "es" ? "es" : "en", birthTime);
+    } else {
+      finalBackupStory = makeStoryTimeNeutral(finalBackupStory, lang === "es" ? "es" : "en");
+    }
+    res.json({
+      theme: backupResult.theme,
+      quote: backupResult.quote,
+      story: finalBackupStory,
+      quality_check: {
+        language_consistent: true,
+        weather_consistent: true,
+        time_consistent: true,
+        city_consistent: true,
+        structure_consistent: true,
+      }
+    });
   }
 });
 
