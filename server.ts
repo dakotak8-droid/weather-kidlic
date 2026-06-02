@@ -47,43 +47,43 @@ function getPeriodInfo(timeStr?: string): PeriodInfo | null {
     return {
       nameEn: "Late Night",
       nameEs: "Noche tardía",
-      phraseEn: "during the quiet early hours when you arrived",
-      phraseEs: "durante las tranquilas horas de la madrugada cuando llegaste",
+      phraseEn: "during the silent late night hours",
+      phraseEs: "durante las horas silenciosas de la madrugada",
     };
   } else if (hours >= 6 && hours < 9) {
     return {
       nameEn: "Early Morning",
       nameEs: "Mañana temprano",
-      phraseEn: "on a peaceful early morning when you arrived",
-      phraseEs: "en una mañana temprano y apacible cuando llegaste",
+      phraseEn: "as dawn broke quietly over the city",
+      phraseEs: "mientras el amanecer se asomaba silenciosamente sobre la ciudad",
     };
   } else if (hours >= 9 && hours < 12) {
     return {
       nameEn: "Morning",
       nameEs: "Mañana",
-      phraseEn: "during the morning when you arrived",
-      phraseEs: "durante la mañana cuando llegaste",
+      phraseEn: "during the cool morning hours",
+      phraseEs: "durante las frescas horas de la mañana",
     };
   } else if (hours >= 12 && hours < 17) {
     return {
       nameEn: "Afternoon",
       nameEs: "Tarde",
-      phraseEn: "during the afternoon when you arrived",
-      phraseEs: "durante la tarde cuando llegaste",
+      phraseEn: "during the tranquil afternoon",
+      phraseEs: "durante la tarde tranquila",
     };
   } else if (hours >= 17 && hours < 20) {
     return {
       nameEn: "Evening",
       nameEs: "Atardecer",
-      phraseEn: "during the evening when you arrived",
-      phraseEs: "durante el atardecer cuando llegaste",
+      phraseEn: "as dusk settled over the streets",
+      phraseEs: "cuando el atardecer comenzaba a cubrir las calles",
     };
   } else {
     return {
       nameEn: "Night",
       nameEs: "Noche",
-      phraseEn: "during the night when you arrived",
-      phraseEs: "durante la noche cuando llegaste",
+      phraseEn: "under the dark night sky",
+      phraseEs: "bajo el oscuro cielo nocturno",
     };
   }
 }
@@ -92,31 +92,25 @@ function applyTimeOfArrival(story: string, lang: 'en' | 'es', birthTime?: string
   const period = getPeriodInfo(birthTime);
   if (!period) return story;
 
-  // Step 1: Neutralize the story first to clean up existing generic time of day references
+  // Step 1: Clean the story first of any time parameters
   const neutralized = makeStoryTimeNeutral(story, lang);
 
   // Step 2: Inject the specific birth time phrase at key structure anchors
   if (lang === "es") {
     const phraseEs = period.phraseEs;
     let s = neutralized;
-    s = s.replace(/El día comenzó con/gi, `El día comenzó, ${phraseEs}, con`);
-    s = s.replace(/El día en que naciste, con/gi, `El día en que naciste, ${phraseEs}, con`);
-    s = s.replace(/El día en que naciste/gi, `El día en que naciste, ${phraseEs},`);
-    s = s.replace(/el día en que naciste/gi, `el día en que naciste, ${phraseEs},`);
-    s = s.replace(/cuando naciste, con/gi, `cuando arribaste, ${phraseEs}, con`);
-    s = s.replace(/cuando naciste/gi, `cuando llegaste, ${phraseEs},`);
-    s = s.replace(/El día de tu llegada comenzó con/gi, `El día de tu llegada comenzó, ${phraseEs}, con`);
-    s = s.replace(/el día de tu llegada comenzó con/gi, `el día de tu llegada comenzó, ${phraseEs}, con`);
+    s = s.replace(/El día comenzó con/gi, `La jornada comenzó, ${phraseEs}, con`);
+    s = s.replace(/Durante esa jornada/gi, `Durante esa jornada, ${phraseEs}`);
+    s = s.replace(/En esa fecha/gi, `En esa fecha, ${phraseEs}`);
     s = s.replace(/comenzó el día con/gi, `comenzó el día, ${phraseEs}, con`);
     return s;
   } else {
     const phraseEn = period.phraseEn;
     let s = neutralized;
     s = s.replace(/The day began with/gi, `The day began ${phraseEn}, with`);
-    s = s.replace(/On the day you were born in/gi, `On the day you were born, ${phraseEn}, the weather in`);
-    s = s.replace(/the day you were born/gi, `the day you were born, ${phraseEn}`);
-    s = s.replace(/The day you were born/gi, `The day you were born, ${phraseEn}`);
-    s = s.replace(/when you were born/gi, `when you arrived, ${phraseEn}`);
+    s = s.replace(/On this date/gi, `On this date, ${phraseEn}`);
+    s = s.replace(/During that clear afternoon/gi, `During that clear afternoon, ${phraseEn}`);
+    s = s.replace(/During that/gi, `During that ${phraseEn}`);
     return s;
   }
 }
@@ -128,17 +122,17 @@ function getThemeForEmptyTime(weatherCode: number, lang: 'en' | 'es'): string {
   const isCloudy = [2, 3, 45, 48].includes(weatherCode);
 
   if (lang === "es") {
-    if (isRainy) return "Una llegada con lluvia";
-    if (isSnowy) return "Una bienvenida con nieve";
-    if (isSunny) return "Un inicio soleado";
+    if (isRainy) return "Una jornada de lluvia";
+    if (isSnowy) return "Un día cubierto de nieve";
+    if (isSunny) return "Un despejado día soleado";
     if (isCloudy) return "Un día nublado y tranquilo";
-    return "Una llegada pacífica";
+    return "Una jornada pacífica";
   } else {
-    if (isRainy) return "A Rainy Arrival";
-    if (isSnowy) return "A Snowy Welcome";
-    if (isSunny) return "A Sunny Beginning";
+    if (isRainy) return "A Rainy Day";
+    if (isSnowy) return "A Snowy Winter Day";
+    if (isSunny) return "A Sunny Afternoon";
     if (isCloudy) return "A Quiet Cloudy Day";
-    return "A Peaceful Arrival";
+    return "A Peaceful Day";
   }
 }
 
@@ -150,16 +144,16 @@ function getCorrectTheme(weatherCode: number, lang: 'en' | 'es', birthTime?: str
 function makeStoryTimeNeutral(story: string, lang: 'en' | 'es'): string {
   if (lang === "es") {
     let s = story;
-    s = s.replace(/la mañana en que naciste/gi, "el día en que naciste");
-    s = s.replace(/La mañana en que naciste/gi, "El día en que naciste");
-    s = s.replace(/la mañana de tu llegada/gi, "el día de tu llegada");
-    s = s.replace(/La mañana comenzó con/gi, "El día comenzó con");
+    s = s.replace(/la mañana en que naciste/gi, "durante esa fecha");
+    s = s.replace(/La mañana en que naciste/gi, "Durante esa fecha");
+    s = s.replace(/la mañana de tu llegada/gi, "durante esa jornada");
+    s = s.replace(/La mañana comenzó con/gi, "La jornada comenzó con");
     s = s.replace(/el sol asomando a las \d+:\d+\s*(?:AM|PM)?/gi, "el cielo de la ciudad");
-    s = s.replace(/salida del sol a las \d+:\d+\s*(?:AM|PM)?/gi, "llegada");
+    s = s.replace(/salida del sol a las \d+:\d+\s*(?:AM|PM)?/gi, "el día");
     s = s.replace(/llovizna a las \d+:\d+\s*(?:AM|PM)?/gi, "llovizna");
     s = s.replace(/a las \d+:\d+\s*(?:AM|PM)?/gi, "");
-    s = s.replace(/al amanecer/gi, "en tu llegada");
-    s = s.replace(/Pasamos la mañana/gi, "Pasamos las primeras horas");
+    s = s.replace(/al amanecer/gi, "el cielo de la mañana");
+    s = s.replace(/Pasamos la mañana/gi, "Pasaron las primeras horas");
     s = s.replace(/amaneció con/gi, "comenzó con");
     s = s.replace(/amaneció cubierta/gi, "se cubrió");
     s = s.replace(/amaneció/gi, "comenzó el día");
@@ -179,12 +173,12 @@ function makeStoryTimeNeutral(story: string, lang: 'en' | 'es'): string {
       [/\bun atardecer\b/gi, "un momento"],
       [/\batardecer\b/gi, "momento"],
       [/\bmadrugada\b/gi, "jornada"],
-      [/\bmedianoche\b/gi, "llegada"],
-      [/\bamanecer\b/gi, "llegada"],
-      [/\bsalida del sol\b/gi, "llegada"],
-      [/\bpuesta de sol\b/gi, "llegada"],
-      [/\bla noche de tu llegada\b/gi, "el de tu llegada"],
-      [/\bla noche en que naciste\b/gi, "el día en que naciste"],
+      [/\bmedianoche\b/gi, "la noche"],
+      [/\bamanecer\b/gi, "el inicio de la jornada"],
+      [/\bsalida del sol\b/gi, "el día"],
+      [/\bpuesta de sol\b/gi, "el fin del día"],
+      [/\bla noche de tu llegada\b/gi, "el de esa jornada"],
+      [/\bla noche en que naciste\b/gi, "la noche de esa fecha"],
       [/\bpor la noche\b/gi, "durante el día"],
       [/\ben la noche\b/gi, "durante la jornada"],
       [/\buna noche\b/gi, "un día"],
@@ -202,8 +196,8 @@ function makeStoryTimeNeutral(story: string, lang: 'en' | 'es'): string {
     let s = story;
     s = s.replace(/the morning began/gi, "the day began");
     s = s.replace(/The morning began/gi, "The day began");
-    s = s.replace(/the morning you were born/gi, "the day you were born");
-    s = s.replace(/The morning you were born/gi, "The day you were born");
+    s = s.replace(/the morning you were born/gi, "that date");
+    s = s.replace(/The morning you were born/gi, "That date");
     s = s.replace(/chilly winter morning/gi, "chilly winter day");
     s = s.replace(/sunny morning/gi, "sunny day");
     s = s.replace(/spent the morning/gi, "spent those first hours");
@@ -226,10 +220,10 @@ function makeStoryTimeNeutral(story: string, lang: 'en' | 'es'): string {
       [/\bevening\b/gi, "day"],
       [/\bthe night\b/gi, "the day"],
       [/\bnight\b/gi, "day"],
-      [/\bdawn\b/gi, "arrival"],
-      [/\bsunrise\b/gi, "arrival"],
-      [/\bsunset\b/gi, "arrival"],
-      [/\bmidnight\b/gi, "arrival"],
+      [/\bdawn\b/gi, "daybreak"],
+      [/\bsunrise\b/gi, "daylight"],
+      [/\bsunset\b/gi, "nightfall"],
+      [/\bmidnight\b/gi, "the night"],
       [/\bdaylight\b/gi, "the skies"],
       [/\bdaytime\b/gi, "the day"],
     ];
@@ -240,6 +234,68 @@ function makeStoryTimeNeutral(story: string, lang: 'en' | 'es'): string {
     s = s.replace(/\b(morning|afternoon|evening|night|dawn|sunrise|sunset|midnight)\b/gi, "day");
     return s;
   }
+}
+
+function validateGeneratedContent(story: string, quote: string, theme: string): { valid: boolean; reason?: string } {
+  if (!story || !quote || !theme) return { valid: false, reason: "Missing required story fields" };
+  const combined = `${story} ${quote} ${theme}`.toLowerCase().replace(/[\s\r\n\t]+/g, " ");
+  
+  const forbiddenPhrases = [
+    "on the day of your arrival",
+    "your arrival",
+    "holding you",
+    "holding you for the first time",
+    "first cuddle",
+    "first embrace",
+    "tiny face",
+    "sweet scent",
+    "everything changed",
+    "our universe",
+    "our world",
+    "our hearts",
+    "joy",
+    "relief",
+    "gratitude",
+    "wonder",
+    "inside our room",
+    "carry forever",
+    "beautiful moment",
+    "sacred",
+    "precious",
+    "miracle",
+    "bundle of joy",
+
+    "el día de tu llegada",
+    "tu llegada",
+    "sostenerte",
+    "tenerte en brazos",
+    "primer abrazo",
+    "primer arrullo",
+    "carita",
+    "dulce aroma",
+    "todo cambió",
+    "nuestro universo",
+    "nuestro mundo",
+    "nuestros corazones",
+    "alegría",
+    "alivio",
+    "gratitud",
+    "asombro",
+    "nuestra habitación",
+    "para siempre",
+    "momento hermoso",
+    "sagrado",
+    "precioso",
+    "milagro"
+  ];
+
+  for (const phrase of forbiddenPhrases) {
+    if (combined.includes(phrase)) {
+      return { valid: false, reason: `Contains forbidden phrase "${phrase}"` };
+    }
+  }
+
+  return { valid: true };
 }
 
 // -------------------------------------------------------------
@@ -311,8 +367,8 @@ function getOfflineBackupStory(params: {
 
       const randomIndex = Math.floor(Math.random() * variants.length);
       return {
-        theme: "A Rainy Arrival",
-        quote: "The rain arrived softly, as if the city had paused for a moment.",
+        theme: "A Rainy Afternoon",
+        quote: "The rain fell softly, as if the city had paused for a moment.",
         story: variants[randomIndex],
       };
     }
@@ -679,9 +735,9 @@ Mandatory Constraints:
      * City: ${city} (Region: ${region || 'None'}, Country: ${country})
 
 5. STYLISH, MEMORABLE QUOTE & SIMPLE THEME:
-   - THEME: If the weather is rainy, the theme title MUST be exactly "A Rainy Arrival" (or "Una llegada con lluvia" in Spanish). Otherwise, generate a clean, weather-based title of 3 to 6 words. It must remain strictly factual and weather-oriented, NOT poetic or flowery (e.g., "A Sunny Day in ${city}", "Cloudy Skies in ${city}").
+   - THEME: If the weather is rainy, the theme title MUST be exactly "A Rainy Afternoon" (or "Una jornada de lluvia" in Spanish). Otherwise, generate a clean, weather-based title of 3 to 6 words. It must remain strictly factual and weather-oriented, NOT poetic or flowery (e.g., "A Sunny Day in ${city}", "Cloudy Skies in ${city}").
    - QUOTE: Quotes must describe the atmosphere of the day (e.g., "The rain softened every sound across the city." / "El aire de la mañana llevaba el rastro frío del invierno."). Never generate emotional quotes about becoming a parent or full hearts.
-     * If the weather is rainy and requested in English, the quote MUST be exactly: "The rain arrived softly, as if the city had paused for a moment." Otherwise, generate exactly one short, simple, natural, and memorable sentence reflecting the weather.
+     * If the weather is rainy and requested in English, the quote MUST be exactly: "The rain fell softly, as if the city had paused for a moment." Otherwise, generate exactly one short, simple, natural, and memorable sentence reflecting the weather.
 
 6. STRICT LANGUAGE REQUIREMENT:
    - The requested language is: "${language}".
@@ -739,16 +795,21 @@ You must output a JSON object containing:
 
       const parsed = JSON.parse(response.text || "{}");
       if (parsed.theme && parsed.quote && parsed.story) {
-        const qCheck = parsed.quality_check || {};
-        const isPassed = qCheck.language_consistent && qCheck.weather_consistent && qCheck.time_consistent && qCheck.city_consistent && qCheck.structure_consistent;
-        
-        if (isPassed) {
-          console.log("Gemini self-validation quality check passed on attempt " + (attempts + 1));
-          finalJson = parsed;
-          break;
+        const validation = validateGeneratedContent(parsed.story, parsed.quote, parsed.theme);
+        if (validation.valid) {
+          const qCheck = parsed.quality_check || {};
+          const isPassed = qCheck.language_consistent && qCheck.weather_consistent && qCheck.time_consistent && qCheck.city_consistent && qCheck.structure_consistent;
+
+          if (isPassed) {
+            console.log("Gemini self-validation quality check passed on attempt " + (attempts + 1));
+            finalJson = parsed;
+            break;
+          } else {
+            console.log("Quality checks failed on attempt " + (attempts + 1) + ". Detail: ", qCheck);
+            finalJson = parsed; // Store the last valid one in case we run out of retries
+          }
         } else {
-          console.log("Quality checks failed on attempt " + (attempts + 1) + ". Retrying... Details: ", qCheck);
-          finalJson = parsed; // Store the last one in case we run out of retries
+          console.warn(`Gemini response rejected on attempt ${attempts + 1}: ${validation.reason}`);
         }
       }
     } catch (err) {
