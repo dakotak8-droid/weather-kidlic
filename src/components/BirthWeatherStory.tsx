@@ -110,7 +110,7 @@ const LOCALES: { [key: string]: Dictionary } = {
     defaultCondition: "Calm Breeze",
 
     // Form
-    tinyTag: "A Single Date. A Unique Sky.",
+    tinyTag: "TEST CHANGE ACTIVE",
     formTitle: "What was the weather on that specific date?",
     formSubtitle: "Every day leaves a weather story behind. Discover the skies, temperatures, and atmosphere that shaped the world on that specific date.",
     fieldLanguage: "Language / Idioma",
@@ -190,7 +190,7 @@ const LOCALES: { [key: string]: Dictionary } = {
     defaultCondition: "Brisa Calma",
 
     // Form
-    tinyTag: "Una fecha única. Un cielo único.",
+    tinyTag: "TEST CHANGE ACTIVE",
     formTitle: "¿Cómo era el clima en esa fecha específica?",
     formSubtitle: "Cada día deja una historia climática detrás. Descubre los cielos, las temperaturas y la atmósfera que dieron forma al mundo en esa fecha específica.",
     fieldLanguage: "Idioma / Language",
