@@ -139,10 +139,10 @@ const LOCALES: { [key: string]: Dictionary } = {
     exampleCondition: "Gentle Sunshine",
     exampleWind: "12 km/h / 7 mph",
     exampleSunrise: "7:28 AM",
-    exampleTheme: "Wrapped in Warmth",
+    exampleTheme: "A Gentle Autumn Sun",
     exampleDate: "Oct 14, 2021",
-    exampleStory: "Bright afternoon sunshine spread across Austin, lighting up the neighborhood and casting yellow beams across the limestone ridges. It was a warm day outside, but our focus was entirely in our arms. The moment we cradled you, we felt an immense sense of gratitude that filled our hearts. The sunny day was beautiful, but you were the real daylight in our lives, bringing a warmth we will carry forever.",
-    exampleQuote: "Among clouds, rain, and sunlight, you were always the brightest part of the day.",
+    exampleStory: "Bright afternoon sunshine spread across Austin on October 14, 2021, lighting up the streets and casting long yellow beams over the limestone ridges. The warm, dry air settled gently over the city, carrying a calm breeze through the quiet neighborhood avenues. A birth was recorded in the city on this date. The sky remained perfectly blue and cloudless until the sun dipped below the horizon.",
+    exampleQuote: "The afternoon sun bathed the limestone hills in a warm, golden glow.",
   },
 
   es: {
@@ -219,10 +219,10 @@ const LOCALES: { [key: string]: Dictionary } = {
     exampleCondition: "Brillo Solar Suave",
     exampleWind: "12 km/h / 7 mph",
     exampleSunrise: "7:28 AM",
-    exampleTheme: "Cubierto de Calidez",
+    exampleTheme: "Un Suave Sol de Otoño",
     exampleDate: "Oct 14, 2021",
-    exampleStory: "Un brillante sol de la tarde se extendía sobre Austin, iluminando el vecindario y proyectando rayos amarillos a lo largo de las colinas de piedra caliza. Hacía un día cálido afuera, pero nuestra atención estaba por completo en nuestros brazos. En el momento en que te acunamos, sentimos una inmensa sensación de gratitud que llenó nuestros corazones. El día soleado era hermoso, pero tú eras la verdadera luz del día en nuestras vidas, trayendo una calidez que llevaremos para siempre.",
-    exampleQuote: "Entre las nubes, la lluvia y la luz del sol, siempre fuiste la parte más brillante del día.",
+    exampleStory: "Un brillante sol de la tarde se extendía sobre Austin el 14 de octubre de 2021, iluminando las calles y proyectando largos rayos amarillos sobre las colinas de piedra caliza. El aire cálido y seco envolvía suavemente la ciudad, con una brisa tranquila que recorría las avenidas residenciales. Un nacimiento fue registrado en la ciudad en esta fecha. El cielo permaneció perfectamente limpio y azul hasta el atardecer.",
+    exampleQuote: "El sol de la tarde bañó las colinas de piedra caliza con un cálido resplandor dorado.",
   }
 };
 
