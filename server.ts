@@ -312,11 +312,19 @@ function validateGeneratedContent(story: string, quote: string, theme: string): 
     }
   }
 
-  // Ensure that the child or birth is mentioned at most once and in a neutral way
-  const birthMentionsEn = (story.match(/\bbirth\b|\bborn\b/gi) || []).length;
-  const birthMentionsEs = (story.match(/\bnacimiento\b|\bnació\b/gi) || []).length;
-  if (birthMentionsEn + birthMentionsEs > 2) {
-    return { valid: false, reason: "Contains too many references to birth" };
+  // Enforce zero birth, baby, child or person mentions in the story
+  const birthMentionsEn = (combined.match(/\bbirth\b|\bborn\b|\bbaby\b|\bchild\b|\bperson\b|\bpeople\b/gi) || []).length;
+  const birthMentionsEs = (combined.match(/\bnacimiento\b|\bnació\b|\bbebé\b|\bniño\b|\bniña\b|\bhijo\b|\bhija\b|\bpersona\b|\bgente\b/gi) || []).length;
+  if (birthMentionsEn + birthMentionsEs > 0) {
+    return { valid: false, reason: "Contains forbidden birth, baby, child, or person references" };
+  }
+
+  // Enforce zero standard pronouns targeting the user or first-person plural
+  if (/\b(you|we|our|us)\b/i.test(combined)) {
+    return { valid: false, reason: "Contains forbidden pronoun 'you', 'we', 'our', or 'us'" };
+  }
+  if (/\b(tú|te|ti|tu|nosotros|nuestro|nuestra|nuestros|nuestras|nos)\b/i.test(combined)) {
+    return { valid: false, reason: "Contains forbidden Spanish pronoun or possessive" };
   }
 
   return { valid: true };
@@ -352,41 +360,41 @@ function getOfflineBackupStory(params: {
       return {
         theme: "Una jornada de lluvia",
         quote: "La lluvia cayó suavemente, como si la ciudad se hubiera detenido por un momento.",
-        story: `Durante esa jornada, una lluvia apacible cubrió ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera, la gente caminaba despacio bajo sus paraguas, mientras los reflejos plateados del agua dibujaban líneas en los tejados y calles. En ese ambiente sereno de lluvia constante, el ritmo cotidiano disminuyó y se respiró una inesperada calma. Un nacimiento fue registrado en la ciudad en esta fecha. El agua continuó cayendo uniformemente hasta caer la tarde.`,
+        story: `Durante esa jornada, una lluvia apacible cubrió ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). El agua caía sobre los tejados y las calles vacías, mientras los reflejos plateados dibujaban líneas constantes en las aceras. En ese ambiente de lluvia constante, la jornada transcurrió con una inesperada calma. El agua continuó cayendo uniformemente hasta finales del día.`,
       };
     }
     if (isSnowy) {
       return {
         theme: "Un día cubierto de nieve",
         quote: "Mientras la nieve cubría la ciudad, el silence blanco envolvía las calles.",
-        story: `En esa fecha invernal, un manto de nieve cubrió las calles de ${params.city} en medio de un frío de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). El exterior permanecía en un pacífico silencio blanco que amortiguaba el sonido del tráfico cotidiano. Un nacimiento fue registrado en la ciudad en esta fecha. Afuera, los copos de nieve continuaron descendiendo con suavidad y constancia sobre los tejados y aceras.`,
+        story: `En esa fecha invernal, un manto de nieve cubrió las calles de ${params.city} en medio de un frío de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). La ciudad permanecía en un pacífico silencio blanco que amortiguaba el sonido habitual del viento. Los copos de nieve continuaron descendiendo con suavidad y constancia, acumulándose sobre los tejados y aceras.`,
       };
     }
     if (isSunny) {
       return {
         theme: "Un despejado día soleado",
         quote: "El sol brilló con calma, iluminando las calles de la ciudad.",
-        story: `Durante esa jornada despejada, un sol brillante iluminó todo ${params.city} alcanzando los ${tempC}°C (${tempF}°F) con viento a ${windKn} km/h (${windMph} mph). Afuera, la gente transitaba con calma por las avenidas y los edificios reflejaban la luz cálida. Un nacimiento fue registrado en la ciudad en esta fecha. El cielo continuó perfectamente limpio y azul hasta el atardecer.`,
+        story: `Durante esa jornada despejada, un sol brillante iluminó todo ${params.city} alcanzando los ${tempC}°C (${tempF}°F) con viento a ${windKn} km/h (${windMph} mph). Los edificios y las avenidas principales reflejaban la luz cálida, y una brisa ligera cruzaba las plazas locales. El cielo permaneció perfectamente limpio y azul de horizonte a horizonte.`,
       };
     }
     // Default Cloudy
     return {
       theme: "Un día nublado y tranquilo",
       quote: "El sky gris trajo una calma reconfortante a toda la ciudad.",
-      story: `Durante esa fecha, nubes pacíficas vistieron de gris el cielo de ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Afuera, todo seguía su marcha habitual bajo la luz difusa, mientras un viento suave mecía las ramas de los árboles. Un nacimiento fue registrado en la ciudad en esta fecha. La jornada gris continuó desarrollándose en un ambiente de notable quietud.`,
+      story: `Durante esa fecha, nubes pacíficas vistieron de gris el cielo de ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Todo transcurrió bajo una luz difusa, mientras un viento suave mecía las ramas de los árboles. La jornada gris continuó desarrollándose en un ambiente de notable quietud y serenidad.`,
     };
   } else {
     if (isRainy) {
       const variants = [
-        `Light rain drifted across ${params.city} throughout the afternoon with steady temperatures around ${tempC}°C (${tempF}°F). Umbrellas appeared along busy avenues, and water gathered quietly on rooftops as a breeze of ${windKn} km/h (${windMph} mph) rustled through the trees. The rhythmic sound of rainfall softened the city’s usual noise, casting a quiet calm over parks and neighborhoods. A birth was recorded in the city on this date. The steady precipitation continued to wash the streets until late evening.`,
+        `Light rain drifted across ${params.city} throughout the afternoon with steady temperatures around ${tempC}°C (${tempF}°F). Water gathered quietly on rooftops as a breeze of ${windKn} km/h (${windMph} mph) rustled through the trees. The rhythmic sound of rainfall softened all sound, casting a quiet calm over parks and neighborhoods. The steady precipitation continued until late evening.`,
         
-        `A fresh spring rain washed over the streets of ${params.city}, leaving pavements shimmering under overcast skies. With temperatures holding at ${tempC}°C (${tempF}°F) and wind pacing at ${windKn} km/h (${windMph} mph), the air carried a clean scent of wet earth and stone. Commuters carrying umbrellas moved past shop windows while headlights cast long reflections on the wet asphalt. A birth was recorded in the city on this date. The clouds remained low as the day transitioned quietly into dusk.`,
+        `A fresh spring rain washed over the streets of ${params.city}, leaving pavements shimmering under overcast skies. With temperatures holding at ${tempC}°C (${tempF}°F) and wind pacing at ${windKn} km/h (${windMph} mph), the air carried a clean scent of wet earth and stone. Headlights cast long reflections on the wet asphalt. The clouds remained low as the day transitioned quietly into dusk.`,
         
-        `An evening rain descended over the rooftops of ${params.city}, softening the city outline against a deep iron-grey sky. Temperatures cooled to ${tempC}°C (${tempF}°F) while a gentle breeze of ${windKn} km/h (${windMph} mph) carried mist across the neighborhood streets. Streetlights flickered to life, reflecting in silver pools along the concrete walkways. A birth was recorded in the city on this date. Drops continued to crawl down glass windows under a persistent dark sky.`,
+        `An evening rain descended over the rooftops of ${params.city}, softening the city outline against a deep iron-grey sky. Temperatures cooled to ${tempC}°C (${tempF}°F) while a gentle breeze of ${windKn} km/h (${windMph} mph) carried mist across the neighborhood streets. Streetlights flickered to life, reflecting in silver pools along the concrete walkways. Drops continued to crawl down glass windows under a persistent dark sky.`,
         
-        `Passing rain showers swept quickly across ${params.city}, carried by a gusty wind of ${windKn} km/h (${windMph} mph). Temperatures remained cool at ${tempC}°C (${tempF}°F) as dramatic cloud formations rolled steadily over the rooftops. Between brief bursts of water, wet asphalt streets glistened beneath a soft, diffuse light. A birth was recorded in the city on this date. Overcast skies persisted as the weather front moved slowly eastward.`,
+        `Passing rain showers swept quickly across ${params.city}, carried by a gusty wind of ${windKn} km/h (${windMph} mph). Temperatures remained cool at ${tempC}°C (${tempF}°F) as dramatic cloud formations rolled steadily over the rooftops. Between brief bursts of water, wet asphalt streets glistened beneath a soft, diffuse light. Overcast skies persisted as the weather front moved slowly eastward.`,
         
-        `Quiet, steady rainfall enveloped ${params.city}, turning the streets into a canvas of soft slate and grey. With temperatures registering ${tempC}°C (${tempF}°F) and wind blowing gently at ${windKn} km/h (${windMph} mph), silver droplets lined every windowpane. The steady patter of moisture created an unexpected calm, slowing the city’s rapid morning pace. A birth was recorded in the city on this date. Grey clouds hung low across the skyline until nightfall.`
+        `Quiet, steady rainfall enveloped ${params.city}, turning the streets into a canvas of soft slate and grey. With temperatures registering ${tempC}°C (${tempF}°F) and wind blowing gently at ${windKn} km/h (${windMph} mph), silver droplets lined every windowpane. The steady patter of moisture created an unexpected calm across the skyline until nightfall.`
       ];
 
       const randomIndex = Math.floor(Math.random() * variants.length);
@@ -400,27 +408,27 @@ function getOfflineBackupStory(params: {
       return {
         theme: "A Snowy Winter Day",
         quote: "While snow carpeted the city outside, the streets fell into a quiet, frozen stillness.",
-        story: `During that winter afternoon, soft snow blanketed ${params.city}, bringing a chill of ${tempC}°C (${tempF}°F) and a gentle wind at ${windKn} km/h (${windMph} mph). The streets fell silent under the white canopy, while office buildings and residential houses kept their windows glowing. A birth was recorded in the city on this date. Outdoor flakes continued to gather quietly on rooftops and pavements.`,
+        story: `During that winter afternoon, soft snow blanketed ${params.city}, bringing a chill of ${tempC}°C (${tempF}°F) and a gentle wind at ${windKn} km/h (${windMph} mph). The streets fell silent under the white canopy, while buildings kept their facade lights glowing. Flakes continued to gather quietly on rooftops and pavements.`,
       };
     }
     if (isSunny) {
       return {
         theme: "A Sunny Afternoon",
         quote: "The sun rose for the city just like any other day, casting bright golden light across the streets.",
-        story: `During that clear afternoon, bright sunshine bathed ${params.city}, warming the day to ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Outside, walkways were lively with pedestrians, and gold light danced across the brick building facades. A birth was recorded in the city on this date. The blue sky remained perfectly clear and cloudless until the sun dipped below the horizon.`,
+        story: `During that clear afternoon, bright sunshine bathed ${params.city}, warming the day to ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Gold light danced across the brick building facades and tree branches. The blue sky remained perfectly clear and cloudless until the sun dipped below the horizon.`,
       };
     }
     // Default Cloudy
     const variants = [
-      `A quiet blanket of overcast clouds settled low over the horizon of ${params.city}. Throughout the day, the temperature rested at a steady ${tempC}°C (${tempF}°F) while a light breeze of ${windKn} km/h (${windMph} mph) rustled through parks and along building fronts. Beneath the diffuse slate-grey sky, the usual sharp outline of the skyline was beautifully softened, and streetlights glowed early on the avenues. A birth was recorded in the city on this date. Daily traffic moved patiently through the quiet, shaded neighborhoods.`,
+      `A quiet blanket of overcast clouds settled low over the horizon of ${params.city}. Throughout the day, the temperature rested at a steady ${tempC}°C (${tempF}°F) while a light breeze of ${windKn} km/h (${windMph} mph) rustled through parks and along building fronts. Beneath the diffuse slate-grey sky, the usual sharp outline of the skyline was beautifully softened.`,
       
-      `A vast, iron-grey canopy of clouds shrouded the sky over ${params.city}, creating a cool, unified shade across the streets and public squares. Temperatures hovered around ${tempC}°C (${tempF}°F) with wind blowing at ${windKn} km/h (${windMph} mph), sweeping dry leaves along the stone pavements. The soft, shadowless light gave the local parks and brick facades an archival, timeless quality. A birth was recorded in the city on this date. Residents went about their errands in sweaters and coats under the grey sky.`,
+      `A vast, iron-grey canopy of clouds shrouded the sky over ${params.city}, creating a cool, unified shade across the streets and public squares. Temperatures hovered around ${tempC}°C (${tempF}°F) with wind blowing at ${windKn} km/h (${windMph} mph), sweeping dry leaves along the stone pavements. The soft, shadowless light gave the local parks and brick facades an archival, timeless quality.`,
       
-      `Thick, dense grey clouds wrapped the buildings of ${params.city} in a peaceful and protective mist. The wind paced gently at ${windKn} km/h (${windMph} mph) underneath an overcast sky, keeping the daytime temperature locked at a cool ${tempC}°C (${tempF}°F). Across the city, local street corners, shop windows, and historic avenues appeared quiet and calm, illuminated by the glare-free light. A birth was recorded in the city on this date. The overcast canopy provided a smooth, muted tone to the afternoon.`,
+      `Thick, dense grey clouds wrapped the buildings of ${params.city} in a peaceful and protective mist. The wind paced gently at ${windKn} km/h (${windMph} mph) underneath an overcast sky, keeping the daytime temperature locked at a cool ${tempC}°C (${tempF}°F). Across the city, local street corners, shop windows, and historic avenues appeared quiet and calm, illuminated by the glare-free light.`,
       
-      `High-altitude grey clouds uniform in texture stretched coast to coast over the sky of ${params.city}. Air temperatures remained cool but steady at ${tempC}°C (${tempF}°F) with wind speeds of ${windKn} km/h (${windMph} mph) carrying a crisp, seasonal freshness through the streets. Under this calm slate canopy, the city’s busy thoroughfares slowed to a quiet mutter. A birth was recorded in the city on this date. High-altitude clouds continued to block any direct sunlight through the rest of the day.`,
+      `High-altitude grey clouds uniform in texture stretched coast to coast over the sky of ${params.city}. Air temperatures remained cool but steady at ${tempC}°C (${tempF}°F) with wind speeds of ${windKn} km/h (${windMph} mph) carrying a crisp, seasonal freshness through the streets. Under this calm slate canopy, the skyline sat in quiet composure.`,
       
-      `A quiet layer of stratocumulus clouds blanketed the rooftops of ${params.city} from dawn until twilight. Outside, temperatures measured ${tempC}°C (${tempF}°F) with a steady, atmospheric wind blowing at ${windKn} km/h (${windMph} mph), creating a crisp feeling in the air. The lack of direct sunshine painted the city in soft, classic shades of slate and charcoal. A birth was recorded in the city on this date. The neutral light maintained an elegant, historic mood across the urban avenues.`
+      `A quiet layer of stratocumulus clouds blanketed the rooftops of ${params.city} from dawn until twilight. Outside, temperatures measured ${tempC}°C (${tempF}°F) with a steady, atmospheric wind blowing at ${windKn} km/h (${windMph} mph), creating a crisp feeling in the air. The lack of direct sunshine painted the city in soft, classic shades of slate and charcoal.`
     ];
 
     const randomIndex = Math.floor(Math.random() * variants.length);
@@ -537,35 +545,38 @@ app.post("/api/generate-story", async (req, res) => {
    - "The sky over ${city}..." / "El cielo sobre ${city}..."
    Do NOT assume a specific time period under any circumstances.`;
 
-  const systemInstruction = `You are an expert weather keepsake writer creating atmospheric historical weather stories connected to real birth dates and locations.
+  const systemInstruction = `You are an expert weather keepsake writer creating atmospheric historical archive records documenting the weather of specific dates and locations.
 
 CONCEPTUAL REFRAME (CRITICAL NARRATIVE DIRECTION):
-Your task is NOT to write an emotional birth announcement or a parent diary entry. Instead, write a historical weather keepsake journal documenting the atmosphere, weather, season, and regional character of a specific day. The weather, sky, atmosphere, temperature, wind, and city environment are the absolute main characters. 
+This is not a birth story, parent memory, or family keepsake generator. Do NOT write about people, relationships, families, birth, or babies. Write a historical weather keepsake journal documenting ONLY the atmosphere, weather, season, and regional character of a specific day. The weather, sky, clouds, wind, temperature, season, atmosphere, and city environment are the absolute main characters. 
 
 The story must satisfy the following NEW STORY VALIDATION TESTS before outputting:
-1. Is the weather the absolute main character and the subject of every paragraph or sentence? 
-2. WOULD THE STORY WORK IF ALL CHILD OR BIRTH REFERENCES WERE REMOVED? Yes! If every mention of the child or the birth is completely deleted, the remaining text MUST compile into a perfectly coherent, grammatically correct, and beautifully flowing weather-only description. If the birth sentence is structurally, grammatically, or semantically intertwined with the weather, the story is INVALID. 
+1. Is the weather the absolute main character and the subject of every paragraph or sentence? Yes.
+2. Does the story contain ZERO references to babies, children, birth, parenting, or family? Yes. If any such reference is found, the story is INVALID.
 3. Does the story read like an atmospheric weather chronicle preserved as a keepsake? (Completely objective, sensory, and beautifully detailed weather description).
-4. Does the story avoid all parent-focused emotional storytelling, feelings, or perspective? (Yes, the narrator is a neutral, historical narrator, never speaking as "we", "our", "us", or "parent").
+4. Does the story contain the word 'you', 'your', 'we', 'our', 'us', or any personal pronoun? No. They are STRICTLY FORBIDDEN.
 
 STRICTLY FORBIDDEN NARRATIVE THEMES:
-Do NOT write about: parents, family members, emotions, gratitude, joy, relief, wonder, love, hearts, cuddles, embraces, holding or carrying the baby, first moments, first meeting, first sight, inside the room, inside our world, life changing moments, or emotional memories.
+Do NOT write about: parents, family members, babies, birth, children, emotions, gratitude, joy, relief, wonder, love, hearts, cuddles, embraces, holding or carrying the baby, first moments, first meeting, first sight, inside the room, inside our world, life changing moments, or emotional memories.
 
 STRICTLY FORBIDDEN PHRASES (MUST NEVER APPEAR):
 Do NOT use:
 - "you", "your", "arrival", "your arrival", "on the day of your arrival", "when you arrived", "welcomed your child", "welcomed you", "the sky welcomed you"
-- "our arms", "we cradled you", "held you", "first cuddle", "first embrace", "first hug", "first moments together"
+- "we", "our", "us", "our arms", "we cradled you", "held you", "first cuddle", "first embrace", "first hug", "first moments together"
 - "our world", "our universe", "our hearts", "our lives changed", "carry forever", "ultimate light", "brightest part of the day"
-- "joy", "relief", "wonder", "gratitude", "sweet scent", "tiny face", "beautiful tiny face", "everything changed"
+- "joy", "relief", "wonder", "gratitude", "sweet scent", "tiny face", "beautiful tiny face", "everything changed", "birth", "born", "baby", "child"
 - Any other direct references to physical contact with a baby, parental emotions, tears, or family milestone feelings.
 
 NARRATIVE RATIO:
-- 90% weather, atmosphere, season, city life, sky, streets, landscape.
-- 10% simple, brief, completely detached acknowledgment that a birth was recorded on that date. 
+- 100% weather, atmosphere, season, sky, clouds, wind, temperature, streets, landscape, city environment.
+- 0% birth, baby, child, family, relationships, or emotions.
 
 Mandatory Constraints:
 1. FORBIDDEN WORD GROUPS:
    Avoid generating these words or their equivalents in Spanish/other languages:
+   - baby / bebe / bebé
+   - child / kid / children / hijo / hija / niño / niña
+   - birth / born / nacido / nacida / nacer / nacimiento
    - love / amor
    - heart / corazón / corazones
    - joy / alegría
@@ -586,11 +597,10 @@ Mandatory Constraints:
 2. STORY STRUCTURE:
    - Keep the story length strictly between 80 and 120 words (physical layout constraint).
    - Follow this narrative flow exactly:
-     1. Describe the weather conditions in ${city} (such as rain, clouds, streets, wind, temperature, how the city environment felt).
-     2. Describe the sky, atmosphere, streets, season, or landscape.
-     3. Mention how people experienced the day (e.g. residents walking, traffic, storefronts, etc.).
-     4. Briefly and in an understated, detached way, acknowledge that a birth was recorded in the city on this date (e.g., "A birth was recorded in the city on this date.").
-     5. Return naturally to the weather, sky, and atmosphere of the day.
+     1. Describe the weather conditions in ${city} (such as rain, clouds, streets, wind, temperature, atmospheric composition, how the ambient city environment felt).
+     2. Describe the sky, atmosphere, season, or landscape.
+     3. Describe and focus purely on the environmental character of the day (e.g. steady winds, light patterns, cloud cover over building facades).
+     4. Do NOT include any birth or person references. Maintain a purely objective, archival weather journal style.
 
 3. WEATHER AS FACTUAL SENSORY CONTEXT:
    - Treat weather strictly as factual, sensory background context of the day, not as a poetic metaphor or an emotional driver. Keep all weather descriptions completely objective.
@@ -608,10 +618,8 @@ Mandatory Constraints:
      * If the weather is rainy and requested in English, the quote MUST be exactly: "The rain fell softly, as if the city had paused for a moment." Otherwise, generate exactly one short, simple, natural, and memorable sentence reflecting the weather (e.g., "A single date. A unique sky. A story preserved.").
 
 5. BIRTH REFERENCE REMOVABILITY:
-   - The reference to the birth of the child MUST be isolated to a single, simple, standalone sentence.
-   - This sentence must NOT be stylistically, grammatically, or semantically intertwined with the weather descriptions.
-   - If every mention of the child or the birth is completely removed from the story, the remaining text MUST compile into a perfectly coherent, grammatically correct, and beautifully flowing weather-only description.
-   - The story MUST NOT make any assumption about "you", "your", "arrival", or the baby.
+   - The story MUST NOT contain any reference to births, babies, children, or families.
+   - The story MUST NOT make any assumption about "you", "your", "arrival", "we", "our", "us", or any person.
 
 6. STRICT LANGUAGE REQUIREMENT:
    - The requested language is: "${language}".
@@ -639,7 +647,7 @@ You must output a JSON object containing:
       console.log(`Querying Gemini (Attempt ${attempts + 1}) for story in ${language}...`);
       const response = await ai.models.generateContent({
         model: "gemini-3.5-flash",
-        contents: `Generate an atmospheric historical weather memory centered on the weather conditions, season, sky, city atmosphere, and character of the day. The weather is the primary subject. The birth is only a brief historical fact. Follow the system instruction for ${city}, ${country} (${region || ''}) with weather ${weatherText} (Max Temp ${tempMax}°C, Wind ${windSpeed} km/h) on ${birthDate}.`,
+        contents: `Generate an atmospheric historical weather archive record centered entirely on the weather conditions, season, sky, city atmosphere, and character of the day. Do NOT write about birth, babies, relationships, families, or people. Follow the system instruction for ${city}, ${country} (${region || ''}) with weather ${weatherText} (Max Temp ${tempMax}°C, Wind ${windSpeed} km/h) on ${birthDate}.`,
         config: {
           systemInstruction: systemInstruction,
           responseMimeType: "application/json",

@@ -67,12 +67,12 @@ interface Dictionary {
 const LOCALES: { [key: string]: Dictionary } = {
   en: {
     certificateHeader: "WEATHER KEEPSAKE CERTIFICATE",
-    weatherOnArrival: "WEATHER ON YOUR ARRIVAL",
+    weatherOnArrival: "WEATHER ON THIS DATE",
     conditionHeader: "CONDITION",
     temperatureHeader: "TEMPERATURE",
     windSpeedHeader: "MAX WIND SPEED",
     sunriseHeader: "SUNRISE TIME",
-    skysWelcome: "THE SKY'S WELCOME",
+    skysWelcome: "THE SKY'S RECORD",
     themeLabel: "Theme",
     dateLabel: "Date",
     authenticKeepsake: "Your Authentic Weather Keepsake",
@@ -110,7 +110,7 @@ const LOCALES: { [key: string]: Dictionary } = {
     defaultCondition: "Calm Breeze",
 
     // Form
-    tinyTag: "Tiny Date. Big Memory.",
+    tinyTag: "A Single Date. A Unique Sky.",
     formTitle: "What was the weather when your child was born?",
     formSubtitle: "Every day leaves a weather story behind. Discover the skies, temperatures, and atmosphere that shaped the world on the day your child was born.",
     fieldLanguage: "Language / Idioma",
@@ -141,18 +141,18 @@ const LOCALES: { [key: string]: Dictionary } = {
     exampleSunrise: "7:28 AM",
     exampleTheme: "GOLDEN OCTOBER SKIES",
     exampleDate: "Oct 14, 2021",
-    exampleStory: "Bright afternoon sunshine spread across Austin on October 14, 2021, lighting up the streets and casting long yellow beams over the limestone ridges. The warm, dry air settled gently over the city, carrying a calm breeze through the quiet neighborhood avenues. A birth was recorded in the city on this date. The sky remained perfectly blue and cloudless until the sun dipped below the horizon.",
+    exampleStory: "Bright afternoon sunshine spread across Austin on October 14, 2021, lighting up the streets and casting long yellow beams over the limestone ridges. The warm, dry air settled gently over the city, carrying a calm breeze through the quiet neighborhood avenues. The sky remained perfectly blue and cloudless until the sun dipped below the horizon.",
     exampleQuote: "A single date. A unique sky. A story preserved.",
   },
 
   es: {
     certificateHeader: "CERTIFICADO DE RECUERDO DEL CLIMA",
-    weatherOnArrival: "EL CLIMA EN TU LLEGADA",
+    weatherOnArrival: "EL CLIMA EN ESTA FECHA",
     conditionHeader: "CONDICIÓN",
     temperatureHeader: "TEMPERATURA",
     windSpeedHeader: "VELOCIDAD MÁXIMA DEL VIENTO",
     sunriseHeader: "HORA DEL AMANECER",
-    skysWelcome: "LA BIENVENIDA DEL CIELO",
+    skysWelcome: "EL REGISTRO DEL CIELO",
     themeLabel: "Tema",
     dateLabel: "Fecha",
     authenticKeepsake: "Tu Recuerdo del Clima Auténtico",
@@ -190,7 +190,7 @@ const LOCALES: { [key: string]: Dictionary } = {
     defaultCondition: "Brisa Calma",
 
     // Form
-    tinyTag: "Fecha pequeña. Gran recuerdo.",
+    tinyTag: "Una fecha única. Un cielo único.",
     formTitle: "¿Cómo era el clima el día en que nació tu hijo?",
     formSubtitle: "Cada día deja una historia climática detrás. Descubre los cielos, las temperaturas y la atmósfera que dieron forma al mundo el día en que nació tu hijo.",
     fieldLanguage: "Idioma / Language",
@@ -221,7 +221,7 @@ const LOCALES: { [key: string]: Dictionary } = {
     exampleSunrise: "7:28 AM",
     exampleTheme: "CIELOS DORADOS DE OTOÑO",
     exampleDate: "Oct 14, 2021",
-    exampleStory: "Un brillante sol de la tarde se extendía sobre Austin el 14 de octubre de 2021, iluminando las calles y proyectando largos rayos amarillos sobre las colinas de piedra caliza. El aire cálido y seco envolvía suavemente la ciudad, con una brisa tranquila que recorría las avenidas residenciales. Un nacimiento fue registrado en la ciudad en esta fecha. El cielo permaneció perfectamente limpio y azul hasta el atardecer.",
+    exampleStory: "Un brillante sol de la tarde se extendía sobre Austin el 14 de octubre de 2021, iluminando las calles y proyectando largos rayos amarillos sobre las colinas de piedra caliza. El aire cálido y seco envolvía suavemente la ciudad, con una brisa tranquila que recorría las avenidas residenciales. El cielo permaneció perfectamente limpio y azul hasta el atardecer.",
     exampleQuote: "Una sola fecha. Un cielo único. Una historia preservada.",
   }
 };
@@ -1313,7 +1313,7 @@ export default function BirthWeatherStory() {
         ctx.fillStyle = bgGrad;
         ctx.fillRect(0, 0, 1080, finalCanvasHeight);
 
-        // Draw glowing golden baby-light cosmic orb from upper right corner
+        // Draw glowing golden twilight-light cosmic orb from upper right corner
         const sunGlow = ctx.createRadialGradient(900, 160, 50, 900, 160, 500);
         sunGlow.addColorStop(0, "rgba(232, 158, 130, 0.08)"); // cozy gold atmospheric mist
         sunGlow.addColorStop(1, "rgba(0, 0, 0, 0)");
