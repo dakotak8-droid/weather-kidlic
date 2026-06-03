@@ -79,7 +79,7 @@ const LOCALES: { [key: string]: Dictionary } = {
     referenceIdea: "Reference Idea",
     downloadButton: "Download Keepsake",
     downloadButtonLoading: "Crafting Keepsake...",
-    downloadOptimized: "Optimized for Instagram (4:5 vertical), Facebook, and baby memory albums",
+    downloadOptimized: "Optimized for Instagram (4:5 vertical), Facebook, framing, and keepsake albums",
     months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
     weatherConditions: {
       0: "Clear Skies",
@@ -111,8 +111,8 @@ const LOCALES: { [key: string]: Dictionary } = {
 
     // Form
     tinyTag: "Tiny Date. Big Memory.",
-    formTitle: "What was the weather when your baby was born?",
-    formSubtitle: "Before the sleepless nights, snack negotiations, and mysterious sticky fingerprints, there was a single day. Discover the weather that welcomed your child into the world.",
+    formTitle: "What was the weather when your child was born?",
+    formSubtitle: "Every day leaves a weather story behind. Discover the skies, temperatures, and atmosphere that shaped the world on the day your child was born.",
     fieldLanguage: "Language / Idioma",
     fieldBirthDate: "Birth Date (MM/DD/YYYY)",
     fieldBirthTime: "Birth Time (Optional)",
@@ -139,10 +139,10 @@ const LOCALES: { [key: string]: Dictionary } = {
     exampleCondition: "Gentle Sunshine",
     exampleWind: "12 km/h / 7 mph",
     exampleSunrise: "7:28 AM",
-    exampleTheme: "A Gentle Autumn Sun",
+    exampleTheme: "GOLDEN OCTOBER SKIES",
     exampleDate: "Oct 14, 2021",
     exampleStory: "Bright afternoon sunshine spread across Austin on October 14, 2021, lighting up the streets and casting long yellow beams over the limestone ridges. The warm, dry air settled gently over the city, carrying a calm breeze through the quiet neighborhood avenues. A birth was recorded in the city on this date. The sky remained perfectly blue and cloudless until the sun dipped below the horizon.",
-    exampleQuote: "The afternoon sun bathed the limestone hills in a warm, golden glow.",
+    exampleQuote: "A single date. A unique sky. A story preserved.",
   },
 
   es: {
@@ -159,7 +159,7 @@ const LOCALES: { [key: string]: Dictionary } = {
     referenceIdea: "Idea de Referencia",
     downloadButton: "Descargar Recuerdo",
     downloadButtonLoading: "Creando Recuerdo...",
-    downloadOptimized: "Optimizado para Instagram (4:5 vertical), Facebook y álbumes de recuerdos de bebés",
+    downloadOptimized: "Optimizado para Instagram (4:5 vertical), Facebook, enmarcar y álbumes de recuerdos",
     months: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
     weatherConditions: {
       0: "Cielos Despejados",
@@ -191,8 +191,8 @@ const LOCALES: { [key: string]: Dictionary } = {
 
     // Form
     tinyTag: "Fecha pequeña. Gran recuerdo.",
-    formTitle: "¿Cómo era el clima cuando nació tu bebé?",
-    formSubtitle: "Antes de las noches de desvelo, las negociaciones de refrigerios y las misteriosas huellas pegajosas, hubo un solo día. Descubre el clima que le dio la bienvenida a tu hijo al mundo.",
+    formTitle: "¿Cómo era el clima el día en que nació tu hijo?",
+    formSubtitle: "Cada día deja una historia climática detrás. Descubre los cielos, las temperaturas y la atmósfera que dieron forma al mundo el día en que nació tu hijo.",
     fieldLanguage: "Idioma / Language",
     fieldBirthDate: "Fecha de nacimiento (MM/DD/AAAA)",
     fieldBirthTime: "Hora de nacimiento (Opcional)",
@@ -219,10 +219,10 @@ const LOCALES: { [key: string]: Dictionary } = {
     exampleCondition: "Brillo Solar Suave",
     exampleWind: "12 km/h / 7 mph",
     exampleSunrise: "7:28 AM",
-    exampleTheme: "Un Suave Sol de Otoño",
+    exampleTheme: "CIELOS DORADOS DE OTOÑO",
     exampleDate: "Oct 14, 2021",
     exampleStory: "Un brillante sol de la tarde se extendía sobre Austin el 14 de octubre de 2021, iluminando las calles y proyectando largos rayos amarillos sobre las colinas de piedra caliza. El aire cálido y seco envolvía suavemente la ciudad, con una brisa tranquila que recorría las avenidas residenciales. Un nacimiento fue registrado en la ciudad en esta fecha. El cielo permaneció perfectamente limpio y azul hasta el atardecer.",
-    exampleQuote: "El sol de la tarde bañó las colinas de piedra caliza con un cálido resplandor dorado.",
+    exampleQuote: "Una sola fecha. Un cielo único. Una historia preservada.",
   }
 };
 
