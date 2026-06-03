@@ -1,6 +1,6 @@
 {
-  "name": "Parent Weather Forecast",
-  "description": "A modern, warm, and humorous weather app that translates meteorology into daily parenting reality.",
+  "name": "Historical Weather Keepsake",
+  "description": "Generate beautifully formatted, certificate-style keepsake memories of historical weather and atmospheric records for any date in history.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

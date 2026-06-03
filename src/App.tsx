@@ -4,18 +4,18 @@
  */
 
 import React, { useState, useEffect } from "react";
-import { Moon, Sun, Heart } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import BirthWeatherStory from "./components/BirthWeatherStory";
 
 export default function App() {
   const [isDark, setIsDark] = useState<boolean>(() => {
-    const saved = localStorage.getItem("parent_weather_theme_dark");
+    const saved = localStorage.getItem("keepsake_weather_theme_dark");
     if (saved) return saved === "true";
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
 
   useEffect(() => {
-    localStorage.setItem("parent_weather_theme_dark", isDark.toString());
+    localStorage.setItem("keepsake_weather_theme_dark", isDark.toString());
     const root = document.documentElement;
     if (isDark) {
       root.classList.add("dark");
@@ -57,22 +57,22 @@ export default function App() {
           </div>
         </header>
 
-        {/* Newborn Legacy Birth Date Weather Story */}
+        {/* Historical Date Weather Story Section */}
         <main className="relative z-10">
           <BirthWeatherStory />
         </main>
       </div>
 
-      {/* Warm Cozy Parent App Footer */}
+      {/* Atmospheric Weather Keepsake Footer */}
       <footer className="border-t border-[#F0E4DA] dark:border-[#3B282A] bg-white/40 dark:bg-[#1E1415]/20 backdrop-blur-md py-12 px-6 select-none mt-12">
         <div className="max-w-lg mx-auto text-center">
           <div className="flex items-center justify-center gap-1.5 mb-4 text-xs text-[#7A6363] dark:text-slate-400 font-mono tracking-widest uppercase font-bold">
-            <Heart size={13} className="text-[#D48D71] fill-[#D48D71]" />
-            <span>Cozy Climate Division</span>
+            <Sun size={13} className="text-[#D48D71]" />
+            <span>Historical Climate Archives</span>
           </div>
 
           <p className="font-serif italic text-[#7A6363] dark:text-slate-300 leading-relaxed mb-4 text-sm max-w-sm mx-auto">
-            "Made with ☕ and survived juice boxes. Map the exact atmosphere of your child's spectacular original arrival."
+            "Map the exact atmosphere of any historic date. Preserving the skies, winds, and temperature in a timeless keepsake."
           </p>
 
           <p className="text-[10px] text-slate-400 dark:text-slate-500 font-mono">

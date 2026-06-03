@@ -23,7 +23,6 @@ export interface DailyForecast {
   tempMax: number;
   tempMin: number;
   rainProb: number;
-  moodLabel: string; // Humorous parenting label (e.g. "Playground Goldmines", "Blanket Fort Critical")
 }
 
 export interface WeatherData {
@@ -38,28 +37,4 @@ export interface GeocodingResult {
   admin1?: string; // State / Region
   latitude: number;
   longitude: number;
-}
-
-export interface ClothingSuggestion {
-  baby: string;
-  toddler: string;
-  parent: string;
-}
-
-export interface SurvivalForecastItem {
-  id: string;
-  metric: string; // Action / Negotiation type
-  probability: number; // Percentage
-  funnyComment: string;
-  iconName: string; // Standard matching icon name
-}
-
-export interface ParentContext {
-  moodSentence: string;
-  survivalForecast: SurvivalForecastItem[];
-  clothing: ClothingSuggestion;
-  quoteCard: {
-    quote: string;
-    hashtag: string;
-  };
 }

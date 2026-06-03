@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Search, Calendar, Clock, ChevronRight, Sparkles, RefreshCw, X, Heart, Baby, BookOpen, Download } from "lucide-react";
+import { Search, Calendar, Clock, ChevronRight, Sparkles, RefreshCw, X, BookOpen, Download } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { GeocodingResult } from "../types";
 import WeatherIcon from "./WeatherIcon";
@@ -11,12 +11,12 @@ const MONTHS_ABBR = [
 
 interface Dictionary {
   certificateHeader: string;
-  weatherOnArrival: string;
+  weatherOnDate: string;
   conditionHeader: string;
   temperatureHeader: string;
   windSpeedHeader: string;
   sunriseHeader: string;
-  skysWelcome: string;
+  skysRecord: string;
   themeLabel: string;
   dateLabel: string;
   authenticKeepsake: string;
@@ -67,12 +67,12 @@ interface Dictionary {
 const LOCALES: { [key: string]: Dictionary } = {
   en: {
     certificateHeader: "WEATHER KEEPSAKE CERTIFICATE",
-    weatherOnArrival: "WEATHER ON THIS DATE",
+    weatherOnDate: "WEATHER ON THIS DATE",
     conditionHeader: "CONDITION",
     temperatureHeader: "TEMPERATURE",
     windSpeedHeader: "MAX WIND SPEED",
     sunriseHeader: "SUNRISE TIME",
-    skysWelcome: "THE SKY'S RECORD",
+    skysRecord: "THE SKY'S RECORD",
     themeLabel: "Theme",
     dateLabel: "Date",
     authenticKeepsake: "Your Authentic Weather Keepsake",
@@ -111,12 +111,12 @@ const LOCALES: { [key: string]: Dictionary } = {
 
     // Form
     tinyTag: "A Single Date. A Unique Sky.",
-    formTitle: "What was the weather when your child was born?",
-    formSubtitle: "Every day leaves a weather story behind. Discover the skies, temperatures, and atmosphere that shaped the world on the day your child was born.",
+    formTitle: "What was the weather on that specific date?",
+    formSubtitle: "Every day leaves a weather story behind. Discover the skies, temperatures, and atmosphere that shaped the world on that specific date.",
     fieldLanguage: "Language / Idioma",
-    fieldBirthDate: "Birth Date (MM/DD/YYYY)",
-    fieldBirthTime: "Birth Time (Optional)",
-    fieldBirthCity: "Birth City & Country (in English)",
+    fieldBirthDate: "Date (MM/DD/YYYY)",
+    fieldBirthTime: "Time (Optional)",
+    fieldBirthCity: "City & Country (in English)",
     cityPlaceholder: "Examples: New York, United States • Warsaw, Poland • Paris, France",
     cityHelper: "Please enter city and country names in English. Local spellings such as Polska, Deutschland, España, or Italia may not be recognized.",
     btnRevealLoading: "Scanning the heavens...",
@@ -124,12 +124,12 @@ const LOCALES: { [key: string]: Dictionary } = {
     trustLine: "Powered by historical weather archives and location data.",
 
     // Errors
-    errNoDate: "Please select a valid birth date.",
-    errFutureDate: "Are they a time traveler? The birth date cannot be in the future!",
-    errYearLimit: "Alas! Historical weather archives are only available back to 1940. Please enter a birth date from 1940 onwards.",
+    errNoDate: "Please select a valid date.",
+    errFutureDate: "Is this a futuristic date? The selected date cannot be in the future!",
+    errYearLimit: "Alas! Historical weather archives are only available back to 1940. Please enter a date from 1940 onwards.",
     errNoCity: "We couldn't find that city. Please enter the city and country in English (for example: Warsaw, Poland or Munich, Germany).",
-    errMultipleMatches: "Multiple matches found for \"{city}\". Please select your specific birth city from the suggestions list below to continue.",
-    errEmptyCity: "Please specify a birth city & country.",
+    errMultipleMatches: "Multiple matches found for \"{city}\". Please select your specific city from the suggestions list below to continue.",
+    errEmptyCity: "Please specify a city & country.",
     errApiRecovery: "Open-Meteo archive is recovering state. Please check your network and retry in a few moments!",
 
     // Example
@@ -147,12 +147,12 @@ const LOCALES: { [key: string]: Dictionary } = {
 
   es: {
     certificateHeader: "CERTIFICADO DE RECUERDO DEL CLIMA",
-    weatherOnArrival: "EL CLIMA EN ESTA FECHA",
+    weatherOnDate: "EL CLIMA EN ESTA FECHA",
     conditionHeader: "CONDICIÓN",
     temperatureHeader: "TEMPERATURA",
     windSpeedHeader: "VELOCIDAD MÁXIMA DEL VIENTO",
     sunriseHeader: "HORA DEL AMANECER",
-    skysWelcome: "EL REGISTRO DEL CIELO",
+    skysRecord: "EL REGISTRO DEL CIELO",
     themeLabel: "Tema",
     dateLabel: "Fecha",
     authenticKeepsake: "Tu Recuerdo del Clima Auténtico",
@@ -191,12 +191,12 @@ const LOCALES: { [key: string]: Dictionary } = {
 
     // Form
     tinyTag: "Una fecha única. Un cielo único.",
-    formTitle: "¿Cómo era el clima el día en que nació tu hijo?",
-    formSubtitle: "Cada día deja una historia climática detrás. Descubre los cielos, las temperaturas y la atmósfera que dieron forma al mundo el día en que nació tu hijo.",
+    formTitle: "¿Cómo era el clima en esa fecha específica?",
+    formSubtitle: "Cada día deja una historia climática detrás. Descubre los cielos, las temperaturas y la atmósfera que dieron forma al mundo en esa fecha específica.",
     fieldLanguage: "Idioma / Language",
-    fieldBirthDate: "Fecha de nacimiento (MM/DD/AAAA)",
-    fieldBirthTime: "Hora de nacimiento (Opcional)",
-    fieldBirthCity: "Ciudad y país de nacimiento (en inglés)",
+    fieldBirthDate: "Fecha (MM/DD/AAAA)",
+    fieldBirthTime: "Hora (Opcional)",
+    fieldBirthCity: "Ciudad y país (en inglés)",
     cityPlaceholder: "Ejemplos: New York, United States • Warsaw, Poland • Paris, France",
     cityHelper: "Por favor, ingresa los nombres de la ciudad y el país en inglés. Es posible que no se reconozcan las grafías locales como Polska, Deutschland, España o Italia.",
     btnRevealLoading: "Escaneando los cielos...",
@@ -204,12 +204,12 @@ const LOCALES: { [key: string]: Dictionary } = {
     trustLine: "Desarrollado con archivos climáticos históricos y datos de ubicación.",
 
     // Errors
-    errNoDate: "Por favor, selecciona una fecha de nacimiento válida.",
-    errFutureDate: "¿Acaso viajan en el tiempo? ¡La fecha de nacimiento no puede ser en el futuro!",
-    errYearLimit: "¡Vaya! Los archivos meteorológicos históricos solo están disponibles desde 1940. Por favor, ingresa una fecha de nacimiento a partir de 1940.",
+    errNoDate: "Por favor, selecciona una fecha válida.",
+    errFutureDate: "¿Acaso es una fecha futura? ¡La fecha seleccionada no puede estar en el futuro!",
+    errYearLimit: "¡Vaya! Los archivos meteorológicos históricos solo están disponibles desde 1940. Por favor, ingresa una fecha a partir de 1940.",
     errNoCity: "No pudimos encontrar esa ciudad. Por favor, ingresa la ciudad y el país en inglés (por ejemplo: Warsaw, Poland o Munich, Germany).",
-    errMultipleMatches: "Se encontraron múltiples coincidencias para \"{city}\". Por favor, selecciona tu ciudad de nacimiento específica de la lista de sugerencias a continuación para continuar.",
-    errEmptyCity: "Por favor, especifica una ciudad y un país de nacimiento.",
+    errMultipleMatches: "Se encontraron múltiples coincidencias para \"{city}\". Por favor, selecciona tu ciudad específica de la lista de sugerencias a continuación para continuar.",
+    errEmptyCity: "Por favor, especifica una ciudad y un país.",
     errApiRecovery: "El archivo de Open-Meteo se está recuperando. ¡Por favor, verifica tu conexión e inténtalo de nuevo en unos momentos!",
 
     // Example
@@ -568,7 +568,7 @@ interface HistoricalStory {
 
 export default function BirthWeatherStory() {
   const [lang, setLang] = useState<"en" | "es">(() => {
-    const saved = localStorage.getItem("parent_weather_lang");
+    const saved = localStorage.getItem("keepsake_weather_lang");
     return (saved as "en" | "es") || "en";
   });
 
@@ -785,35 +785,28 @@ export default function BirthWeatherStory() {
     }
   };
 
-  const applyTimeOfArrival = (story: string, lang: 'en' | 'es', birthTime?: string): string => {
+  const applyTimeOfRecord = (story: string, lang: 'en' | 'es', birthTime?: string): string => {
     const period = getPeriodInfo(birthTime);
     if (!period) return story;
 
     // Step 1: Neutralize the story first to clean up existing generic time of day references
     const neutralized = makeStoryTimeNeutral(story, lang);
 
-    // Step 2: Inject the specific birth time phrase at key structure anchors
+    // Step 2: Inject the specific weather time phrase at key structure anchors
     if (lang === "es") {
       const phraseEs = period.phraseEs;
       let s = neutralized;
-      s = s.replace(/El día comenzó con/gi, `El día comenzó, ${phraseEs}, con`);
-      s = s.replace(/El día en que naciste, con/gi, `El día en que naciste, ${phraseEs}, con`);
-      s = s.replace(/El día en que naciste/gi, `El día en que naciste, ${phraseEs},`);
-      s = s.replace(/el día en que naciste/gi, `el día en que naciste, ${phraseEs},`);
-      s = s.replace(/cuando naciste, con/gi, `cuando arribaste, ${phraseEs}, con`);
-      s = s.replace(/cuando naciste/gi, `cuando llegaste, ${phraseEs},`);
-      s = s.replace(/El día de tu llegada comenzó con/gi, `El día de tu llegada comenzó, ${phraseEs}, con`);
-      s = s.replace(/el día de tu llegada comenzó con/gi, `el día de tu llegada comenzó, ${phraseEs}, con`);
+      s = s.replace(/El día comenzó con/gi, `La jornada comenzó, ${phraseEs}, con`);
+      s = s.replace(/Durante esa jornada/gi, `Durante esa jornada, ${phraseEs}`);
+      s = s.replace(/En esa fecha/gi, `En esa fecha, ${phraseEs}`);
       s = s.replace(/comenzó el día con/gi, `comenzó el día, ${phraseEs}, con`);
       return s;
     } else {
       const phraseEn = period.phraseEn;
       let s = neutralized;
       s = s.replace(/The day began with/gi, `The day began ${phraseEn}, with`);
-      s = s.replace(/On the day you were born in/gi, `On the day you were born, ${phraseEn}, the weather in`);
-      s = s.replace(/the day you were born/gi, `the day you were born, ${phraseEn}`);
-      s = s.replace(/The day you were born/gi, `The day you were born, ${phraseEn}`);
-      s = s.replace(/when you were born/gi, `when you arrived, ${phraseEn}`);
+      s = s.replace(/On this date/gi, `On this date, ${phraseEn}`);
+      s = s.replace(/During that/gi, `During that ${phraseEn}`);
       return s;
     }
   };
@@ -825,17 +818,17 @@ export default function BirthWeatherStory() {
     const isCloudy = [2, 3, 45, 48].includes(weatherCode);
 
     if (lang === "es") {
-      if (isRainy) return "Una llegada con lluvia";
-      if (isSnowy) return "Una bienvenida con nieve";
-      if (isSunny) return "Un inicio soleado";
+      if (isRainy) return "Una jornada de lluvia";
+      if (isSnowy) return "Un día cubierto de nieve";
+      if (isSunny) return "Un despejado día soleado";
       if (isCloudy) return "Un día nublado y tranquilo";
-      return "Una llegada pacífica";
+      return "Una jornada pacífica";
     } else {
-      if (isRainy) return "A Rainy Arrival";
-      if (isSnowy) return "A Snowy Welcome";
-      if (isSunny) return "A Sunny Beginning";
+      if (isRainy) return "A Rainy Day";
+      if (isSnowy) return "A Snowy Winter Day";
+      if (isSunny) return "A Sunny Afternoon";
       if (isCloudy) return "A Quiet Cloudy Day";
-      return "A Peaceful Arrival";
+      return "A Peaceful Day";
     }
   };
 
@@ -847,16 +840,16 @@ export default function BirthWeatherStory() {
   const makeStoryTimeNeutral = (story: string, lang: 'en' | 'es'): string => {
     if (lang === "es") {
       let s = story;
-      s = s.replace(/la mañana en que naciste/gi, "el día en que naciste");
-      s = s.replace(/La mañana en que naciste/gi, "El día en que naciste");
-      s = s.replace(/la mañana de tu llegada/gi, "el día de tu llegada");
-      s = s.replace(/La mañana comenzó con/gi, "El día comenzó con");
+      s = s.replace(/la mañana en que naciste/gi, "durante esa fecha");
+      s = s.replace(/La mañana en que naciste/gi, "Durante esa fecha");
+      s = s.replace(/la mañana de tu llegada/gi, "durante esa jornada");
+      s = s.replace(/La mañana comenzó con/gi, "La jornada comenzó con");
       s = s.replace(/el sol asomando a las \d+:\d+\s*(?:AM|PM)?/gi, "el cielo de la ciudad");
-      s = s.replace(/salida del sol a las \d+:\d+\s*(?:AM|PM)?/gi, "llegada");
+      s = s.replace(/salida del sol a las \d+:\d+\s*(?:AM|PM)?/gi, "el día");
       s = s.replace(/llovizna a las \d+:\d+\s*(?:AM|PM)?/gi, "llovizna");
       s = s.replace(/a las \d+:\d+\s*(?:AM|PM)?/gi, "");
-      s = s.replace(/al amanecer/gi, "en tu llegada");
-      s = s.replace(/Pasamos la mañana/gi, "Pasamos las primeras horas");
+      s = s.replace(/al amanecer/gi, "el cielo de la mañana");
+      s = s.replace(/Pasamos la mañana/gi, "Pasaron las primeras horas");
       s = s.replace(/amaneció con/gi, "comenzó con");
       s = s.replace(/amaneció cubierta/gi, "se cubrió");
       s = s.replace(/amaneció/gi, "comenzó el día");
@@ -876,12 +869,12 @@ export default function BirthWeatherStory() {
         [/\bun atardecer\b/gi, "un momento"],
         [/\batardecer\b/gi, "momento"],
         [/\bmadrugada\b/gi, "jornada"],
-        [/\bmedianoche\b/gi, "llegada"],
-        [/\bamanecer\b/gi, "llegada"],
-        [/\bsalida del sol\b/gi, "llegada"],
-        [/\bpuesta de sol\b/gi, "llegada"],
-        [/\bla noche de tu llegada\b/gi, "el de tu llegada"],
-        [/\bla noche en que naciste\b/gi, "el día en que naciste"],
+        [/\bmedianoche\b/gi, "la noche"],
+        [/\bamanecer\b/gi, "el inicio de la jornada"],
+        [/\bsalida del sol\b/gi, "el día"],
+        [/\bpuesta de sol\b/gi, "el fin del día"],
+        [/\bla noche de tu llegada\b/gi, "el de esa jornada"],
+        [/\bla noche en que naciste\b/gi, "la noche de esa fecha"],
         [/\bpor la noche\b/gi, "durante el día"],
         [/\ben la noche\b/gi, "durante la jornada"],
         [/\buna noche\b/gi, "un día"],
@@ -899,8 +892,8 @@ export default function BirthWeatherStory() {
       let s = story;
       s = s.replace(/the morning began/gi, "the day began");
       s = s.replace(/The morning began/gi, "The day began");
-      s = s.replace(/the morning you were born/gi, "the day you were born");
-      s = s.replace(/The morning you were born/gi, "The day you were born");
+      s = s.replace(/the morning you were born/gi, "that date");
+      s = s.replace(/The morning you were born/gi, "That date");
       s = s.replace(/chilly winter morning/gi, "chilly winter day");
       s = s.replace(/sunny morning/gi, "sunny day");
       s = s.replace(/spent the morning/gi, "spent those first hours");
@@ -923,10 +916,10 @@ export default function BirthWeatherStory() {
         [/\bevening\b/gi, "day"],
         [/\bthe night\b/gi, "the day"],
         [/\bnight\b/gi, "day"],
-        [/\bdawn\b/gi, "arrival"],
-        [/\bsunrise\b/gi, "arrival"],
-        [/\bsunset\b/gi, "arrival"],
-        [/\bmidnight\b/gi, "arrival"],
+        [/\bdawn\b/gi, "daybreak"],
+        [/\bsunrise\b/gi, "daylight"],
+        [/\bsunset\b/gi, "nightfall"],
+        [/\bmidnight\b/gi, "the night"],
         [/\bdaylight\b/gi, "the skies"],
         [/\bdaytime\b/gi, "the day"],
       ];
@@ -1490,7 +1483,7 @@ export default function BirthWeatherStory() {
 
         ctx.fillStyle = "#D48D71";
         ctx.font = "bold 15px 'JetBrains Mono', 'Courier New', monospace";
-        ctx.fillText(t.skysWelcome.toUpperCase(), 160, quoteBoxY + 50);
+        ctx.fillText(t.skysRecord.toUpperCase(), 160, quoteBoxY + 50);
 
         ctx.fillStyle = "#FFFFFF";
         ctx.font = "italic 34px 'Georgia', 'Times New Roman', serif";
@@ -1560,7 +1553,7 @@ export default function BirthWeatherStory() {
                     id="lang-btn-en"
                     onClick={() => {
                       setLang("en");
-                      localStorage.setItem("parent_weather_lang", "en");
+                      localStorage.setItem("keepsake_weather_lang", "en");
                     }}
                     className={`flex-1 py-2 text-xs font-mono rounded-xl border font-bold transition cursor-pointer ${
                       lang === "en"
@@ -1575,7 +1568,7 @@ export default function BirthWeatherStory() {
                     id="lang-btn-es"
                     onClick={() => {
                       setLang("es");
-                      localStorage.setItem("parent_weather_lang", "es");
+                      localStorage.setItem("keepsake_weather_lang", "es");
                     }}
                     className={`flex-1 py-2 text-xs font-mono rounded-xl border font-bold transition cursor-pointer ${
                       lang === "es"
@@ -1760,7 +1753,7 @@ export default function BirthWeatherStory() {
                       
                       <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
                         <div className="text-right">
-                          <span className="text-xs font-mono font-bold text-slate-300 block">{t.weatherOnArrival}</span>
+                          <span className="text-xs font-mono font-bold text-slate-300 block">{t.weatherOnDate}</span>
                           <p className="font-serif font-extrabold text-xl sm:text-2xl text-white">
                             21°C / 70°F
                           </p>
@@ -1814,7 +1807,7 @@ export default function BirthWeatherStory() {
 
                     {/* Short bold Quote */}
                     <div className="bg-white/[0.03] border-l-2 border-[#E89E82] p-4 rounded-r-xl">
-                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">{t.skysWelcome}</p>
+                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">{t.skysRecord}</p>
                       <p className="font-serif italic text-white text-md sm:text-lg leading-snug">
                         “{t.exampleQuote}”
                       </p>
@@ -1824,7 +1817,7 @@ export default function BirthWeatherStory() {
 
                 {/* Example Tag Badge hover overlay */}
                 <div className="absolute top-3 -right-3 rotate-6 bg-[#D48D71] text-xs font-mono font-bold text-white px-3 py-1.5 rounded-xl shadow-md border border-white/10 pointer-events-none z-20 flex items-center gap-1 uppercase tracking-wider scale-90">
-                  <Baby size={12} />
+                  <BookOpen size={12} />
                   <span>{t.referenceIdea}</span>
                 </div>
               </motion.div>
@@ -1865,7 +1858,7 @@ export default function BirthWeatherStory() {
                       {/* Meteorological snapshot */}
                       <div className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl p-3.5 self-start sm:self-center">
                         <div className="text-right">
-                          <span className="text-xs font-mono font-bold text-slate-300 block">{t.weatherOnArrival}</span>
+                          <span className="text-xs font-mono font-bold text-slate-300 block">{t.weatherOnDate}</span>
                           <p className="font-serif font-extrabold text-xl sm:text-2xl text-white">
                             {Math.round(revealResult.tempMax)}°C / {Math.round((revealResult.tempMax * 9) / 5 + 32)}°F
                           </p>
@@ -1919,7 +1912,7 @@ export default function BirthWeatherStory() {
 
                     {/* Full-width Quote banner inside Card container */}
                     <div className="bg-white/[0.03] border-l-2 border-[#E89E82] p-4 rounded-r-xl">
-                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">{t.skysWelcome}</p>
+                      <p className="text-[10px] font-mono text-[#D48D71] uppercase tracking-widest font-bold mb-1.5">{t.skysRecord}</p>
                       <p className="font-serif italic text-white text-md sm:text-lg leading-snug">
                         “{revealResult.story.quote}”
                       </p>
@@ -1998,19 +1991,6 @@ function drawFourPointStar(ctx: CanvasRenderingContext2D, cx: number, cy: number
   ctx.quadraticCurveTo(cx, cy, cx, cy + r);
   ctx.quadraticCurveTo(cx, cy, cx - r, cy);
   ctx.quadraticCurveTo(cx, cy, cx, cy - r);
-  ctx.fill();
-}
-
-function drawHeartIcon(ctx: CanvasRenderingContext2D, x: number, y: number, size: number, color: string) {
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  const d = size;
-  ctx.moveTo(x, y + d / 4);
-  ctx.quadraticCurveTo(x, y, x + d / 2, y);
-  ctx.quadraticCurveTo(x + d, y, x + d, y + d / 3);
-  ctx.quadraticCurveTo(x + d, y + (d * 5) / 8, x + d / 2, y + d);
-  ctx.quadraticCurveTo(x, y + (d * 5) / 8, x, y + d / 3);
-  ctx.quadraticCurveTo(x, y, x, y + d / 4);
   ctx.fill();
 }
 

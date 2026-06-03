@@ -80,7 +80,7 @@ function getPeriodInfo(timeStr?: string): PeriodInfo | null {
   }
 }
 
-function applyTimeOfArrival(story: string, lang: 'en' | 'es', birthTime?: string): string {
+function applyTimeOfRecord(story: string, lang: 'en' | 'es', birthTime?: string): string {
   const period = getPeriodInfo(birthTime);
   if (!period) return story;
 
@@ -451,7 +451,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
     let finalBackupStory = backupResult.story;
     if (birthTime) {
-      finalBackupStory = applyTimeOfArrival(finalBackupStory, lang === "es" ? "es" : "en", birthTime);
+      finalBackupStory = applyTimeOfRecord(finalBackupStory, lang === "es" ? "es" : "en", birthTime);
     } else {
       finalBackupStory = makeStoryTimeNeutral(finalBackupStory, lang === "es" ? "es" : "en");
     }
@@ -695,7 +695,7 @@ You must output a JSON object containing:
     });
     let finalBackupStory = backupResult.story;
     if (birthTime) {
-      finalBackupStory = applyTimeOfArrival(finalBackupStory, lang === "es" ? "es" : "en", birthTime);
+      finalBackupStory = applyTimeOfRecord(finalBackupStory, lang === "es" ? "es" : "en", birthTime);
     } else {
       finalBackupStory = makeStoryTimeNeutral(finalBackupStory, lang === "es" ? "es" : "en");
     }
