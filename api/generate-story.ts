@@ -276,31 +276,15 @@ function validateGeneratedContent(story: string, quote: string, theme: string): 
     }
   }
 
-  // 1. Enforce zero birth, baby, child, or arrival mentions in the QUOTE and THEME (100% weather only!)
-  const birthMentionsQuoteThemeEn = (combinedQuoteTheme.match(/\bbirth\b|\bborn\b|\bbaby\b|\bchild\b|\bperson\b|\bpeople\b|\barrival\b/gi) || []).length;
-  const birthMentionsQuoteThemeEs = (combinedQuoteTheme.match(/\bnacimiento\b|\bnació\b|\bbebé\b|\bniño\b|\bniña\b|\bhijo\b|\bhija\b|\bpersona\b|\bgente\b|\bllegada\b|\barribo\b/gi) || []).length;
-  if (birthMentionsQuoteThemeEn + birthMentionsQuoteThemeEs > 0) {
-    return { valid: false, reason: "Quote or Theme contains forbidden birth, baby, child, or arrival references" };
+  // 1. Enforce zero birth, baby, child, arrival, parents, or family references in the STORY, QUOTE, and THEME (100% weather only!)
+  const combinedAll = `${storyLower} ${themeLower} ${quoteLower}`;
+  const birthMentionsEn = (combinedAll.match(/\bbirth\b|\bborn\b|\bbaby\b|\bchild\b|\bperson\b|\bpeople\b|\barrival\b|\bparents\b|\bfamily\b|\bhospital\b|\blabor\b|\bchildbirth\b|\bdeliver\b|\bdelivered\b/gi) || []).length;
+  const birthMentionsEs = (combinedAll.match(/\bnacimiento\b|\bnació\b|\bbebé\b|\bniño\b|\bniña\b|\bhijo\b|\bhija\b|\bpersona\b|\bgente\b|\bllegada\b|\barribo\b|\bpadres\b|\bfamilia\b|\bparto\b|\bparir\b/gi) || []).length;
+  if (birthMentionsEn + birthMentionsEs > 0) {
+    return { valid: false, reason: "Story, Quote, or Theme contains forbidden birth, baby, child, family, arrival, or human references" };
   }
 
-  // 2. Enforce exactly one (or at most one) brief, third-person-neutral birth reference in the STORY, strictly near the end
-  const birthKeywordsEn = (storyLower.match(/\barrival\b|\bborn\b|\bbirth\b/gi) || []).length;
-  const birthKeywordsEs = (storyLower.match(/\bnacimiento\b|\bnació\b|\barribo\b|\bllegada\b/gi) || []).length;
-  const totalBirthKeywords = birthKeywordsEn + birthKeywordsEs;
-
-  if (totalBirthKeywords > 1) {
-    return { valid: false, reason: `Story contains too many birth/arrival references (${totalBirthKeywords}). Max is 1 brief mention at the very end.` };
-  }
-
-  // If 0 keywords, check for indirect ones like "nueva vida" (new life) or "vida" at the end of the story
-  if (totalBirthKeywords === 0) {
-    const lifeMentions = (storyLower.match(/\bvida\b|\bpequeña vida\b|\blittle life\b/gi) || []).length;
-    if (lifeMentions === 0) {
-      return { valid: false, reason: "Story is missing the required single brief, neutral mention of the birth at the end." };
-    }
-  }
-
-  // 3. Enforce zero standard pronouns targeting the user or first-person plural in the story
+  // 2. Enforce zero standard pronouns targeting the user or first-person plural in the story
   if (/\b(you|your|we|our|us)\b/i.test(storyLower)) {
     return { valid: false, reason: "Story contains forbidden pronoun 'you', 'your', 'we', 'our', or 'us'" };
   }
@@ -492,11 +476,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Generate prompt
   const language = lang === "es" ? "Spanish (Español)" : "English (English)";
 
-  const timeOfDepartureRule = birthTime
+  const targetDate = birthDate;
+  const timeOfRecord = birthTime;
+  const timeOfDepartureRule = timeOfRecord
     ? `
-5. BIRTH TIME PERSONALIZATION (CRITICAL CONSTRAINT):
-   Since the user has provided the birth time ("${birthTime}"), you MUST use the exact requested phrase inside the story narrative.
-   The categorization and exact phrases to use based on the birth time of "${birthTime}" are:
+5. TIME OF RECORD PERSONALIZATION (CRITICAL CONSTRAINT):
+   Since the provided time of record is "${timeOfRecord}", the narrative MUST incorporate the exact phrase corresponding to that period from the list below:
    - 00:00–05:59:
      English phrase: "during the silent late night hours"
      Spanish phrase: "durante las horas silenciosas de la madrugada"
@@ -517,47 +502,43 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
      Spanish phrase: "bajo el oscuro cielo nocturno"
 
    CRITICAL SPECIFICATION FOR THE THEME (TITLE):
-   - You are STRICTLY FORBIDDEN from putting any time-of-day references inside the Theme title (the "theme" json property).
+   - Avoid placing any time-of-day references inside the Theme title (the "theme" json property).
    - Absolutely do NOT use words like: Morning, Afternoon, Evening, Night, Late Night, Early Morning, Sunset, Sunrise, Dawn, Midnight, Madrugada, Tarde, Atardecer, Noche, etc., in the theme title.
    - Elegant, timeless themes (titles) only! Preferred examples of theme titles are:
      * English: "A Quiet Cloudy Day", "Cloudy Skies in ${city}", "A Gentle Winter Day", "A Sunny Afternoon"
      * Spanish: "Un día nublado y tranquilo", "Cielo nublado en ${city}", "Un despejado día soleado", "Un suave día de invierno"`
     : `
-5. BIRTH TIME (NOT PROVIDED):
-   Since the user did NOT provide a birth time, continue using neutral daily terms that do not assume a specific hour or time of day.
-   CRITICAL CONSTRAINT: You are STRICTLY FORBIDDEN from mentioning or using keywords like: morning, afternoon, evening, night, dawn, sunrise, sunset, midnight, early morning, late night, mañana, tarde, noche, amanecer, salida del sol, puesta de sol, medianoche, madrugada, or similar time-of-day references.
+5. TIME OF RECORD NOT SPECIFIED:
+   Since no time of record was specified, continue using neutral daily terms that do not assume a specific hour or time of day.
+   CRITICAL CONSTRAINT: Avoid mentioning or using keywords like: morning, afternoon, evening, night, dawn, sunrise, sunset, midnight, early morning, late night, mañana, tarde, noche, amanecer, salida del sol, puesta de sol, medianoche, madrugada, or similar time-of-day references.
    Instead, use strictly time-neutral terms, such as:
    - "On this date in ${city}..." / "En esta fecha en ${city}..."
    - "The sky over ${city}..." / "El cielo sobre ${city}..."
    Do NOT assume a specific time period under any circumstances.`;
 
-  const systemInstruction = `You are an expert weather keepsake writer creating atmospheric historical archive records documenting the weather of specific dates and locations.
+  const systemInstruction = `Act as an expert weather keepsake writer creating atmospheric historical archive records documenting the weather of specific dates and locations.
 
 CONCEPTUAL REFRAME (WEATHER AS PROTAGONIST):
-This is a WEATHER KEEPSAKE where the weather, season, sky, temperature, wind, precipitation, and atmosphere of the city are the absolute main subjects (at least 90% of the narrative).
-The day itself is the protagonist. The city's atmosphere is the protagonist.
-A child happened to be born on that day, but this birth is only a small historical event mentioned exactly ONCE near the very end of the story in a single short sentence. The baby is NOT the protagonist.
+This is an atmospheric historical weather archive record documenting ONLY the weather, sky, clouds, temperature, wind, rain, snow, sunlight, season, atmosphere, and city environment of a specific date. The weather is the absolute protagonist and the subject of every sentence. Do NOT mention any people, relationships, domestic elements, milestones, or sentiments.
 
 STORY REQUIREMENTS & STYLE:
-1. Describe: sky conditions, clouds, sunlight, rain, snow, wind, temperature, humidity, seasonal atmosphere, city mood, streets, parks, rooftops, local surroundings, and natural seasonal details.
-2. Under no circumstances write about: parents, motherhood, fatherhood, family emotions, holding/seeing/cradling/embracing the baby, first cuddle, tears of joy, becoming parents, emotional reactions, love at first sight, bonding experiences, nursery scenes, or family memories. These family/parent topics are strictly forbidden.
-3. Write in elegant, warm, atmospheric language with sensory details, letting the reader feel transported back into the weather of that exact day as if reading a preserved weather journal or old almanac. Keep descriptions beautifully sensory and detailed, but completely free of sentimentality or cliches.
-4. Strictly third-person objective perspective. Personal pronouns targeting the user or first person plural ("you", "your", "we", "our", "us", "tú", "te", "ti", "tu", "nosotros", "nuestro", "nuestra", "nuestros", "nuestras", "nos") are STRICTLY FORBIDDEN.
-5. BIRTH MENTION RULE: Mention the birth exactly ONCE near the end of the story in a single brief, neutral sentence without elaborating, discussing parents, or mentioning emotions.
-   - Example English: "It was also the day a new little arrival entered the world."
-   - Example Spanish: "También fue el día en que una nueva y pequeña vida llegó al mundo." / "También fue la fecha en que un nuevo arribo entró al mundo."
-6. UNIQUENESS RULE: Every story must be unique. Never reuse the same structure, opening, or ending. Adapt the atmosphere to the city's unique geography, local character, season, weather details, and regional climate personality. (e.g., a snowy day in Poznan must feel different from a snowy day in Lodz; a rainy day in Toronto must feel different from Seattle).
+1. Describe: sky conditions, clouds, sunlight, rain, snow, wind, temperature, humidity, seasonal atmosphere, city mood, streets, local surroundings, and natural seasonal details.
+2. Under no circumstances write about: human life, offspring, domestic gatherings, medical details, sentimental sentiments, physical contact, first meetings, emotional reactions, or domestic milestones.
+3. Write in elegant, warm, atmospheric language with sensory details, letting the reader feel transported back into the weather of that exact day as if reading a preserved weather journal or old almanac. Keep descriptions beautifully sensory and detailed, but completely free of sentimentality, cliches, or personal human milestones.
+4. Strictly third-person objective perspective. Do NOT use downstream pronouns of first-person plural or second-person.
+5. ZERO HUMAN REFERENCES: The story must contain absolutely zero references to human life, names, individuals, or gatherings. This is 100% a weather record.
+6. UNIQUENESS RULE: Every story must be unique. Never reuse the same structure, opening, or ending. Adapt the atmosphere to the unique geography of the city, local character, season, weather details, and regional climate personality. (e.g., a snowy day in Poznan must feel different from a snowy day in Lodz; a rainy day in Toronto must feel different from Seattle).
 
 WEATHER DETAILS (INTEGRATE NATURALLY EXACTLY ONCE):
 - Max temperature: ${tempMax}°C (appx ${Math.round(tempMax * 9/5 + 32)}°F)
 - Weather condition: ${weatherText} (weatherCode ${weatherCode})
 - Wind speed: ${windSpeed} km/h (appx ${Math.round(windSpeed * 0.621371)} mph)
-- Date: ${birthDate}
-- City: ${city} (Region: ${region || "None"}, Country: ${country})
+- Date: ${targetDate}
+- City: ${city} (Region: ${region || 'None'}, Country: ${country})
 
 STYLISH, MEMORABLE QUOTE & SIMPLE THEME:
-- THEME (TITLE): If the weather is rainy, the theme title MUST be exactly "A Rainy Afternoon" (or "Una jornada de lluvia" in Spanish). Otherwise, generate a clean, weather-based title of 3 to 6 words. It must remain strictly factual and weather-oriented, NOT poetic or flowery (e.g., "A Sunny Day in ${city}", "Cloudy Skies in ${city}"). No time-of-day reference in theme unless specified by birthTime.
-- QUOTE (THE SKY'S RECORD): Generate a separate, short, memorable quote. This quote must describe ONLY the weather, sky, clouds, rain, snow, sunlight, wind, or seasonal atmosphere. It must NEVER mention parents, family, baby, child, arrival, love, joy, or emotions. It should feel like a poetic meteorological line from a climate diary or old almanac.
+- THEME (TITLE): If the weather is rainy, the theme title MUST be exactly "A Rainy Afternoon" (or "Una jornada de lluvia" in Spanish). Otherwise, generate a clean, weather-based title of 3 to 6 words. It must remain strictly factual and weather-oriented, NOT poetic or flowery (e.g., "A Sunny Day in ${city}", "Cloudy Skies in ${city}"). No time-of-day reference in theme unless specified by the record.
+- QUOTE (THE SKY'S RECORD): Generate a separate, short, memorable quote. This quote must describe ONLY the weather, sky, clouds, rain, snow, sunlight, wind, or seasonal atmosphere. It must NEVER mention any human elements, relationships, sentiments, or sentimental milestones. It should feel like a poetic meteorological line from a climate diary or old almanac.
   - Example English: "Rain whispered across the rooftops while silver clouds drifted above the city."
   - Example Spanish: "La lluvia caía suavemente, como si la ciudad se hubiera detenido por un momento."
 
@@ -566,10 +547,10 @@ STRICT LANGUAGE REQUIREMENT:
 - Write "theme", "quote", and "story" purely in "${language}" as a native speaker would, avoiding translation stiffness or hybrid terms.
 
 Response JSON Schema (Keep exactly unchanged):
-You must output a JSON object containing:
+Output a JSON object containing:
 - theme: string (3-6 words, weather-based, factual title)
 - quote: string (exactly 1 short, simple, memorable sentence about weather only)
-- story: string (the completed narrative memory, strictly between 80 and 120 words formatted as a single paragraph with exactly one brief birth mention near the end)
+- story: string (the completed narrative weather archive record, strictly between 80 and 120 words formatted as a single paragraph with absolutely zero human references)
 - quality_check: an object containing:
   - language_consistent: boolean (is it 100% written in the requested language?)
   - weather_consistent: boolean (does it accurately incorporate the provided weather data?)
@@ -587,7 +568,7 @@ You must output a JSON object containing:
       console.log(`Querying Gemini (Attempt ${attempts + 1}) for story in ${language}...`);
       const response = await ai.models.generateContent({
         model: "gemini-3.5-flash",
-        contents: `Generate an atmospheric historical weather archive record centered entirely on the weather conditions, season, sky, city atmosphere, and character of the day. Do NOT write about birth, babies, relationships, families, or people. Follow the system instruction for ${city}, ${country} (${region || ""}) with weather ${weatherText} (Max Temp ${tempMax}°C, Wind ${windSpeed} km/h) on ${birthDate}.`,
+        contents: `Generate an atmospheric historical weather archive record centered entirely on the weather conditions, season, sky, city atmosphere, and character of the day. Do NOT write about humans, personal events, milestones, relationships, or emotions. Follow the system instruction for ${city}, ${country} (${region || ""}) with weather ${weatherText} (Max Temp ${tempMax}°C, Wind ${windSpeed} km/h) on ${targetDate}.`,
         config: {
           systemInstruction: systemInstruction,
           responseMimeType: "application/json",

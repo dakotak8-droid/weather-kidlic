@@ -1186,10 +1186,21 @@ export default function BirthWeatherStory() {
 
         if (storyResponse.ok) {
           const storyData = await storyResponse.json();
+          let parsedStory = storyData.story || "";
+          
+          // Append the birth-related sentence separately in the UI outside the AI-generated story
+          const birthSentence = lang === "es"
+            ? " También fue el día en que una nueva y pequeña vida llegó al mundo."
+            : " It was also the day a new little arrival entered the world.";
+          
+          if (!parsedStory.toLowerCase().includes("llegó al mundo") && !parsedStory.toLowerCase().includes("arrival entered")) {
+            parsedStory = parsedStory.trim() + birthSentence;
+          }
+
           generatedStory = {
             theme: storyData.theme,
             quote: storyData.quote,
-            story: storyData.story,
+            story: parsedStory,
             metricLabel: "",
             metricValue: ""
           };
