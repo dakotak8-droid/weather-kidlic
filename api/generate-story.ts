@@ -450,14 +450,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  return res.status(200).json({
-    theme: "API_DEBUG_THEME",
-    quote: "API_DEBUG_QUOTE",
-    story: "API_DEBUG_STORY_FROM_API_GENERATE_STORY_TS",
-    isFallback: true,
-    debug_source: "api_hardcoded_test"
-  });
-
   const {
     city,
     country,
@@ -682,25 +674,47 @@ Output a JSON object containing:
     }
 
     // Final backend sanitizer check for forbidden parent/relationship concepts
-    const absoluteForbiddenList = [
+    const forbiddenPhrases = [
       "your arrival", "holding you", "our room", "first cuddle", "our hearts",
-      "joy", "relief", "sacred moment", "sweet scent", "our world",
-      "welcome into the world", "life-changing", "we will carry", "pure warmth",
-      "everything changed", "cuddle", "you were born", "your birth", "we held",
-      "we watched", "pure joy", "tender", "peaceful moment", "our hearts forever",
-      "tu llegada", "bienvenida al mundo", "cambió nuestras vidas",
-      "primer abrazo", "primer arrullo", "compañía", "abrazarte", "abrazar", "nuestra habitación",
-      "nuestro cuarto", "nuestros corazones", "alegría", "alivio", "momento sagrado", "dulce aroma",
-      "nuestro mundo", "calidez pura", "todo cambió", "naciste", "te sostuvimos",
-      "momento hermoso", "nuestros corazones para siempre"
+      "sacred moment", "sweet scent", "our world", "welcome into the world",
+      "life-changing", "we will carry", "pure warmth", "everything changed",
+      "you were born", "your birth", "we held", "we watched", "pure joy",
+      "peaceful moment", "our hearts forever", "tu llegada", "bienvenida al mundo",
+      "cambió nuestras vidas", "primer abrazo", "primer arrullo", "compañía",
+      "abrazarte", "nuestra habitación", "nuestro cuarto", "nuestros corazones",
+      "momento sagrado", "dulce aroma", "nuestro mundo", "calidez pura",
+      "todo cambió", "te sostuvimos", "momento hermoso", "nuestros corazones para siempre"
+    ];
+
+    const forbiddenWords = [
+      "arrival", "welcome", "our", "we", "us", "your", "holding", "cuddle", "joy",
+      "relief", "hearts", "room", "sacred", "miracle", "precious", "universe", "changed", "forever",
+      "llegada", "bienvenida", "nuestro", "nuestra", "nuestros", "nuestras", "nosotros", "nosotras",
+      "nos", "tu", "tus", "tuyo", "tuya", "tuyos", "tuyas", "alegría", "alivio", "corazón", "corazones",
+      "milagro", "milagros", "habitación", "cuarto", "universo", "cambió", "siempre"
     ];
 
     let hasForbidden = false;
     const finalStoryLower = finalStory.toLowerCase();
-    for (const phrase of absoluteForbiddenList) {
+    
+    // Check phrases
+    for (const phrase of forbiddenPhrases) {
       if (finalStoryLower.includes(phrase)) {
         hasForbidden = true;
+        console.warn(`[FORBIDDEN PHRASE MATCHED]: "${phrase}" in story: ${finalStory}`);
         break;
+      }
+    }
+
+    // Check individual words with word boundaries by splitting
+    if (!hasForbidden) {
+      const cleanWordList = finalStoryLower.replace(/[^a-zñáéíóúü]/gi, " ").split(/\s+/);
+      for (const word of forbiddenWords) {
+        if (cleanWordList.includes(word)) {
+          hasForbidden = true;
+          console.warn(`[FORBIDDEN WORD MATCHED]: "${word}" in story: ${finalStory}`);
+          break;
+        }
       }
     }
 
