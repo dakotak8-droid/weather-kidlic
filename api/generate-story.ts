@@ -450,6 +450,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
+  return res.status(200).json({
+    theme: "API_DEBUG_THEME",
+    quote: "API_DEBUG_QUOTE",
+    story: "API_DEBUG_STORY_FROM_API_GENERATE_STORY_TS",
+    isFallback: true,
+    debug_source: "api_hardcoded_test"
+  });
+
   const {
     city,
     country,
