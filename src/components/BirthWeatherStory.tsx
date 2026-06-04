@@ -564,6 +564,7 @@ interface HistoricalStory {
   quote: string;
   metricLabel: string;
   metricValue: string;
+  debug_source?: string;
 }
 
 export default function BirthWeatherStory() {
@@ -1212,7 +1213,8 @@ export default function BirthWeatherStory() {
             quote: storyData.quote,
             story: parsedStory,
             metricLabel: "",
-            metricValue: ""
+            metricValue: "",
+            debug_source: storyData.debug_source
           };
           console.log("Successfully loaded Gemini-generated story.");
         } else {
@@ -1920,11 +1922,16 @@ export default function BirthWeatherStory() {
 
                     {/* Weather Legend theme title & story copy */}
                     <div className="space-y-4">
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <span className="text-[10px] font-mono uppercase tracking-widest font-extrabold text-[#E89E82] bg-[#E89E82]/15 px-3 py-1 rounded-full border border-[#E89E82]/25">
                           {t.themeLabel}: {revealResult.story.theme}
                         </span>
                         <span className="text-xs text-slate-500 font-mono">{t.dateLabel}: {revealResult.date}</span>
+                        {revealResult.story.debug_source && (
+                          <span className="text-[10px] text-[#D48D71] font-mono bg-[#D48D71]/10 border border-[#D48D71]/20 px-2 py-0.5 rounded capitalize">
+                            Debug: {revealResult.story.debug_source}
+                          </span>
+                        )}
                       </div>
                       <p className="text-sm md:text-base text-slate-300 font-sans leading-relaxed tracking-wide">
                         {revealResult.story.story}
