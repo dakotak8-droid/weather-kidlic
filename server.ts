@@ -713,10 +713,13 @@ You must output a JSON object containing:
       "your arrival", "holding you", "our room", "first cuddle", "our hearts",
       "joy", "relief", "sacred moment", "sweet scent", "our world",
       "welcome into the world", "life-changing", "we will carry", "pure warmth",
-      "everything changed", "tu llegada", "bienvenida al mundo", "cambió nuestras vidas",
+      "everything changed", "cuddle", "you were born", "your birth", "we held",
+      "we watched", "pure joy", "tender", "peaceful moment", "our hearts forever",
+      "tu llegada", "bienvenida al mundo", "cambió nuestras vidas",
       "primer abrazo", "primer arrullo", "compañía", "abrazarte", "abrazar", "nuestra habitación",
       "nuestro cuarto", "nuestros corazones", "alegría", "alivio", "momento sagrado", "dulce aroma",
-      "nuestro mundo", "calidez pura", "todo cambió"
+      "nuestro mundo", "calidez pura", "todo cambió", "naciste", "te sostuvimos",
+      "momento hermoso", "nuestros corazones para siempre"
     ];
 
     let hasForbidden = false;
