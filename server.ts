@@ -246,7 +246,6 @@ function validateGeneratedContent(story: string, quote: string, theme: string): 
 
   const forbiddenPhrases = [
     "holding you",
-    "holding you for the first time",
     "first cuddle",
     "first embrace",
     "tiny face",
@@ -257,12 +256,16 @@ function validateGeneratedContent(story: string, quote: string, theme: string): 
     "our hearts",
     "joy",
     "relief",
-    "gratitude",
-    "wonder",
+    "sacred moment",
+    "life-changing",
+    "emotional reactions",
+    "bonding moments",
+    "welcome into the world",
+    "your arrival",
+    "our room",
     "inside our room",
     "carry forever",
     "beautiful moment",
-    "sacred",
     "precious",
     "miracle",
     "bundle of joy",
@@ -301,7 +304,10 @@ function validateGeneratedContent(story: string, quote: string, theme: string): 
     "familia",
     "sentimientos",
     "emociones",
-    "abrazar"
+    "abrazar",
+    "bienvenida al mundo",
+    "tu llegada",
+    "cambió nuestras vidas"
   ];
 
   for (const phrase of forbiddenPhrases) {
@@ -310,15 +316,24 @@ function validateGeneratedContent(story: string, quote: string, theme: string): 
     }
   }
 
-  // 1. Enforce zero birth, baby, child, arrival, parents, or family references in the STORY, QUOTE, and THEME (100% weather only!)
-  const combinedAll = `${storyLower} ${themeLower} ${quoteLower}`;
-  const birthMentionsEn = (combinedAll.match(/\bbirth\b|\bborn\b|\bbaby\b|\bchild\b|\bperson\b|\bpeople\b|\barrival\b|\bparents\b|\bfamily\b|\bhospital\b|\blabor\b|\bchildbirth\b|\bdeliver\b|\bdelivered\b/gi) || []).length;
-  const birthMentionsEs = (combinedAll.match(/\bnacimiento\b|\bnació\b|\bbebé\b|\bniño\b|\bniña\b|\bhijo\b|\bhija\b|\bpersona\b|\bgente\b|\bllegada\b|\barribo\b|\bpadres\b|\bfamilia\b|\bparto\b|\bparir\b/gi) || []).length;
-  if (birthMentionsEn + birthMentionsEs > 0) {
-    return { valid: false, reason: "Story, Quote, or Theme contains forbidden birth, baby, child, family, arrival, or human references" };
+  // 1. Enforce zero birth, baby, child, arrival, parents, or family references in QUOTE and THEME (100% weather only!)
+  const combinedQuoteThemeBirthEn = (combinedQuoteTheme.match(/\bbirth\b|\bborn\b|\bbaby\b|\bchild\b|\bperson\b|\bpeople\b|\barrival\b|\bparents\b|\bfamily\b|\bhospital\b|\blabor\b|\bchildbirth\b|\bdeliver\b|\bdelivered\b/gi) || []).length;
+  const combinedQuoteThemeBirthEs = (combinedQuoteTheme.match(/\bnacimiento\b|\bnació\b|\bbebé\b|\bniño\b|\bniña\b|\bhijo\b|\bhija\b|\bpersona\b|\bgente\b|\bllegada\b|\barribo\b|\bpadres\b|\bfamilia\b|\bparto\b|\bparir\b/gi) || []).length;
+  if (combinedQuoteThemeBirthEn + combinedQuoteThemeBirthEs > 0) {
+    return { valid: false, reason: "Quote or Theme contains forbidden birth, baby, child, family, arrival, or human references" };
   }
 
-  // 2. Enforce zero standard pronouns targeting the user or first-person plural in the story
+  // 2. In STORY itself, birth/born must be only a brief factual reference (maximum 2 minor birth words to adhere to the 80/20 rule)
+  const storyBirthEnCount = (storyLower.match(/\bbirth\b|\bborn\b|\bchild\b|\bnacimiento\b|\bnació\b|\bniño\b|\bniña\b/gi) || []).length;
+  const heavyFamilyEnCount = (storyLower.match(/\bbaby\b|\bparents\b|\bfamily\b|\bhospital\b|\bbebé\b|\bpadres\b|\bfamilia\b/gi) || []).length;
+  if (heavyFamilyEnCount > 0) {
+    return { valid: false, reason: "Story contains forbidden active family references like baby, parents, family, or hospital" };
+  }
+  if (storyBirthEnCount > 3) {
+    return { valid: false, reason: "Story exceeds maximum allowed brief historical birth/child references for 80/20 rule" };
+  }
+
+  // 3. Enforce zero standard pronouns targeting the user or first-person plural in the story
   if (/\b(you|your|we|our|us)\b/i.test(storyLower)) {
     return { valid: false, reason: "Story contains forbidden pronoun 'you', 'your', 'we', 'our', or 'us'" };
   }
@@ -560,16 +575,33 @@ app.post("/api/generate-story", async (req, res) => {
 
   const systemInstruction = `You are an expert weather keepsake writer creating atmospheric historical archive records documenting the weather of specific dates and locations.
 
-CONCEPTUAL REFRAME (WEATHER AS PROTAGONIST):
-This is an atmospheric historical weather archive record documenting ONLY the weather, sky, clouds, temperature, wind, rain, snow, sunlight, season, atmosphere, and city environment of a specific date. The weather is the absolute protagonist and the subject of every sentence. Do NOT mention any people, relationships, families, birth, babies, child, parents, birth moments, arrival, cuddles, or emotions.
+WEATHER AS THE PROTAGONIST (80/20 RULE):
+1. Weather is the absolute main character (about 80% of the narrative). The city atmosphere, sky, clouds, rain, snow, wind, temperature, season, and environmental conditions must dominate the story.
+2. A single birth reference may gently be mentioned ONLY as a brief, minor historical fact at the end of the narrative (about 20%). For example: "It was also the date a child was born in the city." / "También fue el día en que nació un niño en la ciudad."
+3. The record must read like a preserved meteorological weather archive or diary entry for that date.
 
-STORY REQUIREMENTS & STYLE:
-1. Describe: sky conditions, clouds, sunlight, rain, snow, wind, temperature, humidity, seasonal atmosphere, city mood, streets, local surroundings, and natural seasonal details.
-2. Under no circumstances write about: babies, children, birth, parenting, motherhood, fatherhood, arrival, family members, emotions, holding/cradling/seeing/embracing the baby, first cuddle, tears of joy, becoming parents, family memories, love, heart, joy, or gratitude.
-3. Write in elegant, warm, atmospheric language with sensory details, letting the reader feel transported back into the weather of that exact day as if reading a preserved weather journal or old almanac. Keep descriptions beautifully sensory and detailed, but completely free of sentimentality, cliches, or personal human milestones.
-4. Strictly third-person objective perspective. Personal pronouns targeting any person or first person plural ("you", "your", "we", "our", "us", "tú", "te", "ti", "tu", "nosotros", "nuestro", "nuestra", "nuestros", "nuestras", "nos") are STRICTLY FORBIDDEN.
-5. ZERO HUMAN REFERENCES: The story must contain absolutely zero references to birth, baby, arrivals, family, parents, child, or people. This is 100% a weather record.
-6. UNIQUENESS RULE: Every story must be unique. Never reuse the same structure, opening, or ending. Adapt the atmosphere to the city's unique geography, local character, season, weather details, and regional climate personality. (e.g., a snowy day in Poznan must feel different from a snowy day in Lodz; a rainy day in Toronto must feel different from Seattle).
+STRICT WRITING GUIDELINES (ANTI-SENTIMENT):
+1. Never write from the perspective of parents or family members.
+2. Never address the child directly (do not use "you" or "your", or Spanish equivalents like "tú", "te", "ti", "tu").
+3. Strictly third-person objective historical perspective.
+4. ABSOLUTELY FORBIDDEN words and phrases in any language (English, Spanish, etc.):
+   - "our room" (nuestra habitación / nuestro cuarto)
+   - "holding you" (sosteniéndote / abrazándote)
+   - "first cuddle" (primer abrazo / primer arrullo)
+   - "our hearts" (nuestros corazones)
+   - "joy" (alegría / júbilo)
+   - "relief" (alivio)
+   - "sacred moment" (momento sagrado)
+   - "life-changing" (cambió nuestras vidas)
+   - emotional/sentimental reactions
+   - family bonding/connection moments
+   - "welcome into the world" (bienvenida al mundo)
+   - "your arrival" (tu llegada)
+   - personal pronouns: "we", "us", "our" (nosotros, nos, nuestro, nuestra, nuestros, nuestras)
+5. Descriptions must keep a factual, beautiful, atmospheric quality without any sentimentality, personal milestones, or domestic/family/parenting emotions.
+
+GOOD EXAMPLE:
+"Snow fell steadily across Edmonton on December 17, 2025. Temperatures remained near -14°C while light winds moved drifting snow across streets and rooftops. The city settled beneath a quiet white canopy as snowfall continued throughout the day. It was also the date a child was born in the city."
 
 WEATHER DETAILS (INTEGRATE NATURALLY EXACTLY ONCE):
 - Max temperature: ${tempMax}°C (appx ${Math.round(tempMax * 9/5 + 32)}°F)
@@ -580,7 +612,7 @@ WEATHER DETAILS (INTEGRATE NATURALLY EXACTLY ONCE):
 
 STYLISH, MEMORABLE QUOTE & SIMPLE THEME:
 - THEME (TITLE): If the weather is rainy, the theme title MUST be exactly "A Rainy Afternoon" (or "Una jornada de lluvia" in Spanish). Otherwise, generate a clean, weather-based title of 3 to 6 words. It must remain strictly factual and weather-oriented, NOT poetic or flowery (e.g., "A Sunny Day in ${city}", "Cloudy Skies in ${city}"). No time-of-day reference in theme unless specified by birthTime.
-- QUOTE (THE SKY'S RECORD): Generate a separate, short, memorable quote. This quote must describe ONLY the weather, sky, clouds, rain, snow, sunlight, wind, or seasonal atmosphere. It must NEVER mention parents, family, baby, child, arrival, love, joy, or emotions. It should feel like a poetic meteorological line from a climate diary or old almanac.
+- QUOTE (THE SKY'S RECORD): Generate a separate, short, memorable quote. This quote must describe ONLY the weather, sky, clouds, rain, snow, sunlight, wind, or seasonal atmosphere. It must NEVER mention any human elements, relationships, birth, or sentiments. It should feel like a poetic meteorological line from a climate diary or old almanac.
   - Example English: "Rain whispered across the rooftops while silver clouds drifted above the city."
   - Example Spanish: "La lluvia caía suavemente, como si la ciudad se hubiera detenido por un momento."
 
@@ -592,7 +624,7 @@ Response JSON Schema (Keep exactly unchanged):
 You must output a JSON object containing:
 - theme: string (3-6 words, weather-based, factual title)
 - quote: string (exactly 1 short, simple, memorable sentence about weather only)
-- story: string (the completed narrative weather archive record, strictly between 80 and 120 words formatted as a single paragraph with absolutely zero birth or human mentions)
+- story: string (the completed narrative weather archive record, strictly between 80 and 120 words formatted as a single paragraph following the 80/20 rule)
 - quality_check: an object containing:
   - language_consistent: boolean (is it 100% written in the requested language?)
   - weather_consistent: boolean (does it accurately incorporate the provided weather data?)
@@ -610,7 +642,7 @@ You must output a JSON object containing:
       console.log(`Querying Gemini (Attempt ${attempts + 1}) for story in ${language}...`);
       const response = await ai.models.generateContent({
         model: "gemini-3.5-flash",
-        contents: `Generate an atmospheric historical weather archive record centered entirely on the weather conditions, season, sky, city atmosphere, and character of the day. Do NOT write about birth, babies, relationships, families, or people. Follow the system instruction for ${city}, ${country} (${region || ''}) with weather ${weatherText} (Max Temp ${tempMax}°C, Wind ${windSpeed} km/h) on ${birthDate}.`,
+        contents: `Generate an atmospheric historical weather archive record centered 80% on weather conditions, seasonal details, and city atmosphere, with only a 20% factual, objective mention about a birth at the end (e.g. "It was also the date a child was born in the city."). Strictly avoid any perspective of parents, family emotions, or addressing anyone as "you". Follow the system instruction for ${city}, ${country} (${region || ""}) with weather ${weatherText} (Max Temp ${tempMax}°C, Wind ${windSpeed} km/h) on ${birthDate}.`,
         config: {
           systemInstruction: systemInstruction,
           responseMimeType: "application/json",

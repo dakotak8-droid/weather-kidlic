@@ -1195,7 +1195,14 @@ export default function BirthWeatherStory() {
               ? " También fue el día en que una nueva y pequeña vida llegó al mundo."
               : " It was also the day a new little arrival entered the world.";
             
-            if (!parsedStory.toLowerCase().includes("llegó al mundo") && !parsedStory.toLowerCase().includes("arrival entered")) {
+            if (
+              !parsedStory.toLowerCase().includes("llegó al mundo") &&
+              !parsedStory.toLowerCase().includes("arrival entered") &&
+              !parsedStory.toLowerCase().includes("born") &&
+              !parsedStory.toLowerCase().includes("nació") &&
+              !parsedStory.toLowerCase().includes("nacimiento") &&
+              !parsedStory.toLowerCase().includes("birth")
+            ) {
               parsedStory = parsedStory.trim() + birthSentence;
             }
           }
