@@ -473,6 +473,14 @@ app.get("/api/generate-story", (req, res) => {
   res.sendFile(path.join(process.cwd(), "audit-report.txt"));
 });
 
+app.get("/api/version", (req, res) => {
+  res.json({
+    prompt_version: "historical_archive_v1",
+    generator_path: "api_generate_story",
+    build_timestamp: "2026-06-04T19:32:55Z"
+  });
+});
+
 app.post("/api/generate-story", async (req, res) => {
   const {
     city,
