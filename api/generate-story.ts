@@ -552,35 +552,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
    - "The sky over ${city}..." / "El cielo sobre ${city}..."
    Do NOT assume a specific time period under any circumstances.`;
 
-  const systemInstruction = `Act as an expert weather keepsake writer creating atmospheric historical archive records documenting the weather of specific dates and locations.
+  const systemInstruction = `Act as an expert weather keepsake writer creating atmospheric, strictly factual historical meteorological archive records documenting the weather of specific dates and locations.
 
-WEATHER AS THE PROTAGONIST (80/20 RULE):
-1. Weather is the absolute main character (about 80% of the narrative). The city atmosphere, sky, clouds, rain, snow, wind, temperature, season, and environmental conditions must dominate the story.
-2. A single birth reference may gently be mentioned ONLY as a brief, minor historical fact at the end of the narrative (about 20%). For example: "It was also the date a child was born in the city." / "También fue el día en que nació un niño en la ciudad."
-3. The record must read like a preserved meteorological weather archive or diary entry for that date.
+WEATHER AS THE EXCLUSIVE MAIN SUBJECT (80-90% weather/atmosphere):
+1. The story must be 80–90% weather, city atmosphere, sky, wind, temperature, season, streets, clouds, rain, snow, sunlight, and environmental details.
+2. The record must read like a historical weather archive or meteorological diary entry for that date, not a birth memory.
 
-STRICT WRITING GUIDELINES (ANTI-SENTIMENT):
-1. Never write from the perspective of parents or family members.
-2. Never address the child directly (do not use "you" or "your", or Spanish equivalents like "tú", "te", "ti", "tu").
-3. Strictly third-person objective historical perspective.
-4. ABSOLUTELY FORBIDDEN words and phrases in any language (English, Spanish, etc.):
-   - "our room" (nuestra habitación / nuestro cuarto)
-   - "holding you" (sosteniéndote / abrazándote)
-   - "first cuddle" (primer abrazo / primer arrullo)
-   - "our hearts" (nuestros corazones)
-   - "joy" (alegría / júbilo)
-   - "relief" (alivio)
-   - "sacred moment" (momento sagrado)
-   - "life-changing" (cambió nuestras vidas)
-   - emotional/sentimental reactions
-   - family bonding/connection moments
-   - "welcome into the world" (bienvenida al mundo)
-   - "your arrival" (tu llegada)
-   - personal pronouns: "we", "us", "our" (nosotros, nos, nuestro, nuestra, nuestros, nuestras)
-5. Descriptions must keep a factual, beautiful, atmospheric quality without any sentimentality, personal milestones, or domestic/family/parenting emotions.
-
-GOOD EXAMPLE:
-"Snow fell steadily across Edmonton on December 17, 2025. Temperatures remained near -14°C while light winds moved drifting snow across streets and rooftops. The city settled beneath a quiet white canopy as snowfall continued throughout the day. It was also the date a child was born in the city."
+STRICT WRITING CONSTRAINT (FACTUAL ARCHIVE TONE, NO SENTIMENT):
+1. Use third-person factual archive tone only.
+2. Birth must NOT be emotional and must NOT be written from a parent, family, or personal perspective.
+3. Birth must NOT address the child as "you" (do not use "you", "your", "tú", "te", "ti", "tu" or any variations of these pronouns).
+4. Do NOT mention parents, family, hospital, room, cuddle, holding, feelings, love, joy, relief, hearts, miracle, or forever.
+5. ABSOLUTELY FORBIDDEN words: arrival, welcome, our, we, us, your, holding, cuddle, joy, relief, hearts, room, sacred, miracle, precious, universe, changed, forever ("nuestra habitación", "nuestro cuarto", "sosteniéndote", "abrazándote", "primer abrazo", "primer arrullo", "nuestros corazones", "alegría", "alivio", "momento sagrado", "cambió nuestras vidas", "bienvenida al mundo", "tu llegada", "nosotros", "nos", "nuestro").
+6. Remove all phrases like "On the day of your arrival" or "On the morning you were born".
+7. Allowed birth mention ONLY:
+   - English: "It was also the date a child was born in the city."
+   - Spanish: "También fue la fecha en que nació un niño en la ciudad."
+   This exact statement must be the ONLY birth or child reference in the entire story, and it must join the text as the very final sentence of the paragraph. Do not deviate, change, or expand this wording.
 
 WEATHER DETAILS (INTEGRATE NATURALLY EXACTLY ONCE):
 - Max temperature: ${tempMax}°C (appx ${Math.round(tempMax * 9/5 + 32)}°F)
@@ -599,11 +587,13 @@ STRICT LANGUAGE REQUIREMENT:
 - The requested language is: "${language}".
 - Write "theme", "quote", and "story" purely in "${language}" as a native speaker would, avoiding translation stiffness or hybrid terms.
 
+${timeOfDepartureRule}
+
 Response JSON Schema (Keep exactly unchanged):
 Output a JSON object containing:
 - theme: string (3-6 words, weather-based, factual title)
 - quote: string (exactly 1 short, simple, memorable sentence about weather only)
-- story: string (the completed narrative weather archive record, strictly between 80 and 120 words formatted as a single paragraph following the 80/20 rule)
+- story: string (the completed narrative weather archive record, strictly between 80 and 120 words formatted as a single paragraph containing exactly the required birth mention at the end)
 - quality_check: an object containing:
   - language_consistent: boolean (is it 100% written in the requested language?)
   - weather_consistent: boolean (does it accurately incorporate the provided weather data?)
@@ -621,7 +611,7 @@ Output a JSON object containing:
       console.log(`Querying Gemini (Attempt ${attempts + 1}) for story in ${language}...`);
       const response = await ai.models.generateContent({
         model: "gemini-3.5-flash",
-        contents: `Generate an atmospheric historical weather archive record centered 80% on weather conditions, seasonal details, and city atmosphere, with only a 20% factual, objective mention about a birth at the end (e.g. "It was also the date a child was born in the city."). Strictly avoid any perspective of parents, family emotions, or addressing anyone as "you". Follow the system instruction for ${city}, ${country} (${region || ""}) with weather ${weatherText} (Max Temp ${tempMax}°C, Wind ${windSpeed} km/h) on ${targetDate}.`,
+        contents: `Generate an atmospheric historical weather archive record centered 80-90% on weather conditions, seasonal details, and city atmosphere, with only the allowed factual birth mention. Ensure it is third-person factual and has absolutely zero emotional words or family mentions. Follow the system instruction for ${city}, ${country} (${region || ""}) on ${targetDate}.`,
         config: {
           systemInstruction: systemInstruction,
           responseMimeType: "application/json",
@@ -645,7 +635,7 @@ Output a JSON object containing:
             },
             required: ["theme", "quote", "story", "quality_check"]
           },
-          temperature: 0.8,
+          temperature: 0.2,
         },
       });
 
