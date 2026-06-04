@@ -474,6 +474,12 @@ app.get("/api/generate-story", (req, res) => {
 });
 
 app.post("/api/generate-story", async (req, res) => {
+  return res.status(200).json({
+    theme: "DEBUG_THEME",
+    quote: "DEBUG_QUOTE",
+    story: "DEBUG_STORY_FROM_SERVER_TS"
+  });
+
   const {
     city,
     country,
