@@ -1192,8 +1192,8 @@ export default function BirthWeatherStory() {
           if (shouldAppendBirth) {
             // Append the birth-related sentence separately in the UI outside the AI-generated story
             const birthSentence = lang === "es"
-              ? " También fue el día en que una nueva y pequeña vida llegó al mundo."
-              : " It was also the day a new little arrival entered the world.";
+              ? " También fue la fecha en que nació un niño en la ciudad."
+              : " It was also the date a child was born in the city.";
             
             if (
               !parsedStory.toLowerCase().includes("llegó al mundo") &&

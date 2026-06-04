@@ -231,6 +231,8 @@ function validateGeneratedContent(story: string, quote: string, theme: string): 
     "our room",
     "inside our room",
     "carry forever",
+    "we will carry",
+    "pure warmth",
     "beautiful moment",
     "precious",
     "miracle",
@@ -261,6 +263,8 @@ function validateGeneratedContent(story: string, quote: string, theme: string): 
     "asombro",
     "nuestra habitación",
     "para siempre",
+    "llevaremos",
+    "calidez pura",
     "momento hermoso",
     "sagrado",
     "precioso",
@@ -669,19 +673,52 @@ Output a JSON object containing:
     attempts++;
   }
 
+  let useBackup = true;
+  let finalResponseData: any = null;
+
   if (finalJson) {
     let finalStory = finalJson.story;
     if (!birthTime) {
       finalStory = makeStoryTimeNeutral(finalStory, lang === "es" ? "es" : "en");
     }
-    res.status(200).json({
-      theme: finalJson.theme,
-      quote: finalJson.quote,
-      story: finalStory,
-      quality_check: finalJson.quality_check
-    });
+
+    // Final backend sanitizer check for forbidden parent/relationship concepts
+    const absoluteForbiddenList = [
+      "your arrival", "holding you", "our room", "first cuddle", "our hearts",
+      "joy", "relief", "sacred moment", "sweet scent", "our world",
+      "welcome into the world", "life-changing", "we will carry", "pure warmth",
+      "everything changed", "tu llegada", "bienvenida al mundo", "cambió nuestras vidas",
+      "primer abrazo", "primer arrullo", "compañía", "abrazarte", "abrazar", "nuestra habitación",
+      "nuestro cuarto", "nuestros corazones", "alegría", "alivio", "momento sagrado", "dulce aroma",
+      "nuestro mundo", "calidez pura", "todo cambió"
+    ];
+
+    let hasForbidden = false;
+    const finalStoryLower = finalStory.toLowerCase();
+    for (const phrase of absoluteForbiddenList) {
+      if (finalStoryLower.includes(phrase)) {
+        hasForbidden = true;
+        break;
+      }
+    }
+
+    if (!hasForbidden) {
+      useBackup = false;
+      finalResponseData = {
+        theme: finalJson.theme,
+        quote: finalJson.quote,
+        story: finalStory,
+        quality_check: finalJson.quality_check
+      };
+    } else {
+      console.warn("Discarding Gemini story due to forbidden parenting/emotion phrases in final state. Falling back to high-quality offline backup.");
+    }
+  }
+
+  if (!useBackup && finalResponseData) {
+    res.status(200).json(finalResponseData);
   } else {
-    console.log("All Gemini attempts failed or timed out, executing high-quality offline backup generator with birthTime=" + birthTime);
+    console.log("Executing high-quality offline backup generator with birthTime=" + birthTime);
     const backupResult = getOfflineBackupStory({
       city,
       country: country || "",
