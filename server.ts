@@ -522,6 +522,8 @@ app.post("/api/generate-story", async (req, res) => {
       story: finalBackupStory.trim(),
       isFallback: true,
       debug_source: "server_offline_backup",
+      prompt_version: "historical_archive_v1",
+      generator_path: "api_generate_story",
       quality_check: {
         language_consistent: true,
         weather_consistent: true,
@@ -792,7 +794,9 @@ You must output a JSON object containing:
         quote: finalJson.quote,
         story: finalStory,
         quality_check: finalJson.quality_check,
-        debug_source: "server_gemini_clean"
+        debug_source: "server_gemini_clean",
+        prompt_version: "historical_archive_v1",
+        generator_path: "api_generate_story"
       };
     } else {
       console.warn("Discarding Gemini story due to forbidden parenting/emotion phrases in final state. Falling back to high-quality offline backup.");
@@ -828,6 +832,8 @@ You must output a JSON object containing:
       story: finalBackupStory.trim(),
       isFallback: true,
       debug_source: "server_forbidden_backup",
+      prompt_version: "historical_archive_v1",
+      generator_path: "api_generate_story",
       quality_check: {
         language_consistent: true,
         weather_consistent: true,

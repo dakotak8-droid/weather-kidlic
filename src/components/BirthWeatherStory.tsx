@@ -565,6 +565,8 @@ interface HistoricalStory {
   metricLabel: string;
   metricValue: string;
   debug_source?: string;
+  prompt_version?: string;
+  generator_path?: string;
 }
 
 export default function BirthWeatherStory() {
@@ -1214,7 +1216,9 @@ export default function BirthWeatherStory() {
             story: parsedStory,
             metricLabel: "",
             metricValue: "",
-            debug_source: storyData.debug_source
+            debug_source: storyData.debug_source,
+            prompt_version: storyData.prompt_version,
+            generator_path: storyData.generator_path
           };
           console.log("Successfully loaded Gemini-generated story.");
         } else {
@@ -1939,8 +1943,23 @@ export default function BirthWeatherStory() {
                         )}
                       </div>
                       {revealResult.story.debug_source && (
-                        <div className="bg-[#ff0000] text-white text-[12px] font-mono px-3 py-1 rounded font-bold uppercase inline-block">
+                        <div className="bg-[#ff0000] text-white text-[12px] font-mono px-3 py-1 rounded font-bold uppercase inline-block font-mono">
                           DEBUG SOURCE: {revealResult.story.debug_source}
+                        </div>
+                      )}
+                      {revealResult.story.prompt_version && (
+                        <div className="mt-2 text-xs font-mono text-slate-400 uppercase">
+                          PROMPT VERSION: <span className="text-white font-bold">{revealResult.story.prompt_version}</span>
+                        </div>
+                      )}
+                      {revealResult.story.generator_path && (
+                        <div className="mt-1 text-xs font-mono text-slate-400 uppercase">
+                          GENERATOR PATH: <span className="text-white font-bold">{revealResult.story.generator_path}</span>
+                        </div>
+                      )}
+                      {(revealResult.story.prompt_version || revealResult.story.generator_path) && (
+                        <div className="mt-1 text-[10px] font-mono text-slate-500 italic">
+                          This is a temporary diagnostic feature only.
                         </div>
                       )}
                       <p className="text-sm md:text-base text-slate-300 font-sans leading-relaxed tracking-wide">
