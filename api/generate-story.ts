@@ -118,7 +118,7 @@ function makeStoryTimeNeutral(story: string, lang: 'en' | 'es'): string {
     s = s.replace(/salida del sol a las \d+:\d+\s*(?:AM|PM)?/gi, "el día");
     s = s.replace(/llovizna a las \d+:\d+\s*(?:AM|PM)?/gi, "llovizna");
     s = s.replace(/a las \d+:\d+\s*(?:AM|PM)?/gi, "");
-    s = s.replace(/al amanecer/gi, "el cielo de la mañana");
+    s = s.replace(/al amanecer/gi, "con el comienzo de la jornada");
     s = s.replace(/Pasamos la mañana/gi, "Pasaron las primeras horas");
     s = s.replace(/amaneció con/gi, "comenzó con");
     s = s.replace(/amaneció cubierta/gi, "se cubrió");
@@ -139,12 +139,12 @@ function makeStoryTimeNeutral(story: string, lang: 'en' | 'es'): string {
       [/\bun atardecer\b/gi, "un momento"],
       [/\batardecer\b/gi, "momento"],
       [/\bmadrugada\b/gi, "jornada"],
-      [/\bmedianoche\b/gi, "la noche"],
+      [/\bmedianoche\b/gi, "la jornada"],
       [/\bamanecer\b/gi, "el inicio de la jornada"],
       [/\bsalida del sol\b/gi, "el día"],
       [/\bpuesta de sol\b/gi, "el fin del día"],
       [/\bla noche de tu llegada\b/gi, "el de esa jornada"],
-      [/\bla noche en que naciste\b/gi, "la noche de esa fecha"],
+      [/\bla noche en que naciste\b/gi, "la jornada de esa fecha"],
       [/\bpor la noche\b/gi, "durante el día"],
       [/\ben la noche\b/gi, "durante la jornada"],
       [/\buna noche\b/gi, "un día"],
@@ -186,10 +186,10 @@ function makeStoryTimeNeutral(story: string, lang: 'en' | 'es'): string {
       [/\bevening\b/gi, "day"],
       [/\bthe night\b/gi, "the day"],
       [/\bnight\b/gi, "day"],
-      [/\bdawn\b/gi, "daybreak"],
-      [/\bsunrise\b/gi, "daylight"],
-      [/\bsunset\b/gi, "nightfall"],
-      [/\bmidnight\b/gi, "the night"],
+      [/\bdawn\b/gi, "the start of the day"],
+      [/\bsunrise\b/gi, "the sun"],
+      [/\bsunset\b/gi, "the end of the day"],
+      [/\bmidnight\b/gi, "the day"],
       [/\bdaylight\b/gi, "the skies"],
       [/\bdaytime\b/gi, "the day"],
     ];
@@ -325,13 +325,13 @@ function getOfflineBackupStory(params: {
       return {
         theme: "Una jornada de lluvia",
         quote: "La lluvia cayó suavemente, como si la ciudad se hubiera detenido por un momento.",
-        story: `Durante esa jornada, una lluvia apacible cubrió ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). El agua caía sobre los tejados y las calles vacías, mientras los reflejos plateados dibujaban líneas constantes en las aceras. En ese ambiente de lluvia constante, la jornada transcurrió con una inesperada calma. El agua continuó cayendo uniformemente hasta finales del día.`,
+        story: `Durante esa fecha, una lluvia apacible cubrió ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). El agua caía sobre los tejados y las calles vacías, mientras los reflejos plateados dibujaban líneas constantes en las aceras. En ese ambiente de lluvia constante, la jornada transcurrió con una inesperada calma. El agua continuó cayendo uniformemente hasta finales de la jornada.`,
       };
     }
     if (isSnowy) {
       return {
         theme: "Un día cubierto de nieve",
-        quote: "Mientras la nieve cubría la ciudad, el silence blanco envolvía las calles.",
+        quote: "Mientras la nieve cubría la ciudad, el silencio blanco envolvía las calles.",
         story: `En esa fecha invernal, un manto de nieve cubrió las calles de ${params.city} en medio de un frío de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). La ciudad permanecía en un pacífico silencio blanco que amortiguaba el sonido habitual del viento. Los copos de nieve continuaron descendiendo con suavidad y constancia, acumulándose sobre los tejados y aceras.`,
       };
     }
@@ -345,26 +345,26 @@ function getOfflineBackupStory(params: {
     // Default Cloudy
     return {
       theme: "Un día nublado y tranquilo",
-      quote: "El sky gris trajo una calma reconfortante a toda la ciudad.",
+      quote: "El cielo gris trajo una calma reconfortante a toda la ciudad.",
       story: `Durante esa fecha, nubes pacíficas vistieron de gris el cielo de ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Todo transcurrió bajo una luz difusa, mientras un viento suave mecía las ramas de los árboles. La jornada gris continuó desarrollándose en un ambiente de notable quietud y serenidad.`,
     };
   } else {
     if (isRainy) {
       const variants = [
-        `Light rain drifted across ${params.city} throughout the afternoon with steady temperatures around ${tempC}°C (${tempF}°F). Water gathered quietly on rooftops as a breeze of ${windKn} km/h (${windMph} mph) rustled through the trees. The rhythmic sound of rainfall softened all sound, casting a quiet calm over parks and neighborhoods. The steady precipitation continued until late evening.`,
+        `Light rain drifted across ${params.city} throughout the day with steady temperatures around ${tempC}°C (${tempF}°F). Water gathered quietly on rooftops as a breeze of ${windKn} km/h (${windMph} mph) rustled through the trees. The rhythmic sound of rainfall softened all sound, casting a quiet calm over parks and neighborhoods. The steady precipitation continued until the end of the day.`,
         
-        `A fresh spring rain washed over the streets of ${params.city}, leaving pavements shimmering under overcast skies. With temperatures holding at ${tempC}°C (${tempF}°F) and wind pacing at ${windKn} km/h (${windMph} mph), the air carried a clean scent of wet earth and stone. Headlights cast long reflections on the wet asphalt. The clouds remained low as the day transitioned quietly into dusk.`,
+        `A fresh spring rain washed over the streets of ${params.city}, leaving pavements shimmering under overcast skies. With temperatures holding at ${tempC}°C (${tempF}°F) and wind pacing at ${windKn} km/h (${windMph} mph), the air carried a clean scent of wet earth and stone. Headlights cast long reflections on the wet asphalt. The clouds remained low as the day progressed quietly.`,
         
-        `An evening rain descended over the rooftops of ${params.city}, softening the city outline against a deep iron-grey sky. Temperatures cooled to ${tempC}°C (${tempF}°F) while a gentle breeze of ${windKn} km/h (${windMph} mph) carried mist across the neighborhood streets. Streetlights flickered to life, reflecting in silver pools along the concrete walkways. Drops continued to crawl down glass windows under a persistent dark sky.`,
+        `Steady rain descended over the rooftops of ${params.city}, softening the city outline against a deep iron-grey sky. Temperatures cooled to ${tempC}°C (${tempF}°F) while a gentle breeze of ${windKn} km/h (${windMph} mph) carried mist across the neighborhood streets. Puddles gathered on the pavement, reflecting in silver pools along the concrete walkways. Drops continued to crawl down glass windows under a persistent overcast sky.`,
         
         `Passing rain showers swept quickly across ${params.city}, carried by a gusty wind of ${windKn} km/h (${windMph} mph). Temperatures remained cool at ${tempC}°C (${tempF}°F) as dramatic cloud formations rolled steadily over the rooftops. Between brief bursts of water, wet asphalt streets glistened beneath a soft, diffuse light. Overcast skies persisted as the weather front moved slowly eastward.`,
         
-        `Quiet, steady rainfall enveloped ${params.city}, turning the streets into a canvas of soft slate and grey. With temperatures registering ${tempC}°C (${tempF}°F) and wind blowing gently at ${windKn} km/h (${windMph} mph), silver droplets lined every windowpane. The steady patter of moisture created an unexpected calm across the skyline until nightfall.`
+        `Quiet, steady rainfall enveloped ${params.city}, turning the streets into a canvas of soft slate and grey. With temperatures registering ${tempC}°C (${tempF}°F) and wind blowing gently at ${windKn} km/h (${windMph} mph), silver droplets lined every windowpane. The steady patter of moisture created an unexpected calm across the skyline throughout the day.`
       ];
 
       const randomIndex = Math.floor(Math.random() * variants.length);
       return {
-        theme: "A Rainy Afternoon",
+        theme: "A Rainy Day",
         quote: "The rain fell softly, as if the city had paused for a moment.",
         story: variants[randomIndex],
       };
@@ -373,14 +373,14 @@ function getOfflineBackupStory(params: {
       return {
         theme: "A Snowy Winter Day",
         quote: "While snow carpeted the city outside, the streets fell into a quiet, frozen stillness.",
-        story: `During that winter afternoon, soft snow blanketed ${params.city}, bringing a chill of ${tempC}°C (${tempF}°F) and a gentle wind at ${windKn} km/h (${windMph} mph). The streets fell silent under the white canopy, while buildings kept their facade lights glowing. Flakes continued to gather quietly on rooftops and pavements.`,
+        story: `During that winter day, soft snow blanketed ${params.city}, bringing a chill of ${tempC}°C (${tempF}°F) and a gentle wind at ${windKn} km/h (${windMph} mph). The streets fell silent under the white canopy, while buildings kept their facade lights glowing. Flakes continued to gather quietly on rooftops and pavements.`,
       };
     }
     if (isSunny) {
       return {
-        theme: "A Sunny Afternoon",
-        quote: "The sun rose for the city just like any other day, casting bright golden light across the streets.",
-        story: `During that clear afternoon, bright sunshine bathed ${params.city}, warming the day to ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Gold light danced across the brick building facades and tree branches. The blue sky remained perfectly clear and cloudless until the sun dipped below the horizon.`,
+        theme: "A Sunny Day",
+        quote: "The sun shone for the city with gentle brilliance, casting gold light across the streets.",
+        story: `During that clear day, bright sunshine bathed ${params.city}, warming the day to ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Gold light danced across the brick building facades and tree branches. The blue sky remained perfectly clear and cloudless throughout.`,
       };
     }
     // Default Cloudy
@@ -389,11 +389,11 @@ function getOfflineBackupStory(params: {
       
       `A vast, iron-grey canopy of clouds shrouded the sky over ${params.city}, creating a cool, unified shade across the streets and public squares. Temperatures hovered around ${tempC}°C (${tempF}°F) with wind blowing at ${windKn} km/h (${windMph} mph), sweeping dry leaves along the stone pavements. The soft, shadowless light gave the local parks and brick facades an archival, timeless quality.`,
       
-      `Thick, dense grey clouds wrapped the buildings of ${params.city} in a peaceful and protective mist. The wind paced gently at ${windKn} km/h (${windMph} mph) underneath an overcast sky, keeping the daytime temperature locked at a cool ${tempC}°C (${tempF}°F). Across the city, local street corners, shop windows, and historic avenues appeared quiet and calm, illuminated by the glare-free light.`,
+      `Thick, dense grey clouds wrapped the buildings of ${params.city} in a peaceful and protective mist. The wind paced gently at ${windKn} km/h (${windMph} mph) underneath an overcast sky, keeping the temperature locked at a cool ${tempC}°C (${tempF}°F). Across the city, local street corners, shop windows, and historic avenues appeared quiet and calm, illuminated by the glare-free light.`,
       
-      `High-altitude grey clouds uniform in texture stretched coast to coast over the sky of ${params.city}. Air temperatures remained cool but steady at ${tempC}°C (${tempF}°F) with wind speeds of ${windKn} km/h (${windMph} mph) carrying a crisp, seasonal freshness through the streets. Under this calm slate canopy, the skyline sat in quiet composure.`,
+      `High-altitude grey clouds uniform in texture stretched coast to coast over the sky of ${params.city}. Air temperatures remained cool but steady at ${tempC}°C (${tempF}°F) with wind speeds of ${windKn} km/h (${windMph} mph) carrying a crisp freshness through the streets. Under this calm slate canopy, the skyline sat in quiet composure.`,
       
-      `A quiet layer of stratocumulus clouds blanketed the rooftops of ${params.city} from dawn until twilight. Outside, temperatures measured ${tempC}°C (${tempF}°F) with a steady, atmospheric wind blowing at ${windKn} km/h (${windMph} mph), creating a crisp feeling in the air. The lack of direct sunshine painted the city in soft, classic shades of slate and charcoal.`
+      `A quiet layer of stratocumulus clouds blanketed the rooftops of ${params.city} throughout the day. Outside, temperatures measured ${tempC}°C (${tempF}°F) with a steady, atmospheric wind blowing at ${windKn} km/h (${windMph} mph), creating a crisp feeling in the air. The lack of direct sunshine painted the city in soft, classic shades of slate and charcoal.`
     ];
 
     const randomIndex = Math.floor(Math.random() * variants.length);
@@ -406,6 +406,25 @@ function getOfflineBackupStory(params: {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Allow GET for retrieving the audit-report
+  if (req.method === "GET") {
+    const fs = await import("fs");
+    const path = await import("path");
+    try {
+      const filePath = path.join(process.cwd(), "audit-report.txt");
+      if (fs.existsSync(filePath)) {
+        res.setHeader("Content-Type", "text/plain; charset=utf-8");
+        res.setHeader("Content-Disposition", "attachment; filename=audit-report.txt");
+        res.status(200).send(fs.readFileSync(filePath, "utf-8"));
+        return;
+      }
+    } catch (e) {
+      console.error("Error reading audit report on Vercel API:", e);
+    }
+    res.status(404).send("Audit report file not found on disk.");
+    return;
+  }
+
   // Only allow POST
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method not allowed. Use POST." });
@@ -454,14 +473,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     } else {
       finalBackupStory = makeStoryTimeNeutral(finalBackupStory, lang === "es" ? "es" : "en");
     }
-    const birthSentence = lang === "es"
-      ? " También fue el día en que una nueva y pequeña vida llegó al mundo."
-      : " It was also the day a new little arrival entered the world.";
-    finalBackupStory = finalBackupStory.trim() + birthSentence;
     res.status(200).json({
       theme: backupResult.theme,
       quote: backupResult.quote,
-      story: finalBackupStory,
+      story: finalBackupStory.trim(),
+      isFallback: true,
       quality_check: {
         language_consistent: true,
         weather_consistent: true,
@@ -653,14 +669,11 @@ Output a JSON object containing:
     } else {
       finalBackupStory = makeStoryTimeNeutral(finalBackupStory, lang === "es" ? "es" : "en");
     }
-    const birthSentence = lang === "es"
-      ? " También fue el día en que una nueva y pequeña vida llegó al mundo."
-      : " It was also the day a new little arrival entered the world.";
-    finalBackupStory = finalBackupStory.trim() + birthSentence;
     res.status(200).json({
       theme: backupResult.theme,
       quote: backupResult.quote,
-      story: finalBackupStory,
+      story: finalBackupStory.trim(),
+      isFallback: true,
       quality_check: {
         language_consistent: true,
         weather_consistent: true,

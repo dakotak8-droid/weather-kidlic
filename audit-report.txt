@@ -1,0 +1,459 @@
+WEATHER STORY GENERATION PLATFORM AUDIT REPORT
+=============================================
+Date of Audit: 2026-06-03
+Platform: Google AI Studio Build (Node.js Express + Vercel Serverless Architecture)
+
+This report details a project-wide audit of all story generation, post-processing, validation, fallback, and client/server-side transformation paths. It identifies all locations where weather stories are generated or processed and tracks the presence of parenting-focused or emotional language.
+
+--------------------------------------------------------------------------------
+PART 1: PROJECT-WIDE KEYWORD & PHRASE MATCHES
+--------------------------------------------------------------------------------
+
+The following is a complete and precise catalog of where any of the audited keywords or phrases appear in the codebase, along with execution details.
+
+A. FILENAME: /server.ts
+-----------------------
+
+* Match 1: Line 248 - 250
+  - Code Snippet:
+    ```typescript
+    const forbiddenPhrases = [
+      "holding you",
+      "holding you for the first time",
+      "first cuddle",
+    ```
+  - Executed in Production/Dev: Yes (when running in Express/local container environment).
+  - Calling function: `validateGeneratedContent(story, quote, theme)`
+  - Reaching Route: POST `/api/generate-story` (only on Express local node server path).
+  - Can affect production output: Yes. If Gemini produces these phrases, the validation fails, forcing a retry (up to 3 attempts) before resorting to the backup/offline generator.
+
+* Match 2: Line 256 - 257
+  - Code Snippet:
+    ```typescript
+      "our world",
+      "our hearts",
+    ```
+  - Executed in Production/Dev: Yes (on local Express server).
+  - Calling function: `validateGeneratedContent(story, quote, theme)`
+  - Reaching Route: POST `/api/generate-story` (local Express path).
+  - Can affect production output: Yes (forces validation failure & retry if found).
+
+* Match 3: Line 262
+  - Code Snippet:
+    ```typescript
+      "inside our room",
+    ```
+  - Executed in Production/Dev: Yes (on local Express server).
+  - Calling function: `validateGeneratedContent(story, quote, theme)`
+  - Reaching Route: POST `/api/generate-story` (local Express path).
+  - Can affect production output: Yes (forces validation failure & retry if found).
+
+* Match 4: Line 268 - 273
+  - Code Snippet:
+    ```typescript
+      "bundle of joy",
+      "parent",
+      "mother",
+      "father",
+      "family",
+      "cuddle",
+    ```
+  - Executed in Production/Dev: Yes (on local Express server).
+  - Calling function: `validateGeneratedContent(story, quote, theme)`
+  - Reaching Route: POST `/api/generate-story` (local Express path).
+  - Can affect production output: Yes (forces validation failure & retry if found).
+
+* Match 5: Line 315 - 318
+  - Code Snippet:
+    ```typescript
+    const birthMentionsEn = (combinedAll.match(/\bbirth\b|\bborn\b|\bbaby\b|\bchild\b|\bperson\b|\bpeople\b|\barrival\b|\bparents\b|\bfamily\b|\bhospital\b|\blabor\b|\bchildbirth\b|\bdeliver\b|\bdelivered\b/gi) || []).length;
+    const birthMentionsEs = (combinedAll.match(/\bnacimiento\b|\bnació\b|\bbebé\b|\bniño\b|\bniña\b|\bhijo\b|\bhija\b|\bpersona\b|\bgente\b|\bllegada\b|\barribo\b|\bpadres\b|\bfamilia\b|\bparto\b|\bparir\b/gi) || []).length;
+    if (birthMentionsEn + birthMentionsEs > 0) {
+      return { valid: false, reason: "Story, Quote, or Theme contains forbidden birth, baby, child, family, arrival, or human references" };
+    }
+    ```
+  - Executed in Production/Dev: Yes (on local Express server).
+  - Calling function: `validateGeneratedContent(story, quote, theme)`
+  - Reaching Route: POST `/api/generate-story` (local Express path).
+  - Can affect production output: Yes (forces validation failure & retry if Gemini introduces humans, babies, arrivals, or birth mentions in the core weather story).
+
+* Match 6: Line 490 - 493
+  - Code Snippet:
+    ```typescript
+    const birthSentence = lang === "es"
+      ? " También fue el día en que una nueva y pequeña vida llegó al mundo."
+      : " It was also the day a new little arrival entered the world.";
+    finalBackupStory = finalBackupStory.trim() + birthSentence;
+    ```
+  - Executed in Production/Dev: Yes (whenever Gemini API key is missing or calls fail on local Express server path).
+  - Calling function: Route Handler `app.post("/api/generate-story")`
+  - Reaching Route: POST `/api/generate-story` (local Express path).
+  - Can affect production output: Yes (appends the neutral birth mention to the offline fallback story).
+
+* Match 7: Line 555
+  - Code Snippet:
+    ```typescript
+    This is an atmospheric historical weather archive record documenting ONLY the weather, sky, clouds, temperature, wind, rain, snow, sunlight, season, atmosphere, and city environment of a specific date. The weather is the absolute protagonist and the subject of every sentence. Do NOT mention any people, relationships, families, birth, babies, child, parents, birth moments, arrival, cuddles, or emotions.
+    ```
+  - Executed in Production/Dev: Yes (whenever Gemini is queried on the local Express path).
+  - Calling function: Route Handler `app.post("/api/generate-story")` (systemInstruction string).
+  - Reaching Route: POST `/api/generate-story` (local Express path).
+  - Can affect production output: Yes (shapes the system prompt instructions sent directly to Gemini).
+
+* Match 8: Line 559
+  - Code Snippet:
+    ```typescript
+    2. Under no circumstances write about: babies, children, birth, parenting, motherhood, fatherhood, arrival, family members, emotions, holding/cradling/seeing/embracing the baby, first cuddle, tears of joy, becoming parents, family memories, love, heart, joy, or gratitude.
+    ```
+  - Executed in Production/Dev: Yes.
+  - Calling function: Route Handler `app.post("/api/generate-story")` (systemInstruction string).
+  - Reaching Route: POST `/api/generate-story` (local Express path).
+  - Can affect production output: Yes (acts as negative constraints in systemInstructions sent to Gemini).
+
+* Match 9: Line 562
+  - Code Snippet:
+    ```typescript
+    5. ZERO HUMAN REFERENCES: The story must contain absolutely zero references to birth, baby, arrivals, family, parents, child, or people. This is 100% a weather record.
+    ```
+  - Executed in Production/Dev: Yes.
+  - Calling function: Route Handler `app.post("/api/generate-story")` (systemInstruction string).
+  - Reaching Route: POST `/api/generate-story` (local Express path).
+  - Can affect production output: Yes.
+
+* Match 10: Line 574
+  - Code Snippet:
+    ```typescript
+    - QUOTE (THE SKY'S RECORD): Generate a separate, short, memorable quote. This quote must describe ONLY the weather, sky, clouds, rain, snow, sunlight, wind, or seasonal atmosphere. It must NEVER mention parents, family, baby, child, arrival, love, joy, or emotions. It should feel like a poetic meteorological line from a climate diary or old almanac.
+    ```
+  - Executed in Production/Dev: Yes.
+  - Calling function: Route Handler `app.post("/api/generate-story")` (systemInstruction string).
+  - Reaching Route: POST `/api/generate-story` (local Express path).
+  - Can affect production output: Yes.
+
+* Match 11: Line 586
+  - Code Snippet:
+    ```typescript
+    - story: string (the completed narrative weather archive record, strictly between 80 and 120 words formatted as a single paragraph with absolutely zero birth or human mentions)
+    ```
+  - Executed in Production/Dev: Yes.
+  - Calling function: Route Handler `app.post("/api/generate-story")` (systemInstruction string).
+  - Reaching Route: POST `/api/generate-story` (local Express path).
+  - Can affect production output: Yes.
+
+* Match 12: Line 604
+  - Code Snippet:
+    ```typescript
+    contents: `Generate an atmospheric historical weather archive record centered entirely on the weather conditions, season, sky, city atmosphere, and character of the day. Do NOT write about birth, babies, relationships, families, or people. Follow the system instruction for ${city}, ${country} (${region || ''}) with weather ${weatherText} (Max Temp ${tempMax}°C, Wind ${windSpeed} km/h) on ${birthDate}.`,
+    ```
+  - Executed in Production/Dev: Yes.
+  - Calling function: Route Handler `app.post("/api/generate-story")` (individual model call).
+  - Reaching Route: POST `/api/generate-story` (local Express path).
+  - Can affect production output: Yes.
+
+* Match 13: Line 689 - 692
+  - Code Snippet:
+    ```typescript
+    const birthSentence = lang === "es"
+      ? " También fue el día en que una nueva y pequeña vida llegó al mundo."
+      : " It was also the day a new little arrival entered the world.";
+    finalBackupStory = finalBackupStory.trim() + birthSentence;
+    ```
+  - Executed in Production/Dev: Yes (whenever all Gemini API call attempts fail on local path).
+  - Calling function: Route Handler backup catch-block.
+  - Reaching Route: POST `/api/generate-story` (local Express path).
+  - Can affect production output: Yes.
+
+
+B. FILENAME: /api/generate-story.ts
+-----------------------------------
+
+* Match 1: Line 214 - 216
+  - Code Snippet:
+    ```typescript
+    const forbiddenPhrases = [
+      "holding you",
+      "holding you for the first time",
+      "first cuddle",
+    ```
+  - Executed in Production/Dev: Yes (when running in Serverless / Vercel cloud environment).
+  - Calling function: `validateGeneratedContent(story, quote, theme)`
+  - Reaching Route: POST `/api/generate-story` (Vercel cloud function path).
+  - Can affect production output: Yes. Forces validation failure and retry if Gemini produces these patterns.
+
+* Match 2: Line 222 - 224
+  - Code Snippet:
+    ```typescript
+      "our world",
+      "our hearts",
+      "joy",
+    ```
+  - Executed in Production/Dev: Yes (Vercel cloud function path).
+  - Calling function: `validateGeneratedContent(story, quote, theme)`
+  - Reaching Route: POST `/api/generate-story` (Vercel cloud function path).
+  - Can affect production output: Yes.
+
+* Match 3: Line 228
+  - Code Snippet:
+    ```typescript
+      "inside our room",
+    ```
+  - Executed in Production/Dev: Yes (Vercel cloud function path).
+  - Calling function: `validateGeneratedContent(story, quote, theme)`
+  - Reaching Route: POST `/api/generate-story`.
+  - Can affect production output: Yes.
+
+* Match 4: Line 234 - 239
+  - Code Snippet:
+    ```typescript
+      "bundle of joy",
+      "parent",
+      "mother",
+      "father",
+      "family",
+      "cuddle",
+    ```
+  - Executed in Production/Dev: Yes (Vercel cloud function path).
+  - Calling function: `validateGeneratedContent(story, quote, theme)`
+  - Reaching Route: POST `/api/generate-story`.
+  - Can affect production output: Yes.
+
+* Match 5: Line 281 - 284
+  - Code Snippet:
+    ```typescript
+    const birthMentionsEn = (combinedAll.match(/\bbirth\b|\bborn\b|\bbaby\b|\bchild\b|\bperson\b|\bpeople\b|\barrival\b|\bparents\b|\bfamily\b|\bhospital\b|\blabor\b|\bchildbirth\b|\bdeliver\b|\bdelivered\b/gi) || []).length;
+    const birthMentionsEs = (combinedAll.match(/\bnacimiento\b|\bnació\b|\bbebé\b|\bniño\b|\bniña\b|\bhijo\b|\bhija\b|\bpersona\b|\bgente\b|\bllegada\b|\barribo\b|\bpadres\b|\bfamilia\b|\bparto\b|\bparir\b/gi) || []).length;
+    if (birthMentionsEn + birthMentionsEs > 0) {
+      return { valid: false, reason: "Story, Quote, or Theme contains forbidden birth, baby, child, family, arrival, or human references" };
+    }
+    ```
+  - Executed in Production/Dev: Yes (Vercel cloud function path).
+  - Calling function: `validateGeneratedContent(story, quote, theme)`
+  - Reaching Route: POST `/api/generate-story`.
+  - Can affect production output: Yes (blocks humans/baby references from leaving the Vercel API).
+
+* Match 6: Line 457 - 460
+  - Code Snippet:
+    ```typescript
+    const birthSentence = lang === "es"
+      ? " También fue el día en que una nueva y pequeña vida llegó al mundo."
+      : " It was also the day a new little arrival entered the world.";
+    finalBackupStory = finalBackupStory.trim() + birthSentence;
+    ```
+  - Executed in Production/Dev: Yes (whenever Gemini API key is missing on Vercel deployment).
+  - Calling function: Vercel handler export `default async (req, res)`.
+  - Reaching Route: POST `/api/generate-story`.
+  - Can affect production output: Yes.
+
+* Match 7: Line 520
+  - Code Snippet:
+    ```typescript
+    This is an atmospheric historical weather archive record documenting ONLY the weather, sky, clouds, temperature, wind, rain, snow, sunlight, season, atmosphere, and city environment of a specific date. The weather is the absolute protagonist and the subject of every sentence. Do NOT mention any people, relationships, families, birth, babies, child, parents, birth moments, arrival, cuddles, or emotions.
+    ```
+  - Executed in Production/Dev: Yes (whenever Gemini API successfully run on Vercel).
+  - Calling function: Vercel handler export `default async (req, res)` (systemInstruction string).
+  - Reaching Route: POST `/api/generate-story`.
+  - Can affect production output: Yes (instructions directly influence Gemini behavior).
+
+* Match 8: Line 524
+  - Code Snippet:
+    ```typescript
+    2. Under no circumstances write about: babies, children, birth, parenting, motherhood, fatherhood, arrival, family members, emotions, holding/cradling/seeing/embracing the baby, first cuddle, tears of joy, becoming parents, family memories, love, heart, joy, or gratitude.
+    ```
+  - Executed in Production/Dev: Yes.
+  - Calling function: Vercel handler.
+  - Reaching Route: POST `/api/generate-story`.
+  - Can affect production output: Yes.
+
+* Match 9: Line 527
+  - Code Snippet:
+    ```typescript
+    5. ZERO HUMAN REFERENCES: The story must contain absolutely zero references to birth, baby, arrivals, family, parents, child, or people. This is 100% a weather record.
+    ```
+  - Executed in Production/Dev: Yes.
+  - Calling function: Vercel handler.
+  - Reaching Route: POST `/api/generate-story`.
+  - Can affect production output: Yes.
+
+* Match 10: Line 539
+  - Code Snippet:
+    ```typescript
+    - QUOTE (THE SKY'S RECORD): Generate a separate, short, memorable quote. This quote must describe ONLY the weather, sky, clouds, rain, snow, sunlight, wind, or seasonal atmosphere. It must NEVER mention parents, family, baby, child, arrival, love, joy, or emotions. It should feel like a poetic meteorological line from a climate diary or old almanac.
+    ```
+  - Executed in Production/Dev: Yes.
+  - Calling function: Vercel handler.
+  - Reaching Route: POST `/api/generate-story`.
+  - Can affect production output: Yes.
+
+* Match 11: Line 553
+  - Code Snippet:
+    ```typescript
+    - story: string (the completed narrative weather archive record, strictly between 80 and 120 words formatted as a single paragraph with absolutely zero human references)
+    ```
+  - Executed in Production/Dev: Yes.
+  - Calling function: Vercel handler.
+  - Reaching Route: POST `/api/generate-story`.
+  - Can affect production output: Yes.
+
+* Match 12: Line 571
+  - Code Snippet:
+    ```typescript
+    contents: `Generate an atmospheric historical weather archive record centered entirely on the weather conditions, season, sky, city atmosphere, and character of the day. Do NOT write about humans, personal events, milestones, relationships, or emotions. Follow the system instruction for ${city}, ${country} (${region || ""}) with weather ${weatherText} (Max Temp ${tempMax}°C, Wind ${windSpeed} km/h) on ${targetDate}.`,
+    ```
+  - Executed in Production/Dev: Yes.
+  - Calling function: Vercel handler model contents payload.
+  - Reaching Route: POST `/api/generate-story`.
+  - Can affect production output: Yes.
+
+* Match 13: Line 656 - 659
+  - Code Snippet:
+    ```typescript
+    const birthSentence = lang === "es"
+      ? " También fue el día en que una nueva y pequeña vida llegó al mundo."
+      : " It was also the day a new little arrival entered the world.";
+    finalBackupStory = finalBackupStory.trim() + birthSentence;
+    ```
+  - Executed in Production/Dev: Yes (whenever all Gemini API call attempts fail or timeout on Vercel serverless function).
+  - Calling function: Vercel handler backup block.
+  - Reaching Route: POST `/api/generate-story`.
+  - Can affect production output: Yes.
+
+
+C. FILENAME: /src/components/BirthWeatherStory.tsx
+-------------------------------------------------
+
+* Match 1: Line 747 - 748
+  - Code Snippet:
+    ```typescript
+    phraseEn: "during the quiet early hours when you arrived",
+    phraseEs: "durante las tranquilas horas de la madrugada cuando llegaste",
+    ```
+  - Executed in Production/Dev: NO.
+  - Calling function: Inside unused `getPeriodInfo(timeStr)` function structure.
+  - Reaching Route: Dead code. Never called or utilized anywhere in the client-side files in production.
+  - Can affect production output: No. This string is part of a local function `getPeriodInfo` definition which is never invoked in any of the frontend components.
+
+* Match 2: Line 754 - 755
+  - Code Snippet:
+    ```typescript
+    phraseEn: "on a peaceful early morning when you arrived",
+    phraseEs: "en una mañana temprano y apacible cuando llegaste",
+    ```
+  - Executed in Production/Dev: NO.
+  - Calling function: Unused `getPeriodInfo` structure.
+  - Reaching Route: Dead code.
+  - Can affect production output: No.
+
+* Match 3: Line 761 - 762
+  - Code Snippet:
+    ```typescript
+    phraseEn: "during the morning when you arrived",
+    phraseEs: "durante la mañana cuando llegaste",
+    ```
+  - Executed in Production/Dev: NO.
+  - Calling function: Unused `getPeriodInfo` structure.
+  - Reaching Route: Dead code.
+  - Can affect production output: No.
+
+* Match 4: Line 768 - 769
+  - Code Snippet:
+    ```typescript
+    phraseEn: "during the afternoon when you arrived",
+    phraseEs: "durante la tarde cuando llegaste",
+    ```
+  - Executed in Production/Dev: NO.
+  - Calling function: Unused `getPeriodInfo` structure.
+  - Reaching Route: Dead code.
+  - Can affect production output: No.
+
+* Match 5: Line 775 - 776
+  - Code Snippet:
+    ```typescript
+    phraseEn: "during the evening when you arrived",
+    phraseEs: "durante el atardecer cuando llegaste",
+    ```
+  - Executed in Production/Dev: NO.
+  - Calling function: Unused `getPeriodInfo` structure.
+  - Reaching Route: Dead code.
+  - Can affect production output: No.
+
+* Match 6: Line 782 - 783
+  - Code Snippet:
+    ```typescript
+    phraseEn: "during the night when you arrived",
+    phraseEs: "durante la noche cuando llegaste",
+    ```
+  - Executed in Production/Dev: NO.
+  - Calling function: Unused `getPeriodInfo` structure.
+  - Reaching Route: Dead code.
+  - Can affect production output: No.
+
+* Match 7: Line 1192 - 1194
+  - Code Snippet:
+    ```typescript
+    const birthSentence = lang === "es"
+      ? " También fue el día en que una nueva y pequeña vida llegó al mundo."
+      : " It was also the day a new little arrival entered the world.";
+    ```
+  - Executed in Production/Dev: YES.
+  - Calling function: Called directly inside `handleRevealStory` in the fetch `.then` processing block.
+  - Reaching Route: Client execution on "Reveal" button submission.
+  - Can affect production output: Yes. It appends the neutral "It was also the day a new little arrival entered the world." / "También fue el día en que una nueva y pequeña vida llegó al mundo." phrase to the AI-generated weather text block before showing it on screen and painting it to the canvas keepsake card.
+
+--------------------------------------------------------------------------------
+PART 2: USER REVEAL WEATHER STORY EXECUTION TRACE
+--------------------------------------------------------------------------------
+
+When the user submits the form or clicks "Reveal the weather story" within the UI, the detailed end-to-end trace proceeds as follows:
+
+1. Form Submit event is captured by `handleRevealStory(e)` inside `/src/components/BirthWeatherStory.tsx` (Line 938).
+2. Input Validation:
+   - Verifies the requested `birthDate` is present, parsed into `yearNum`, `monthNum`, `dayNum`, is not a future date, and is not prior to 1940.
+3. City & Geocode Parsing:
+   - Validates user input text. Resolves name, coordinates, country, and region using:
+     a) Dropdown selection (`selectedCity`).
+     b) Fallback lookup in Polish geographic registry maps.
+     c) Fuzzy Geocoding Search: In the event of typed ambiguities, requests Open-Meteo Geocoding API (`https://geocoding-api.open-meteo.com/v1/search`), scores hits, filters results, and presents choices to select.
+4. Historical Meteorological Archives Fetch:
+   - Calls the public Open-Meteo Web API (`https://archive-api.open-meteo.com/v1/archive`) using coordinates and ISO date string formatting.
+   - Extracts meteorological criteria (`weather_code`, max/min temperatures, precipitation, wind speed, and sunrise time).
+5. Narrative API Generation:
+   - Posts a JSON body containing parameters to `/api/generate-story`.
+   - On Vercel (Production): Handled by `/api/generate-story.ts`.
+   - On Node.js (Local Dev Container): Handled by the custom router in `/server.ts`.
+6. Server-Side Execution Path:
+   a) API Client check: Verifies `GEMINI_API_KEY`.
+   b) Backups / Offline Paths:
+      - If no key exists, or if API attempts fail or time out, executes `getOfflineBackupStory` with input arguments.
+      - Injects period phrase structure using `applyTimeOfRecord` or neutralizes it via `makeStoryTimeNeutral`.
+      - Appends the birth sentence: `" It was also the day a new little arrival entered the world."` / `" También fue el día en que una nueva y pequeña vida llegó al mundo."`
+      - Returns status `200` JSON directly to client.
+   c) Server-Side Gemini API Generation:
+      - Formulates custom system instructions specifying exactly 90% weather descriptions, forcing strict third-person objective, restricting human references, and formatting structure rules.
+      - Selects models via modern Google GenAI SDK and performs content generation using `gemini-3.5-flash`.
+      - Checks responses against `validateGeneratedContent(story, quote, theme)`.
+      - Rejects stories containing emotional pronouns or forbidden phrases (e.g. `holding you`, `our hearts`, etc.); performs up to 3 generation/validation iterations.
+      - Neutralizes temporal elements if no valid `birthTime` parameter was provided.
+      - Returns clean weather-only narrative (`theme`, `quote`, `story`) down the wire as REST response JSON.
+7. Client-Side Parsing & Appending:
+   - Captures the REST payload as `storyData`.
+   - Append Sentence Injection:
+     Inserts the birth indicator suffix to the AI-generated weather theme story, only if not already appended:
+     `" It was also the day a new little arrival entered the world."` / `" También fue el día en que una nueva y pequeña vida llegó al mundo."`
+8. Keepsake Card Construction:
+   - Caches parameters onto state `revealResult`.
+   - Paints city, weather metrics, theme tags, meteorological quote, and weather story directly to HTML5 Canvas.
+   - Provides user interface controls to view and trigger a local client-side PNG/images download.
+
+--------------------------------------------------------------------------------
+PART 3: DIRECT CAUSE FOR PRODUCTION OUTPUT
+--------------------------------------------------------------------------------
+
+"Which exact code path is responsible for generating the production story shown on Vercel?"
+
+The exact code path responsible for generating the production story shown on Vercel is:
+
+==> Filename: `/api/generate-story.ts`
+==> Route Handler: POST `/api/generate-story` (Executing inside Vercel Serverless environment)
+==> Primary Generation Engine: The `ai.models.generateContent` call to `gemini-3.5-flash` at lines 569-597, constrained by the system instructional guidance defined under `systemInstruction` at lines 519-560.
+
+This is the path executing live in the production serverless cloud, querying the Gemini LLM, validating responses server-side to ensure zero forbidden parent/human references, and delivering the weather-only narrative down to the UI. The final neutral birth mention sentence is appended in the frontend at `/src/components/BirthWeatherStory.tsx` on lines 1192-1194 before rendering on the canvas keepsake.

@@ -826,7 +826,7 @@ export default function BirthWeatherStory() {
     } else {
       if (isRainy) return "A Rainy Day";
       if (isSnowy) return "A Snowy Winter Day";
-      if (isSunny) return "A Sunny Afternoon";
+      if (isSunny) return "A Sunny Day";
       if (isCloudy) return "A Quiet Cloudy Day";
       return "A Peaceful Day";
     }
@@ -848,7 +848,7 @@ export default function BirthWeatherStory() {
       s = s.replace(/salida del sol a las \d+:\d+\s*(?:AM|PM)?/gi, "el día");
       s = s.replace(/llovizna a las \d+:\d+\s*(?:AM|PM)?/gi, "llovizna");
       s = s.replace(/a las \d+:\d+\s*(?:AM|PM)?/gi, "");
-      s = s.replace(/al amanecer/gi, "el cielo de la mañana");
+      s = s.replace(/al amanecer/gi, "con el comienzo de la jornada");
       s = s.replace(/Pasamos la mañana/gi, "Pasaron las primeras horas");
       s = s.replace(/amaneció con/gi, "comenzó con");
       s = s.replace(/amaneció cubierta/gi, "se cubrió");
@@ -869,12 +869,12 @@ export default function BirthWeatherStory() {
         [/\bun atardecer\b/gi, "un momento"],
         [/\batardecer\b/gi, "momento"],
         [/\bmadrugada\b/gi, "jornada"],
-        [/\bmedianoche\b/gi, "la noche"],
+        [/\bmedianoche\b/gi, "la jornada"],
         [/\bamanecer\b/gi, "el inicio de la jornada"],
         [/\bsalida del sol\b/gi, "el día"],
         [/\bpuesta de sol\b/gi, "el fin del día"],
         [/\bla noche de tu llegada\b/gi, "el de esa jornada"],
-        [/\bla noche en que naciste\b/gi, "la noche de esa fecha"],
+        [/\bla noche en que naciste\b/gi, "la jornada de esa fecha"],
         [/\bpor la noche\b/gi, "durante el día"],
         [/\ben la noche\b/gi, "durante la jornada"],
         [/\buna noche\b/gi, "un día"],
@@ -916,10 +916,10 @@ export default function BirthWeatherStory() {
         [/\bevening\b/gi, "day"],
         [/\bthe night\b/gi, "the day"],
         [/\bnight\b/gi, "day"],
-        [/\bdawn\b/gi, "daybreak"],
-        [/\bsunrise\b/gi, "daylight"],
-        [/\bsunset\b/gi, "nightfall"],
-        [/\bmidnight\b/gi, "the night"],
+        [/\bdawn\b/gi, "the start of the day"],
+        [/\bsunrise\b/gi, "the sun"],
+        [/\bsunset\b/gi, "the end of the day"],
+        [/\bmidnight\b/gi, "the day"],
         [/\bdaylight\b/gi, "the skies"],
         [/\bdaytime\b/gi, "the day"],
       ];
@@ -1188,13 +1188,16 @@ export default function BirthWeatherStory() {
           const storyData = await storyResponse.json();
           let parsedStory = storyData.story || "";
           
-          // Append the birth-related sentence separately in the UI outside the AI-generated story
-          const birthSentence = lang === "es"
-            ? " También fue el día en que una nueva y pequeña vida llegó al mundo."
-            : " It was also the day a new little arrival entered the world.";
-          
-          if (!parsedStory.toLowerCase().includes("llegó al mundo") && !parsedStory.toLowerCase().includes("arrival entered")) {
-            parsedStory = parsedStory.trim() + birthSentence;
+          const shouldAppendBirth = !storyData.isFallback;
+          if (shouldAppendBirth) {
+            // Append the birth-related sentence separately in the UI outside the AI-generated story
+            const birthSentence = lang === "es"
+              ? " También fue el día en que una nueva y pequeña vida llegó al mundo."
+              : " It was also the day a new little arrival entered the world.";
+            
+            if (!parsedStory.toLowerCase().includes("llegó al mundo") && !parsedStory.toLowerCase().includes("arrival entered")) {
+              parsedStory = parsedStory.trim() + birthSentence;
+            }
           }
 
           generatedStory = {
