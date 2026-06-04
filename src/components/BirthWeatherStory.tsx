@@ -1537,6 +1537,11 @@ export default function BirthWeatherStory() {
 
   return (
     <section className="max-w-[1280px] mx-auto px-6 sm:px-8 md:px-12 py-12 select-none border-b border-[#F0E4DA] dark:border-[#3B282A]">
+      <div className="mb-6 text-center md:text-left">
+        <span className="bg-[#ff0000] text-white text-[12px] font-mono px-3 py-1.5 rounded font-bold uppercase inline-block">
+          LIVE UI VERSION: TEST-2026-06-04
+        </span>
+      </div>
       {/* 50/50 split layout for Desktop/Tablet, stacked for Mobile */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-start w-full">
         
