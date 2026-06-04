@@ -1933,6 +1933,11 @@ export default function BirthWeatherStory() {
                           </span>
                         )}
                       </div>
+                      {revealResult.story.debug_source && (
+                        <div className="bg-[#ff0000] text-white text-[12px] font-mono px-3 py-1 rounded font-bold uppercase inline-block">
+                          DEBUG SOURCE: {revealResult.story.debug_source}
+                        </div>
+                      )}
                       <p className="text-sm md:text-base text-slate-300 font-sans leading-relaxed tracking-wide">
                         {revealResult.story.story}
                       </p>
