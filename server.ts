@@ -274,7 +274,6 @@ function validateGeneratedContent(story: string, quote: string, theme: string): 
     "parent",
     "mother",
     "father",
-    "family",
     "cuddle",
     "embrace",
     "feelings",
@@ -305,7 +304,6 @@ function validateGeneratedContent(story: string, quote: string, theme: string): 
     "milagro",
     "padre",
     "madre",
-    "familia",
     "sentimientos",
     "emociones",
     "abrazar",
@@ -327,9 +325,9 @@ function validateGeneratedContent(story: string, quote: string, theme: string): 
     return { valid: false, reason: "Quote or Theme contains forbidden birth, baby, child, family, arrival, or human references" };
   }
 
-  // 2. In STORY itself, birth/born must be only a brief factual reference (maximum 2 minor birth words to adhere to the 80/20 rule)
+  // 2. In STORY itself, birth/born must be only a brief factual reference (maximum 3 minor birth/child references to adhere to the 80/20 rule)
   const storyBirthEnCount = (storyLower.match(/\bbirth\b|\bborn\b|\bchild\b|\bnacimiento\b|\bnació\b|\bniño\b|\bniña\b/gi) || []).length;
-  const heavyFamilyEnCount = (storyLower.match(/\bbaby\b|\bparents\b|\bfamily\b|\bhospital\b|\bbebé\b|\bpadres\b|\bfamilia\b/gi) || []).length;
+  const heavyFamilyEnCount = (storyLower.match(/\bbaby\b|\bparents\b|\bhospital\b|\bbebé\b|\bpadres\b/gi) || []).length;
   if (heavyFamilyEnCount > 0) {
     return { valid: false, reason: "Story contains forbidden active family references like baby, parents, family, or hospital" };
   }
@@ -615,11 +613,15 @@ HISTORICAL WEATHER DATA FOR YOUR REFERENCE (To influence, not to list as raw num
 - Date: ${birthDate}
 - City: ${city} (Region: ${region || 'None'}, Country: ${country})
 
-THE BIRTH FACT:
-- A child may be mentioned ONLY once at the very end of the story in a single, short, factual sentence:
-  "It was also the date a child was born in the city." (or "También fue la fecha en que nació un niño en la ciudad." in Spanish).
-- Maximum 1 sentence about the birth.
-- Minimum 90% of the text must be about the day itself.
+THE BIRTH FACT (Gently Connecting Weather and Birth):
+- The narrative must end with exactly one final sentence that gently connects the weather archive to the birth.
+- The final sentence must read exactly or be styled very closely as:
+  * In English: "Among all the ordinary moments of that day, one small arrival would make the date unforgettable for a family."
+  * In Spanish: "Entre todos los momentos ordinarios de aquel día, una pequeña llegada haría que la fecha fuera inolvidable para una familia."
+- The final sentence must be warm, memorable, and human, but never sentimental, emotional, or overly dramatic.
+- Do NOT mention hearts, blessings, miracles, destiny, gratitude, or life-changing moments.
+- This is the ONLY permitted reference to the birth, child, or family, appearing exactly once as the final sentence of the story.
+- Minimum 90% of the story must be about the day itself and city atmosphere, with this final sentence delivering the gentle connection at the end.
 
 STYLISH, MEMORABLE QUOTE & SIMPLE THEME:
 - THEME (TITLE): If the weather is rainy, the theme title MUST be exactly "A Rainy Afternoon" (or "Una jornada de lluvia" in Spanish). Otherwise, generate a clean, weather-based title of 3 to 6 words. It must remain strictly factual and weather-oriented, NOT poetic or flowery (e.g., "A Sunny Day in ${city}", "Cloudy Skies in ${city}"). No time-of-day reference in theme unless specified by the record.

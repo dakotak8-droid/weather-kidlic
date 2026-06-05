@@ -1191,12 +1191,12 @@ export default function BirthWeatherStory() {
           const storyData = await storyResponse.json();
           let parsedStory = storyData.story || "";
           
-          const shouldAppendBirth = !storyData.isFallback;
+          const shouldAppendBirth = true;
           if (shouldAppendBirth) {
             // Append the birth-related sentence separately in the UI outside the AI-generated story
             const birthSentence = lang === "es"
-              ? " También fue la fecha en que nació un niño en la ciudad."
-              : " It was also the date a child was born in the city.";
+              ? " Entre todos los momentos ordinarios de aquel día, una pequeña llegada haría que la fecha fuera inolvidable para una familia."
+              : " Among all the ordinary moments of that day, one small arrival would make the date unforgettable for a family.";
             
             if (
               !parsedStory.toLowerCase().includes("llegó al mundo") &&
@@ -1204,9 +1204,11 @@ export default function BirthWeatherStory() {
               !parsedStory.toLowerCase().includes("born") &&
               !parsedStory.toLowerCase().includes("nació") &&
               !parsedStory.toLowerCase().includes("nacimiento") &&
-              !parsedStory.toLowerCase().includes("birth")
+              !parsedStory.toLowerCase().includes("birth") &&
+              !parsedStory.toLowerCase().includes("arrival") &&
+              !parsedStory.toLowerCase().includes("llegada")
             ) {
-              parsedStory = parsedStory.trim() + birthSentence;
+              parsedStory = parsedStory.trim() + " " + birthSentence.trim();
             }
           }
 
