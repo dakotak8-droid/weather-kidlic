@@ -334,56 +334,47 @@ function getOfflineBackupStory(params: {
   const isSnowy = [71, 73, 75, 77, 85, 86].includes(params.weatherCode);
   const isSunny = [0, 1].includes(params.weatherCode);
 
-  const tempF = Math.round((params.tempMax * 9) / 5 + 32);
-  const tempC = Math.round(params.tempMax);
-  const windKn = Math.round(params.windSpeed);
-  const windMph = Math.round(params.windSpeed * 0.621371);
-
   if (params.lang === "es") {
     if (isRainy) {
       return {
         theme: "Una jornada de lluvia",
         quote: "La lluvia cayó suavemente, como si la ciudad se hubiera detenido por un momento.",
-        story: `Durante esa fecha, una lluvia apacible cubrió ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). El agua caía sobre los tejados y las calles vacías, mientras los reflejos plateados dibujaban líneas constantes en las aceras. En ese ambiente de lluvia constante, la jornada transcurrió con una inesperada calma. El agua continuó cayendo uniformemente hasta finales de la jornada.`,
+        story: `Una lluvia apacible y constante cubrió las avenidas de ${params.city}, tiñendo los tejados de un gris plateado. Un aire fresco mecía suavemente las copas de los árboles, arrastrando el aroma característico de la tierra mojada por los parques cercanos. Pocas personas transitaban la calzada húmeda, prefiriendo el resguardo de los portales mientras el agua formaba pequeños espejos en las aceras que reflejaban las siluetas de la arquitectura local. La jornada transcurrió bajo esa luz difusa y tranquila, envolviendo las calles con un manto de serena calma.`,
       };
     }
     if (isSnowy) {
       return {
         theme: "Un día cubierto de nieve",
         quote: "Mientras la nieve cubría la ciudad, el silencio blanco envolvía las calles.",
-        story: `En esa fecha invernal, un manto de nieve cubrió las calles de ${params.city} en medio de un frío de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). La ciudad permanecía en un pacífico silencio blanco que amortiguaba el sonido habitual del viento. Los copos de nieve continuaron descendiendo con suavidad y constancia, acumulándose sobre los tejados y aceras.`,
+        story: `Silenciosos copos de nieve descendían de manera constante sobre ${params.city}, vistiendo las avenidas con un manto blanco y denso. El aire invernal se sentía nítido y helado al respirar, adormeciendo el bullicio habitual de las plazas y calles principales. Las farolas se encendieron temprano, proyectando círculos de luz dorada sobre la nieve intacta acumulada en los alféizares y las aceras vacías. Todo en la ciudad parecía haberse pausado bajo esa atmósfera de quietud profunda.`,
       };
     }
     if (isSunny) {
       return {
         theme: "Un despejado día soleado",
         quote: "El sol brilló con calma, iluminando las calles de la ciudad.",
-        story: `Durante esa jornada despejada, un sol brillante iluminó todo ${params.city} alcanzando los ${tempC}°C (${tempF}°F) con viento a ${windKn} km/h (${windMph} mph). Los edificios y las avenidas principales reflejaban la luz cálida, y una brisa ligera cruzaba las plazas locales. El cielo permaneció perfectamente limpio y azul de horizonte a horizonte.`,
+        story: `Un sol espléndido iluminó brillantemente cada rincón de ${params.city}, proyectando sombras nítidas y alargadas junto a las fachadas de ladrillo antiguo. Una brisa templada y sumamente agradable corría entre los edificios, invitando a la gente a caminar despacio por los parques abiertos y las avenidas principales. El cielo se mantuvo limpio de nubes, extendiendo un azul profundo e impecable desde el amanecer hasta que la luz dorada de la tarde se desvaneció lentamente.`,
       };
     }
     // Default Cloudy
     return {
       theme: "Un día nublado y tranquilo",
       quote: "El cielo gris trajo una calma reconfortante a toda la ciudad.",
-      story: `Durante esa fecha, nubes pacíficas vistieron de gris el cielo de ${params.city} con una temperatura de ${tempC}°C (${tempF}°F) y viento a ${windKn} km/h (${windMph} mph). Todo transcurrió bajo una luz difusa, mientras un viento suave mecía las ramas de los árboles. La jornada gris continuó desarrollándose en un ambiente de notable quietud y serenidad.`,
+      story: `Un denso y pacífico manto de nubes grises cubrió el cielo de ${params.city}, suavizando los contornos de los edificios contra el horizonte. El viento soplaba en ráfagas suaves que traían un aire fresco y limpio del río, agitando ligeramente las hojas secas en el suelo. Bajo esta luz tenue y sin sombras, las calles y los paseos peatonales se percibían íntimos, pacíficos y con una atmósfera nostálgica y acogedora que se prolongó hasta el anochecer.`,
     };
   } else {
     if (isRainy) {
       const variants = [
-        `Light rain drifted across ${params.city} throughout the day with steady temperatures around ${tempC}°C (${tempF}°F). Water gathered quietly on rooftops as a breeze of ${windKn} km/h (${windMph} mph) rustled through the trees. The rhythmic sound of rainfall softened all sound, casting a quiet calm over parks and neighborhoods. The steady precipitation continued until the end of the day.`,
-        
-        `A fresh spring rain washed over the streets of ${params.city}, leaving pavements shimmering under overcast skies. With temperatures holding at ${tempC}°C (${tempF}°F) and wind pacing at ${windKn} km/h (${windMph} mph), the air carried a clean scent of wet earth and stone. Headlights cast long reflections on the wet asphalt. The clouds remained low as the day progressed quietly.`,
-        
-        `Steady rain descended over the rooftops of ${params.city}, softening the city outline against a deep iron-grey sky. Temperatures cooled to ${tempC}°C (${tempF}°F) while a gentle breeze of ${windKn} km/h (${windMph} mph) carried mist across the neighborhood streets. Puddles gathered on the pavement, reflecting in silver pools along the concrete walkways. Drops continued to crawl down glass windows under a persistent overcast sky.`,
-        
-        `Passing rain showers swept quickly across ${params.city}, carried by a gusty wind of ${windKn} km/h (${windMph} mph). Temperatures remained cool at ${tempC}°C (${tempF}°F) as dramatic cloud formations rolled steadily over the rooftops. Between brief bursts of water, wet asphalt streets glistened beneath a soft, diffuse light. Overcast skies persisted as the weather front moved slowly eastward.`,
-        
-        `Quiet, steady rainfall enveloped ${params.city}, turning the streets into a canvas of soft slate and grey. With temperatures registering ${tempC}°C (${tempF}°F) and wind blowing gently at ${windKn} km/h (${windMph} mph), silver droplets lined every windowpane. The steady patter of moisture created an unexpected calm across the skyline throughout the day.`
+        `Soft rain drifted steadily across the avenues of ${params.city}, casting a silver sheen over the brick buildings and historic slate rooftops. A cool, damp breeze rustled through the green branches of the parks, carrying the clean scent of wet cobblestones and earth. Underneath the glass awnings, people watched the droplets trace pathways down the windowpanes, while the streetlights began to flicker on early, casting long reflections in the quiet puddle-lined streets.`,
+        `A fresh rain washed over the streets of ${params.city}, leaving pavements shimmering under dense clouds. The afternoon air carried a clean scent of wet stone and green parks. Warm yellow headlights cast long reflections on the wet asphalt, illuminating the quiet sidewalks. The clouds remained low and heavy, locking the skyline in a peaceful gray embrace as the day progressed quietly.`,
+        `Steady rain descended over the rooftops of ${params.city}, softening the city outline against a deep iron-grey sky. A gentle breeze carried a silver mist across the neighborhood streets, rustling leaf-laden branches. Puddles gathered on the pavement, reflecting in silver pools along the concrete walkways, while fat droplets continued to crawl down glass windows and old stone archways under the persistent overcast sky.`,
+        `Passing rain showers swept quickly across ${params.city}, carried by a fresh, atmospheric wind. High cloud formations rolled steadily over the rooftops. Between brief bursts of water, wet asphalt streets glistened beneath a soft, diffuse light that illuminated the brick buildings. Deep slate clouds persisted as the gentle wind from the river rustled the park benches.`,
+        `Quiet, steady rainfall enveloped ${params.city}, turning the streets into a canvas of soft slate and grey. Cool silver droplets lined every windowpane, glistening against the dull stone brick. The steady patter of moisture created an unexpected calm across the skyline throughout the day, slowing the pulse of the town into a patient, lazy rhythm.`
       ];
 
       const randomIndex = Math.floor(Math.random() * variants.length);
       return {
-        theme: "A Rainy Day",
+        theme: "A Rainy Afternoon",
         quote: "The rain fell softly, as if the city had paused for a moment.",
         story: variants[randomIndex],
       };
@@ -392,27 +383,23 @@ function getOfflineBackupStory(params: {
       return {
         theme: "A Snowy Winter Day",
         quote: "While snow carpeted the city outside, the streets fell into a quiet, frozen stillness.",
-        story: `During that winter day, soft snow blanketed ${params.city}, bringing a chill of ${tempC}°C (${tempF}°F) and a gentle wind at ${windKn} km/h (${windMph} mph). The streets fell silent under the white canopy, while buildings kept their facade lights glowing. Flakes continued to gather quietly on rooftops and pavements.`,
+        story: `Thick, quiet snow descended over ${params.city}, wrapping the urban skyline in a thick blanket of pristine white. The crisp, icy winter air kept the streets peaceful, dampening the usual sounds of traffic and footsteps. Soft light from shop windows glowed warmly onto the accumulating drifts along the sidewalks, while the tree branches in the squares bowed gently under the weight of the fresh snowfall, creating a landscape of stillness.`,
       };
     }
     if (isSunny) {
       return {
         theme: "A Sunny Day",
         quote: "The sun shone for the city with gentle brilliance, casting gold light across the streets.",
-        story: `During that clear day, bright sunshine bathed ${params.city}, warming the day to ${tempC}°C (${tempF}°F) with wind at ${windKn} km/h (${windMph} mph). Gold light danced across the brick building facades and tree branches. The blue sky remained perfectly clear and cloudless throughout.`,
+        story: `Warm, radiant sunshine bathed ${params.city}, illuminating the details of the historic facades and casting sharp, playful shadows across the public squares. A gentle, pleasant breeze wandered through the open streets, carrying a whisper of warmth that invited people to linger on park benches and outdoor cafes. The sky remained a pristine, vast blue from horizon to horizon, keeping the town bright and welcoming.`,
       };
     }
     // Default Cloudy
     const variants = [
-      `A quiet blanket of overcast clouds settled low over the horizon of ${params.city}. Throughout the day, the temperature rested at a steady ${tempC}°C (${tempF}°F) while a light breeze of ${windKn} km/h (${windMph} mph) rustled through parks and along building fronts. Beneath the diffuse slate-grey sky, the usual sharp outline of the skyline was beautifully softened.`,
-      
-      `A vast, iron-grey canopy of clouds shrouded the sky over ${params.city}, creating a cool, unified shade across the streets and public squares. Temperatures hovered around ${tempC}°C (${tempF}°F) with wind blowing at ${windKn} km/h (${windMph} mph), sweeping dry leaves along the stone pavements. The soft, shadowless light gave the local parks and brick facades an archival, timeless quality.`,
-      
-      `Thick, dense grey clouds wrapped the buildings of ${params.city} in a peaceful and protective mist. The wind paced gently at ${windKn} km/h (${windMph} mph) underneath an overcast sky, keeping the temperature locked at a cool ${tempC}°C (${tempF}°F). Across the city, local street corners, shop windows, and historic avenues appeared quiet and calm, illuminated by the glare-free light.`,
-      
-      `High-altitude grey clouds uniform in texture stretched coast to coast over the sky of ${params.city}. Air temperatures remained cool but steady at ${tempC}°C (${tempF}°F) with wind speeds of ${windKn} km/h (${windMph} mph) carrying a crisp freshness through the streets. Under this calm slate canopy, the skyline sat in quiet composure.`,
-      
-      `A quiet layer of stratocumulus clouds blanketed the rooftops of ${params.city} throughout the day. Outside, temperatures measured ${tempC}°C (${tempF}°F) with a steady, atmospheric wind blowing at ${windKn} km/h (${windMph} mph), creating a crisp feeling in the air. The lack of direct sunshine painted the city in soft, classic shades of slate and charcoal.`
+      `A quiet blanket of slate-grey clouds hung low over ${params.city}, beautifully softening the sharp profile of the distant buildings against the sky. A fresh, cool breeze swept through the brick alleys and open avenues, rustling dry leaves along the stone pavements. Without the glare of direct sunlight, the neighborhood blocks felt peaceful and close, wrapped in a comfortable twilight haze that lasted throughout the entire day.`,
+      `A vast, iron-grey canopy of clouds shrouded the sky over ${params.city}, creating a cool, unified shade across the streets and public squares. A light breeze swept dry leaves along the stone pavements and brick boundaries. The soft, shadowless light gave the local parks and buildings an archival, timeless quality, inviting a calm mood of quiet contemplation.`,
+      `Thick, dense grey clouds wrapped the buildings of ${params.city} in a peaceful and protective mist. The wind paced gently underneath an overcast sky, carrying a crisp freshness through the avenues. Across the city, local street corners, shop windows, and historic avenues appeared quiet and calm, beautifully illuminated by the glare-free light.`,
+      `High-altitude grey clouds uniform in texture stretched coast to coast over the sky of ${params.city}. Air temperatures remained cool but steady as a gentle breeze carried a crisp freshness through the streets. Under this calm slate canopy, the skyline sat in quiet composure, casting a peaceful mood onto the stone paths below.`,
+      `A quiet layer of stratocumulus clouds blanketed the rooftops of ${params.city} throughout the day. Outside, a steady, atmospheric wind blew through the alleys, creating a crisp feeling in the air. The lack of direct sunshine painted the city in soft, classic shades of slate and charcoal, bringing a comforting stillness to the parks.`
     ];
 
     const randomIndex = Math.floor(Math.random() * variants.length);
@@ -554,79 +541,57 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
    - "The sky over ${city}..." / "El cielo sobre ${city}..."
    Do NOT assume a specific time period under any circumstances.`;
 
-  const systemInstruction = `You are a historical meteorological archivist.
+  const systemInstruction = `You are a historical local memory chronicler and archivist.
 
-Your task is to create an official weather archive record documenting the atmospheric conditions of a specific date and location.
+Your task is to create a soft, highly atmospheric reminiscence documenting the look, draft, light, and sensory feelings of the city environment on a specific historical date.
 
-IMPORTANT:
+STRICT DESIGN & WORDING PRINCIPLES (OVERRIDING ALL PREVIOUS CONSTRAINTS):
+- The narrative must NEVER read like a scientific report or a standard weather report.
+- It must NEVER sound like a meteorological analysis or contain lists of data points or observations.
+- Do NOT describe weather measurements or mention instrument recordings.
+- The weather data (temperature, rain, snow, wind) must influence the narrative but should rarely appear as numbers. Use numbers only when absolutely necessary. Do not include raw stats or metrics, and if numbers are used, limit them to a single natural reference (e.g., "reaching a soft high around 20°C").
+- Instead of raw data, describe what people in the city would have seen, felt, or noticed in the city environment:
+  - Focus on: sky, light, clouds, rain, air, streets, parks, rooftops, architecture, local scenery, traffic, windows, and overall seasonal character.
+  - The goal is to make the reader feel like they are stepping into that day, observing the quiet flow of life and atmosphere, preserving the memory of a day, not documenting weather observations.
 
-This is NOT a birth keepsake.
+FORBIDDEN PATTERNS & CLICHÉS:
+You are STRICTLY FORBIDDEN from using any of the following phrases (or their Spanish equivalents):
+- "recorded a maximum temperature" / "se registró una temperatura máxima"
+- "minimum temperature" / "temperatura mínima"
+- "wind speed reached" / "la velocidad del viento alcanzó"
+- "visibility remained" / "la visibilidad permaneció"
+- "humidity levels" / "niveles de humedad"
+- "precipitation maintained" / "precipitación se mantuvo"
+- "meteorological station" / "estación meteorológica"
+- "weather conditions were" / "las condiciones climáticas eran" / "las condiciones del clima eran"
+- any sentence that sounds like a scientific summary or technical meteorology report.
 
-This is NOT a family memory.
+No emotional parenting, baby-centric, or family clichés are allowed (e.g. holding, cuddles, newborn fragrance, etc.). This is about the city and its skies.
 
-This is NOT a parenting story.
+A list of examples of good vs. bad style:
+- BAD: "The meteorological station recorded a maximum temperature of 24°C."
+  GOOD: "Warm June air settled over the city as clouds drifted slowly across the afternoon sky."
+- BAD: "Wind speed reached 13.5 km/h."
+  GOOD: "A gentle breeze moved through the streets and carried the scent of recent rain."
+- BAD: "Visibility remained moderate."
+  GOOD: "Distant buildings faded softly into the gray horizon."
 
-This is NOT an emotional narrative.
-
-The weather record itself is the subject.
-
-A birth is only a factual historical annotation that happened on the same date.
-
-Write as if the text were being preserved in a climate archive, weather journal, meteorological almanac, or historical city record.
-
-The narrative must focus almost entirely on:
-
-* weather conditions
-* sky appearance
-* clouds
-* precipitation
-* wind
-* temperature
-* seasonal atmosphere
-* city environment
-* streets
-* architecture
-* visibility
-* local climate characteristics
-
-The weather and city atmosphere must account for at least 90% of the narrative.
-
-No emotional interpretation is allowed.
-
-No human relationships are allowed.
-
-No sentimental language is allowed.
-
-No symbolic language is allowed.
-
-No metaphors comparing weather to people, families, emotions, journeys, dreams, memories, or life events.
-
-Do not describe what anyone felt.
-
-Do not describe what anyone experienced emotionally.
-
-Do not describe any personal moment.
-
-The only permitted birth reference is the exact final sentence:
-
-"It was also the date a child was born in the city."
-
-This sentence must appear exactly once as the final sentence of the story and nowhere else.
-
-The remainder of the narrative must read like a historical weather archive record.
-
-WEATHER DETAILS (INTEGRATE NATURALLY EXACTLY ONCE):
+HISTORICAL WEATHER DATA FOR YOUR REFERENCE (To influence, not to list as raw numbers):
 - Max temperature: ${tempMax}°C (appx ${Math.round(tempMax * 9/5 + 32)}°F)
 - Weather condition: ${weatherText} (weatherCode ${weatherCode})
 - Wind speed: ${windSpeed} km/h (appx ${Math.round(windSpeed * 0.621371)} mph)
 - Date: ${targetDate}
 - City: ${city} (Region: ${region || 'None'}, Country: ${country})
 
+THE BIRTH FACT:
+- A child may be mentioned ONLY once at the very end of the story in a single, short, factual sentence:
+  "It was also the date a child was born in the city." (or "También fue la fecha en que nació un niño en la ciudad." in Spanish).
+- Maximum 1 sentence about the birth.
+- Minimum 90% of the text must be about the day itself.
+
 STYLISH, MEMORABLE QUOTE & SIMPLE THEME:
 - THEME (TITLE): If the weather is rainy, the theme title MUST be exactly "A Rainy Afternoon" (or "Una jornada de lluvia" in Spanish). Otherwise, generate a clean, weather-based title of 3 to 6 words. It must remain strictly factual and weather-oriented, NOT poetic or flowery (e.g., "A Sunny Day in ${city}", "Cloudy Skies in ${city}"). No time-of-day reference in theme unless specified by the record.
-- QUOTE (THE SKY'S RECORD): Generate a separate, short, memorable quote. This quote must describe ONLY the weather, sky, clouds, rain, snow, sunlight, wind, or seasonal atmosphere. It must NEVER mention any human elements, relationships, birth, or sentiments. It should feel like a poetic meteorological line from a climate diary or old almanac.
-  - Example English: "Rain whispered across the rooftops while silver clouds drifted above the city."
-  - Example Spanish: "La lluvia caía suavemente, como si la ciudad se hubiera detenido por un momento."
+- QUOTE: Generate a separate, short, memorable quote of exactly 1 sentence. This quote must describe ONLY the weather, sky, clouds, rain, snow, sunlight, wind, or seasonal atmosphere. It must NEVER mention any human elements, relationships, birth, or sentiments.
 
 STRICT LANGUAGE REQUIREMENT:
 - The requested language is: "${language}".
