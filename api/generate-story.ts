@@ -698,10 +698,12 @@ Output a JSON object containing:
       "todo cambió", "te sostuvimos", "momento hermoso", "nuestros corazones para siempre"
     ];
 
+    // "arrival" is treated as a neutral historical birth reference and should not trigger parenting/emotion rejection.
+    // "llegada" is also treated as its neutral Spanish equivalent.
     const forbiddenWords = [
-      "arrival", "welcome", "our", "we", "us", "your", "holding", "cuddle", "joy",
+      "welcome", "our", "we", "us", "your", "holding", "cuddle", "joy",
       "relief", "hearts", "room", "sacred", "miracle", "precious", "universe", "changed", "forever",
-      "llegada", "bienvenida", "nuestro", "nuestra", "nuestros", "nuestras", "nosotros", "nosotras",
+      "bienvenida", "nuestro", "nuestra", "nuestros", "nuestras", "nosotros", "nosotras",
       "nos", "tu", "tus", "tuyo", "tuya", "tuyos", "tuyas", "alegría", "alivio", "corazón", "corazones",
       "milagro", "milagros", "habitación", "cuarto", "universo", "cambió", "siempre"
     ];
