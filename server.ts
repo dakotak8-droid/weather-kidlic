@@ -734,7 +734,7 @@ You must output a JSON object containing:
           const isPassed = qCheck.language_consistent && qCheck.weather_consistent && qCheck.time_consistent && qCheck.city_consistent && qCheck.structure_consistent;
 
           if (isPassed) {
-            console.log("Gemini self-validation quality check passed on attempt " + (attempts + 1));
+            console.log("[Gemini success] - Gemini self-validation quality check passed on attempt " + (attempts + 1));
             finalJson = parsed;
             break;
           } else {
@@ -751,12 +751,17 @@ You must output a JSON object containing:
       const msg = String(err?.message || err || "").toUpperCase();
       if (status === 503 || msg.includes("UNAVAILABLE") || msg.includes("HIGH DEMAND")) {
         apiFallbackLabel = "API_HIGH_DEMAND_FALLBACK";
-      } else if (status === 403 || msg.includes("FORBIDDEN") || msg.includes("PERMISSION DENIED")) {
-        apiFallbackLabel = "API_FORBIDDEN_BACKUP";
-      } else if (status === 429 || msg.includes("QUOTA")) {
-        apiFallbackLabel = "API_QUOTA_FALLBACK";
+        console.log(`[Gemini high-demand fallback] 503/UNAVAILABLE/HIGH-DEMAND error encountered on attempt ${attempts + 1}. Switching to fallback story immediately to optimize response time.`);
+        break; // Quit immediately, no retries for high demand
       } else {
-        apiFallbackLabel = "API_GEMINI_ERROR_FALLBACK";
+        if (status === 403 || msg.includes("FORBIDDEN") || msg.includes("PERMISSION DENIED")) {
+          apiFallbackLabel = "API_FORBIDDEN_BACKUP";
+        } else if (status === 429 || msg.includes("QUOTA")) {
+          apiFallbackLabel = "API_QUOTA_FALLBACK";
+        } else {
+          apiFallbackLabel = "API_GEMINI_ERROR_FALLBACK";
+        }
+        console.log(`[Gemini network retry] Attempt ${attempts + 1} failed with error. Will retry if attempts < maxAttempts. Error detail: ${err?.message || err}`);
       }
     }
     attempts++;
