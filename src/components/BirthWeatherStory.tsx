@@ -1208,7 +1208,7 @@ export default function BirthWeatherStory() {
           const storyData = await storyResponse.json();
           let parsedStory = storyData.story || "";
           
-          const shouldAppendBirth = true;
+          const shouldAppendBirth = false;
           if (shouldAppendBirth) {
             // Append the birth-related sentence separately in the UI outside the AI-generated story
             const birthSentence = lang === "es"

@@ -371,37 +371,37 @@ function getOfflineBackupStory(params: {
       return {
         theme: "Una jornada de lluvia",
         quote: "La lluvia cayó suavemente, como si la ciudad se hubiera detenido por un momento.",
-        story: `Una lluvia apacible y constante cubrió las avenidas de ${params.city}, tiñendo los tejados de un gris plateado. Un aire fresco mecía suavemente las copas de los árboles, arrastrando el aroma característico de la tierra mojada por los parques cercanos. Pocas personas transitaban la calzada húmeda, prefiriendo el resguardo de los portales mientras el agua formaba pequeños espejos en las aceras que reflejaban las siluetas de la arquitectura local. La jornada transcurrió bajo esa luz difusa y tranquila, envolviendo las calles con un manto de serena calma.`,
+        story: `Una lluvia apacible y constante cubrió las avenidas de ${params.city}, tiñendo los tejados de un gris plateado. Un aire fresco mecía suavemente las copas de los árboles, arrastrando el aroma característico de la tierra mojada por los parques cercanos. En esta misma jornada, un nacimiento fue registrado discretamente bajo el lento compás de la lluvia. La tarde transcurrió pacífica bajo esa luz difusa y tranquila, envolviendo las calles con un manto de serena calma.`,
       };
     }
     if (isSnowy) {
       return {
         theme: "Un día cubierto de nieve",
-        quote: "Mientras la nieve cubría la ciudad, el silencio blanco envolvía las calles.",
-        story: `Silenciosos copos de nieve descendían de manera constante sobre ${params.city}, vistiendo las avenidas con un manto blanco y denso. El aire invernal se sentía nítido y helado al respirar, adormeciendo el bullicio habitual de las plazas y calles principales. Las farolas se encendieron temprano, proyectando círculos de luz dorada sobre la nieve intacta acumulada en los alféizares y las aceras vacías. Todo en la ciudad parecía haberse pausado bajo esa atmósfera de quietud profunda.`,
+        quote: "Mientras la nieve cubría la ciudad, el silence blanco envolvía las calles.",
+        story: `Silenciosos copos de nieve descendían de manera constante sobre ${params.city}, vistiendo las avenidas con un manto blanco y denso. El aire invernal se sentía nítido y helado al respirar, adormeciendo el bullicio habitual de las plazas y calles principales. En medio de esta quietud, un nacimiento fue registrado discretamente en la ciudad. Las farolas se encendieron temprano, proyectando círculos de luz dorada sobre la nieve intacta mientras el cielo continuaba desvaneciéndose en tonos de tiza.`,
       };
     }
     if (isSunny) {
       return {
         theme: "Un despejado día soleado",
         quote: "El sol brilló con calma, iluminando las calles de la ciudad.",
-        story: `Un sol espléndido iluminó brillantemente cada rincón de ${params.city}, proyectando sombras nítidas y alargadas junto a las fachadas de ladrillo antiguo. Una brisa templada y sumamente agradable corría entre los edificios, invitando a la gente a caminar despacio por los parques abiertos y las avenidas principales. El cielo se mantuvo limpio de nubes, extendiendo un azul profundo e impecable desde el amanecer hasta que la luz dorada de la tarde se desvaneció lentamente.`,
+        story: `Un sol espléndido iluminó brillantemente cada rincón de ${params.city}, proyectando sombras nítidas y alargadas junto a las fachadas de ladrillo antiguo. Una brisa templada corría entre los edificios, invitando a caminar despacio por los parques abiertos. En esta luminosa jornada de cielos despejados, un nacimiento fue registrado discretamente. El cielo se mantuvo limpio de nubes todo el día, extendiendo un azul profundo e impecable hasta que la suave luz dorada del atardecer se desvaneció lentamente.`,
       };
     }
     // Default Cloudy
     return {
       theme: "Un día nublado y tranquilo",
       quote: "El cielo gris trajo una calma reconfortante a toda la ciudad.",
-      story: `Un denso y pacífico manto de nubes grises cubrió el cielo de ${params.city}, suavizando los contornos de los edificios contra el horizonte. El viento soplaba en ráfagas suaves que traían un aire fresco y limpio del río, agitando ligeramente las hojas secas en el suelo. Bajo esta luz tenue y sin sombras, las calles y los paseos peatonales se percibían íntimos, pacíficos y con una atmósfera nostálgica y acogedora que se prolongó hasta el anochecer.`,
+      story: `Un denso y pacífico manto de nubes grises cubrió el cielo de ${params.city}, suavizando los contornos de los edificios contra el horizonte. El viento soplaba en ráfagas suaves que traían un aire fresco y limpio del río, agitando ligeramente las hojas secas. En esta atmósfera tranquila, un nacimiento fue registrado discretamente en la ciudad. Bajo esta luz tenue y sin sombras, las calles y los paseos peatonales se percibían pacíficos, con un manto de serena calma que se prolongó hasta el anochecer.`,
     };
   } else {
     if (isRainy) {
       const variants = [
-        `Soft rain drifted steadily across the avenues of ${params.city}, casting a silver sheen over the brick buildings and historic slate rooftops. A cool, damp breeze rustled through the green branches of the parks, carrying the clean scent of wet cobblestones and earth. Underneath the glass awnings, people watched the droplets trace pathways down the windowpanes, while the streetlights began to flicker on early, casting long reflections in the quiet puddle-lined streets.`,
-        `A fresh rain washed over the streets of ${params.city}, leaving pavements shimmering under dense clouds. The afternoon air carried a clean scent of wet stone and green parks. Warm yellow headlights cast long reflections on the wet asphalt, illuminating the quiet sidewalks. The clouds remained low and heavy, locking the skyline in a peaceful gray embrace as the day progressed quietly.`,
-        `Steady rain descended over the rooftops of ${params.city}, softening the city outline against a deep iron-grey sky. A gentle breeze carried a silver mist across the neighborhood streets, rustling leaf-laden branches. Puddles gathered on the pavement, reflecting in silver pools along the concrete walkways, while fat droplets continued to crawl down glass windows and old stone archways under the persistent overcast sky.`,
-        `Passing rain showers swept quickly across ${params.city}, carried by a fresh, atmospheric wind. High cloud formations rolled steadily over the rooftops. Between brief bursts of water, wet asphalt streets glistened beneath a soft, diffuse light that illuminated the brick buildings. Deep slate clouds persisted as the gentle wind from the river rustled the park benches.`,
-        `Quiet, steady rainfall enveloped ${params.city}, turning the streets into a canvas of soft slate and grey. Cool silver droplets lined every windowpane, glistening against the dull stone brick. The steady patter of moisture created an unexpected calm across the skyline throughout the day, slowing the pulse of the town into a patient, lazy rhythm.`
+        `Soft rain drifted steadily across the avenues of ${params.city}, casting a silver sheen over the brick buildings and historic slate rooftops. On this same day, a birth was quietly logged under the damp skies. Underneath the glass awnings, people watched the droplets trace pathways down the windowpanes, while the streetlights began to flicker on early, casting long reflections in the quiet puddle-lined streets.`,
+        `A fresh rain washed over the streets of ${params.city}, leaving pavements shimmering under dense clouds. A birth was recorded amidst the cool afternoon breeze that carried the scent of wet stone. Warm yellow headlights cast long reflections on the wet asphalt, illuminating the quiet sidewalks as the clouds remained low and heavy, locking the skyline in a peaceful gray embrace.`,
+        `Steady rain descended over the rooftops of ${params.city}, softening the city outline against a deep iron-grey sky. In the middle of this quiet rainfall, a birth was logged as a gentle breeze carried a silver mist across the neighborhood streets. Puddles gathered on the pavement, reflecting in silver pools along the concrete walkways under the persistent overcast sky.`,
+        `Passing rain showers swept quickly across ${params.city}, carried by a fresh, atmospheric wind. High cloud formations rolled steadily over the rooftops, and a birth was quietly recorded amidst the changing skies. Between brief bursts of water, wet asphalt streets glistened beneath a soft, diffuse light that illuminated the brick buildings layout as the air turned cool.`,
+        `Quiet, steady rainfall enveloped ${params.city}, turning the streets into a canvas of soft slate and grey. A birth was factually noted as cool silver droplets lined every windowpane. The steady patter of moisture created an unexpected calm across the skyline throughout the day, slowing the pulse of the town into a patient, lazy rhythm of falling water.`
       ];
 
       const randomIndex = Math.floor(Math.random() * variants.length);
@@ -415,23 +415,23 @@ function getOfflineBackupStory(params: {
       return {
         theme: "A Snowy Winter Day",
         quote: "While snow carpeted the city outside, the streets fell into a quiet, frozen stillness.",
-        story: `Thick, quiet snow descended over ${params.city}, wrapping the urban skyline in a thick blanket of pristine white. The crisp, icy winter air kept the streets peaceful, dampening the usual sounds of traffic and footsteps. Soft light from shop windows glowed warmly onto the accumulating drifts along the sidewalks, while the tree branches in the squares bowed gently under the weight of the fresh snowfall, creating a landscape of stillness.`,
+        story: `Thick, quiet snow descended over ${params.city}, wrapping the urban skyline in a thick blanket of pristine white. The crisp, icy winter air kept the streets peaceful, and a birth was quietly logged amidst the snowfall. Soft light from shop windows glowed warmly onto the accumulating drifts, while the tree branches in the squares bowed gently under the weight of the fresh snow, preserving a landscape of absolute stillness.`,
       };
     }
     if (isSunny) {
       return {
         theme: "A Sunny Day",
         quote: "The sun shone for the city with gentle brilliance, casting gold light across the streets.",
-        story: `Warm, radiant sunshine bathed ${params.city}, illuminating the details of the historic facades and casting sharp, playful shadows across the public squares. A gentle, pleasant breeze wandered through the open streets, carrying a whisper of warmth that invited people to linger on park benches and outdoor cafes. The sky remained a pristine, vast blue from horizon to horizon, keeping the town bright and welcoming.`,
+        story: `Warm, radiant sunshine bathed ${params.city}, illuminating the details of the historic facades and casting sharp shadows across the public squares. Amidst this bright atmosphere, a birth was quietly recorded. A gentle, pleasant breeze wandered through the open streets, carrying a whisper of warmth that invited people to linger under a pristine, vast blue sky from horizon to horizon.`,
       };
     }
     // Default Cloudy
     const variants = [
-      `A quiet blanket of slate-grey clouds hung low over ${params.city}, beautifully softening the sharp profile of the distant buildings against the sky. A fresh, cool breeze swept through the brick alleys and open avenues, rustling dry leaves along the stone pavements. Without the glare of direct sunlight, the neighborhood blocks felt peaceful and close, wrapped in a comfortable twilight haze that lasted throughout the entire day.`,
-      `A vast, iron-grey canopy of clouds shrouded the sky over ${params.city}, creating a cool, unified shade across the streets and public squares. A light breeze swept dry leaves along the stone pavements and brick boundaries. The soft, shadowless light gave the local parks and buildings an archival, timeless quality, inviting a calm mood of quiet contemplation.`,
-      `Thick, dense grey clouds wrapped the buildings of ${params.city} in a peaceful and protective mist. The wind paced gently underneath an overcast sky, carrying a crisp freshness through the avenues. Across the city, local street corners, shop windows, and historic avenues appeared quiet and calm, beautifully illuminated by the glare-free light.`,
-      `High-altitude grey clouds uniform in texture stretched coast to coast over the sky of ${params.city}. Air temperatures remained cool but steady as a gentle breeze carried a crisp freshness through the streets. Under this calm slate canopy, the skyline sat in quiet composure, casting a peaceful mood onto the stone paths below.`,
-      `A quiet layer of stratocumulus clouds blanketed the rooftops of ${params.city} throughout the day. Outside, a steady, atmospheric wind blew through the alleys, creating a crisp feeling in the air. The lack of direct sunshine painted the city in soft, classic shades of slate and charcoal, bringing a comforting stillness to the parks.`
+      `A quiet blanket of slate-grey clouds hung low over ${params.city}, beautifully softening the sharp profile of the distant buildings against the sky. During these quiet hours, a birth was logged. A fresh, cool breeze swept through the brick alleys, rustling dry leaves along the stone pavements as the neighborhood blocks felt peaceful and close, wrapped in a comfortable twilight haze.`,
+      `A vast, iron-grey canopy of clouds shrouded the sky over ${params.city}, creating a cool, unified shade across the streets and public squares. A birth was quietly recorded under this overcast dome. A light breeze swept dry leaves along the stone pavements, and the soft, shadowless light gave the local parks and buildings an archival, timeless quality.`,
+      `Thick, dense grey clouds wrapped the buildings of ${params.city} in a peaceful and protective mist. As a birth was quietly logged, the wind paced gently beneath the overcast sky, carrying a crisp freshness through the avenues. Across the city, local street corners, shop windows, and historic avenues appeared quiet and calm under the glare-free sky.`,
+      `High-altitude grey clouds uniform in texture stretched coast to coast over the sky of ${params.city}. Air temperatures remained cool but steady, and a birth was recorded under this calm slate canopy. Outside, a gentle breeze carried a crisp freshness through the streets as the skyline sat in quiet composure.`,
+      `A quiet layer of stratocumulus clouds blanketed the rooftops of ${params.city} throughout the day. A birth was factually noted during these serene hours as a steady, atmospheric wind blew through the alleys. The lack of direct sunshine painted the city in soft, classic shades of slate and charcoal, bringing a comforting stillness to the parks.`
     ];
 
     const randomIndex = Math.floor(Math.random() * variants.length);
