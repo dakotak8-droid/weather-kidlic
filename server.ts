@@ -478,6 +478,7 @@ app.post("/api/generate-story", async (req, res) => {
     sunrise,
     birthDate,
     birthTime,
+    timePeriod,
     lang,
   } = req.body;
 
@@ -533,6 +534,48 @@ app.post("/api/generate-story", async (req, res) => {
 
   const targetDate = birthDate;
   const timeOfRecord = birthTime;
+
+  let finalTimePeriod = timePeriod;
+  if (birthTime && !finalTimePeriod) {
+    const parts = birthTime.split(":");
+    if (parts.length >= 2) {
+      const hours = parseInt(parts[0], 10);
+      const minutes = parseInt(parts[1], 10);
+      if (!isNaN(hours) && !isNaN(minutes)) {
+        if (hours >= 0 && hours < 6) finalTimePeriod = "Early Morning";
+        else if (hours >= 6 && hours < 12) finalTimePeriod = "Morning";
+        else if (hours >= 12 && hours < 17) finalTimePeriod = "Afternoon";
+        else if (hours >= 17 && hours < 21) finalTimePeriod = "Evening";
+        else if (hours >= 21 && hours < 24) finalTimePeriod = "Night";
+      }
+    }
+  }
+
+  let timeAtmosphereContext = "";
+  if (finalTimePeriod) {
+    let atmosDetails = "";
+    if (finalTimePeriod === "Early Morning") {
+      atmosDetails = "- Early Morning atmospheric suggestions: quiet streets, first light, city awakening (or Spanish equivalents: calles tranquilas, primera luz, despertar de la ciudad)";
+    } else if (finalTimePeriod === "Morning") {
+      atmosDetails = "- Morning atmospheric suggestions: active streets, growing daylight (or Spanish equivalents: calles activas, luz del día en aumento)";
+    } else if (finalTimePeriod === "Afternoon") {
+      atmosDetails = "- Afternoon atmospheric suggestions: full daylight, busiest part of the day (or Spanish equivalents: plena luz del día, la parte más ocupada del día)";
+    } else if (finalTimePeriod === "Evening") {
+      atmosDetails = "- Evening atmospheric suggestions: golden light, city slowing down, sunset atmosphere (or Spanish equivalents: luz dorada, la ciudad desacelerando, atmósfera de atardecer)";
+    } else if (finalTimePeriod === "Night") {
+      atmosDetails = "- Night atmospheric suggestions: streetlights, night sky, quieter city atmosphere (or Spanish equivalents: farolas, cielo nocturno, atmósfera urbana más tranquila)";
+    }
+
+    if (atmosDetails) {
+      timeAtmosphereContext = `
+6. ATMOSPHERIC CONTEXT FOR THE TIME OF DAY (${finalTimePeriod}):
+- You may use the following details as additional atmospheric context to capture the mood/vibe of the city at this time of day.
+- Do NOT force the story to mention the name of the time period itself directly if it doesn't fit naturally. Use these details only as subtle sensory context.
+${atmosDetails}
+`;
+    }
+  }
+
   const timeOfDepartureRule = timeOfRecord
     ? `
 5. TIME OF RECORD PERSONALIZATION (CRITICAL CONSTRAINT):
@@ -632,6 +675,8 @@ STRICT LANGUAGE REQUIREMENT:
 - Write "theme", "quote", and "story" purely in "${language}" as a native speaker would, avoiding translation stiffness or hybrid terms.
 
 ${timeOfDepartureRule}
+
+${timeAtmosphereContext}
 
 Response JSON Schema (Keep exactly unchanged):
 You must output a JSON object containing:

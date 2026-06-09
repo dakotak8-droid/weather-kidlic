@@ -115,7 +115,7 @@ const LOCALES: { [key: string]: Dictionary } = {
     formSubtitle: "Every day leaves a weather story behind. Discover the skies, temperatures, and atmosphere that shaped the world on that specific date.",
     fieldLanguage: "Language / Idioma",
     fieldBirthDate: "Date (MM/DD/YYYY)",
-    fieldBirthTime: "Time (Optional)",
+    fieldBirthTime: "Birth Time (Optional)",
     fieldBirthCity: "City & Country (in English)",
     cityPlaceholder: "Examples: New York, United States • Warsaw, Poland • Paris, France",
     cityHelper: "Please enter city and country names in English. Local spellings such as Polska, Deutschland, España, or Italia may not be recognized.",
@@ -195,7 +195,7 @@ const LOCALES: { [key: string]: Dictionary } = {
     formSubtitle: "Cada día deja una historia climática detrás. Descubre los cielos, las temperaturas y la atmósfera que dieron forma al mundo en esa fecha específica.",
     fieldLanguage: "Idioma / Language",
     fieldBirthDate: "Fecha (MM/DD/AAAA)",
-    fieldBirthTime: "Hora (Opcional)",
+    fieldBirthTime: "Hora de nacimiento (Opcional)",
     fieldBirthCity: "Ciudad y país (en inglés)",
     cityPlaceholder: "Ejemplos: New York, United States • Warsaw, Poland • Paris, France",
     cityHelper: "Por favor, ingresa los nombres de la ciudad y el país en inglés. Es posible que no se reconozcan las grafías locales como Polska, Deutschland, España o Italia.",
@@ -1166,6 +1166,22 @@ export default function BirthWeatherStory() {
       // Ask server to generate the birth story (with fallback to the custom backup generator)
       let generatedStory;
       try {
+        const calculateTimePeriod = (timeStr?: string): string | undefined => {
+          if (!timeStr) return undefined;
+          const parts = timeStr.split(":");
+          if (parts.length < 2) return undefined;
+          const hours = parseInt(parts[0], 10);
+          const minutes = parseInt(parts[1], 10);
+          if (isNaN(hours) || isNaN(minutes)) return undefined;
+
+          if (hours >= 0 && hours < 6) return "Early Morning";
+          if (hours >= 6 && hours < 12) return "Morning";
+          if (hours >= 12 && hours < 17) return "Afternoon";
+          if (hours >= 17 && hours < 21) return "Evening";
+          if (hours >= 21 && hours < 24) return "Night";
+          return undefined;
+        };
+
         console.log(`Fetching generated story from API route for ${cityName}, ${admin1Name}, ${countryName}...`);
         const storyResponse = await fetch("/api/generate-story", {
           method: "POST",
@@ -1183,6 +1199,7 @@ export default function BirthWeatherStory() {
             sunrise,
             birthDate: formattedDate,
             birthTime: birthTime || undefined,
+            timePeriod: birthTime ? calculateTimePeriod(birthTime) : undefined,
             lang: lang,
           }),
         });
