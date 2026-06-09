@@ -617,6 +617,7 @@ Output a JSON object containing:
   let attempts = 0;
   const maxAttempts = 3;
   let finalJson: any = null;
+  let apiFallbackLabel = "API_FORBIDDEN_BACKUP";
 
   while (attempts < maxAttempts) {
     try {
@@ -670,8 +671,19 @@ Output a JSON object containing:
           console.warn(`Gemini response rejected on attempt ${attempts + 1}: ${validation.reason}`);
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("Gemini API call error during attempt " + (attempts + 1) + ":", err);
+      const status = err?.status || err?.statusCode || err?.code;
+      const msg = String(err?.message || err || "").toUpperCase();
+      if (status === 503 || msg.includes("UNAVAILABLE") || msg.includes("HIGH DEMAND")) {
+        apiFallbackLabel = "API_HIGH_DEMAND_FALLBACK";
+      } else if (status === 403 || msg.includes("FORBIDDEN") || msg.includes("PERMISSION DENIED")) {
+        apiFallbackLabel = "API_FORBIDDEN_BACKUP";
+      } else if (status === 429 || msg.includes("QUOTA")) {
+        apiFallbackLabel = "API_QUOTA_FALLBACK";
+      } else {
+        apiFallbackLabel = "API_GEMINI_ERROR_FALLBACK";
+      }
     }
     attempts++;
   }
@@ -776,7 +788,7 @@ Output a JSON object containing:
       quote: backupResult.quote,
       story: finalBackupStory.trim(),
       isFallback: true,
-      debug_source: "api_forbidden_backup",
+      debug_source: apiFallbackLabel,
       prompt_version: "historical_archive_v1",
       generator_path: "api_generate_story",
       quality_check: {
