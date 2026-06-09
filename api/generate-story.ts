@@ -586,14 +586,30 @@ ${atmosDetails}
 
 Your task is to create a soft, highly atmospheric reminiscence documenting the look, draft, light, and sensory feelings of the city environment on a specific historical date.
 
-STRICT DESIGN & WORDING PRINCIPLES (OVERRIDING ALL PREVIOUS CONSTRAINTS):
-- The narrative must NEVER read like a scientific report or a standard weather report.
-- It must NEVER sound like a meteorological analysis or contain lists of data points or observations.
-- Do NOT describe weather measurements or mention instrument recordings.
-- The weather data (temperature, rain, snow, wind) must influence the narrative but should rarely appear as numbers. Use numbers only when absolutely necessary. Do not include raw stats or metrics, and if numbers are used, limit them to a single natural reference (e.g., "reaching a soft high around 20°C").
-- Instead of raw data, describe what people in the city would have seen, felt, or noticed in the city environment:
-  - Focus on: sky, light, clouds, rain, air, streets, parks, rooftops, architecture, local scenery, traffic, windows, and overall seasonal character.
-  - The goal is to make the reader feel like they are stepping into that day, observing the quiet flow of life and atmosphere, preserving the memory of a day, not documenting weather observations.
+STRICT DESIGN, STYLE & WEATHER PRINCIPLES:
+1. The weather, sky, season, and city atmosphere must remain the primary subject of the story. The narrative should focus on what people in the city would have seen, felt, or noticed (e.g. the quality of light, clouds, cold drafts, wet cobblestones, seasonal mood, or quiet sky).
+2. The story should read like a preserved historical weather memory, not a birth announcement, greeting card, family story, or tourist guide. Use local city landmarks (such as rivers, old town squares, streets) only when relevant, but avoid turning the story into a travel guide.
+3. The exact weather conditions of the day should influence the story more strongly:
+   - Overcast days should feel different from rainy days: overcast focuses on gray ambient light, flat tones, heavy slate clouds, and diffuse shadows; rain is about glistening streets, pattering droplets, umbrellas, and wet asphalt.
+   - Rainy days should feel different from snowy days: snowy focus on muffled silence, crisp frost, soft white layers on roofs, slow-drifting flakes, and visibility fading into winter haze.
+   - Windy days should feel different from calm days: windy focuses on swaying branches, rustling leaves, dancing dust, chattering windowpanes; calm hours focus on stillness, slow cloud movement, and peaceful, stagnant air.
+   - Cold days should feel different from warm days: cold is brisk, stinging, heavy coats, steam, pale skies; warm is golden, loose layers, lingering shadows, and soft gentle breezes.
+4. Do NOT read like a scientific report or a standard weather report. Do NOT describe weather measurements or mention instrument recordings. Use numbers only when absolutely necessary (e.g. "reaching a soft high around 20°C").
+
+THE BIRTH FACT (Brief, Factual, Non-Sentimental Integration):
+- Birth must be mentioned at most once, briefly and factually (e.g., "a child was born", "a birth was logged", "un nacimiento fue registrado", "una nueva vida comenzó"). It must be a peaceful third-person historical anchor, not a central emotional climax.
+- The reference must be highly integrated and peaceful, with absolutely NO emotional family or parenting clichés in the text.
+- Do NOT use recurring phrases or templates. Do NOT use any of these forbidden phrases:
+  * "one small arrival"
+  * "unforgettable for a family"
+  * "life-changing moment"
+  * "special family"
+  * "precious arrival"
+  * "treasured memory"
+  * "magical moment"
+  * "heartwarming day"
+- Avoid emotional family language.
+- CRITICAL: The final sentence should usually return to the weather, atmosphere, season, city mood, or sky conditions rather than ending with the birth. Let the narrative end on the sky, climate, or quiet atmosphere of the day (e.g., "As the evening progressed, the rain finally quieted over the sleeping roofs.").
 
 FORBIDDEN PATTERNS & CLICHÉS:
 You are STRICTLY FORBIDDEN from using any of the following phrases (or their Spanish equivalents):
@@ -605,34 +621,15 @@ You are STRICTLY FORBIDDEN from using any of the following phrases (or their Spa
 - "precipitation maintained" / "precipitación se mantuvo"
 - "meteorological station" / "estación meteorológica"
 - "weather conditions were" / "las condiciones climáticas eran" / "las condiciones del clima eran"
-- any sentence that sounds like a scientific summary or technical meteorology report.
+- any scientific/meteorological summary pattern.
+- No emotional parenting, baby-centric, or family clichés are allowed (e.g. holding, cuddles, newborn fragrance, hearts, blessings, miracles, destiny, gratitude, etc.).
 
-No emotional parenting, baby-centric, or family clichés are allowed (e.g. holding, cuddles, newborn fragrance, etc.). This is about the city and its skies.
-
-A list of examples of good vs. bad style:
-- BAD: "The meteorological station recorded a maximum temperature of 24°C."
-  GOOD: "Warm June air settled over the city as clouds drifted slowly across the afternoon sky."
-- BAD: "Wind speed reached 13.5 km/h."
-  GOOD: "A gentle breeze moved through the streets and carried the scent of recent rain."
-- BAD: "Visibility remained moderate."
-  GOOD: "Distant buildings faded softly into the gray horizon."
-
-HISTORICAL WEATHER DATA FOR YOUR REFERENCE (To influence, not to list as raw numbers):
+HISTORICAL WEATHER DATA FOR YOUR REFERENCE:
 - Max temperature: ${tempMax}°C (appx ${Math.round(tempMax * 9/5 + 32)}°F)
 - Weather condition: ${weatherText} (weatherCode ${weatherCode})
 - Wind speed: ${windSpeed} km/h (appx ${Math.round(windSpeed * 0.621371)} mph)
 - Date: ${targetDate}
 - City: ${city} (Region: ${region || 'None'}, Country: ${country})
-
-THE BIRTH FACT (Gently Connecting Weather and Birth):
-- The narrative must end with exactly one final sentence that gently connects the weather archive to the birth.
-- The final sentence must read exactly or be styled very closely as:
-  * In English: "Among all the ordinary moments of that day, one small arrival would make the date unforgettable for a family."
-  * In Spanish: "Entre todos los momentos ordinarios de aquel día, una pequeña llegada haría que la fecha fuera inolvidable para una familia."
-- The final sentence must be warm, memorable, and human, but never sentimental, emotional, or overly dramatic.
-- Do NOT mention hearts, blessings, miracles, destiny, gratitude, or life-changing moments.
-- This is the ONLY permitted reference to the birth, child, or family, appearing exactly once as the final sentence of the story.
-- Minimum 90% of the story must be about the day itself and city atmosphere, with this final sentence delivering the gentle connection at the end.
 
 STYLISH, MEMORABLE QUOTE & SIMPLE THEME:
 - THEME (TITLE): If the weather is rainy, the theme title MUST be exactly "A Rainy Afternoon" (or "Una jornada de lluvia" in Spanish). Otherwise, generate a clean, weather-based title of 3 to 6 words. It must remain strictly factual and weather-oriented, NOT poetic or flowery (e.g., "A Sunny Day in ${city}", "Cloudy Skies in ${city}"). No time-of-day reference in theme unless specified by the record.
@@ -650,7 +647,7 @@ Response JSON Schema (Keep exactly unchanged):
 Output a JSON object containing:
 - theme: string (3-6 words, weather-based, factual title)
 - quote: string (exactly 1 short, simple, memorable sentence about weather only)
-- story: string (the completed narrative weather archive record, strictly between 80 and 120 words formatted as a single paragraph containing exactly the required birth mention at the end)
+- story: string (the completed narrative weather archive record, strictly between 80 and 120 words formatted as a single paragraph with a brief, factual birth mention integrated and usually returning to the weather or sky at the end)
 - quality_check: an object containing:
   - language_consistent: boolean (is it 100% written in the requested language?)
   - weather_consistent: boolean (does it accurately incorporate the provided weather data?)
