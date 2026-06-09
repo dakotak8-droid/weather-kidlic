@@ -620,7 +620,13 @@ Your task is to create a soft, highly atmospheric reminiscence documenting the l
 
 STRICT DESIGN, STYLE & WEATHER PRINCIPLES:
 1. The weather, sky, season, and city atmosphere must remain the primary subject of the story. The narrative should focus on what people in the city would have seen, felt, or noticed (e.g. the quality of light, clouds, cold drafts, wet cobblestones, seasonal mood, or quiet sky).
-2. The story should read like a preserved historical weather memory, not a birth announcement, greeting card, family story, or tourist guide. Use local city landmarks (such as rivers, old town squares, streets) only when relevant, but avoid turning the story into a travel guide.
+2. The story should read like a preserved historical weather memory, not a birth announcement, greeting card, family story, or tourist guide.
+   - When appropriate, the story may include ONE recognizable local feature, landmark, district, river, waterfront, square, bridge, avenue, historic neighborhood, or natural feature associated with the city. This helps make different cities feel distinct from one another.
+   - The landmark should ONLY appear as part of the weather scene (e.g., low clouds drifting around the Eiffel Tower, rain reflections along the Seine, mist over the Vistula River, streetlights glowing near the Old Town walls, fog rolling beneath the Golden Gate Bridge / nubes bajas flotando alrededor de la Torre Eiffel, reflejos de lluvia a lo largo del Sena, niebla sobre el río Vístula, farolas brillando cerca de las murallas del casco antiguo, niebla rodando bajo el puente Golden Gate).
+   - Do NOT introduce landmarks simply because they are famous. The weather must always remain the main character.
+   - Do NOT write tourist-guide style descriptions. Avoid: lists of attractions, historical facts, travel recommendations, sightseeing language, or promotional descriptions.
+   - Use local details only when they naturally strengthen the atmosphere of that specific weather day.
+   - The chosen landmark should occupy no more than one sentence.
 3. The exact weather conditions of the day should influence the story more strongly:
    - Overcast days should feel different from rainy days: overcast focuses on gray ambient light, flat tones, heavy slate clouds, and diffuse shadows; rain is about glistening streets, pattering droplets, umbrellas, and wet asphalt.
    - Rainy days should feel different from snowy days: snowy focus on muffled silence, crisp frost, soft white layers on roofs, slow-drifting flakes, and visibility fading into winter haze.
