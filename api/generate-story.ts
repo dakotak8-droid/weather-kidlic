@@ -625,10 +625,11 @@ ${timeAtmosphereContext}`;
       let timeoutId: any;
       const timeoutPromise = new Promise<never>((_, reject) => {
         timeoutId = setTimeout(() => {
-          const err = new Error("Gemini API request timed out (6000ms deadline exceeded)");
+          console.log("Gemini request timed out after 9000ms");
+          const err = new Error("Gemini request timed out after 9000ms");
           (err as any).status = 503;
           reject(err);
-        }, 6000);
+        }, 9000);
       });
 
       let response: any;
