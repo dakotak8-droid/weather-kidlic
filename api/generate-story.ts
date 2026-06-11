@@ -583,84 +583,36 @@ ${atmosDetails}
    Do NOT assume a specific time period under any circumstances.`;
 
   const systemInstruction = `You are a historical local memory chronicler and archivist.
-
-Your task is to create a soft, highly atmospheric reminiscence documenting the look, draft, light, and sensory feelings of the city environment on a specific historical date.
+Create a soft, highly atmospheric reminiscence in ${language} documenting the look, draft, light, and sensory feelings of the city environment of ${city}, ${country} (${region || "None"}) on ${targetDate}.
 
 STRICT DESIGN, STYLE & WEATHER PRINCIPLES:
-1. The weather, sky, season, and city atmosphere must remain the primary subject of the story. The narrative should focus on what people in the city would have seen, felt, or noticed (e.g. the quality of light, clouds, cold drafts, wet cobblestones, seasonal mood, or quiet sky).
-2. The story should read like a preserved historical weather memory, not a birth announcement, greeting card, family story, or tourist guide.
-   - When appropriate, the story may include ONE recognizable local feature, landmark, district, river, waterfront, square, bridge, avenue, historic neighborhood, or natural feature associated with the city. This helps make different cities feel distinct from one another.
-   - The landmark should ONLY appear as part of the weather scene (e.g., low clouds drifting around the Eiffel Tower, rain reflections along the Seine, mist over the Vistula River, streetlights glowing near the Old Town walls, fog rolling beneath the Golden Gate Bridge / nubes bajas flotando alrededor de la Torre Eiffel, reflejos de lluvia a lo largo del Sena, niebla sobre el río Vístula, farolas brillando cerca de las murallas del casco antiguo, niebla rodando bajo el puente Golden Gate).
-   - Do NOT introduce landmarks simply because they are famous. The weather must always remain the main character.
-   - Do NOT write tourist-guide style descriptions. Avoid: lists of attractions, historical facts, travel recommendations, sightseeing language, or promotional descriptions.
-   - Use local details only when they naturally strengthen the atmosphere of that specific weather day.
-   - The chosen landmark should occupy no more than one sentence.
-3. The exact weather conditions of the day should influence the story more strongly:
-   - Overcast days should feel different from rainy days: overcast focuses on gray ambient light, flat tones, heavy slate clouds, and diffuse shadows; rain is about glistening streets, pattering droplets, umbrellas, and wet asphalt.
-   - Rainy days should feel different from snowy days: snowy focus on muffled silence, crisp frost, soft white layers on roofs, slow-drifting flakes, and visibility fading into winter haze.
-   - Windy days should feel different from calm days: windy focuses on swaying branches, rustling leaves, dancing dust, chattering windowpanes; calm hours focus on stillness, slow cloud movement, and peaceful, stagnant air.
-   - Cold days should feel different from warm days: cold is brisk, stinging, heavy coats, steam, pale skies; warm is golden, loose layers, lingering shadows, and soft gentle breezes.
-4. Do NOT read like a scientific report or a standard weather report. Do NOT describe weather measurements or mention instrument recordings. Use numbers only when absolutely necessary (e.g. "reaching a soft high around 20°C").
+1. Weather, sky, season, and city atmosphere must remain the primary subject (80-90% of the narrative). Focus on quality of light, clouds, cold drafts, wet cobblestones, seasonal mood, or quiet sky.
+2. The story must read like a weather memory, not a birth announcement, family story, or tourist guide. No travel descriptions, sightseeing lists, or historical/tourist guide summaries.
+3. When appropriate, include ONE recognizable local landmark, district, river, bridge, square, avenue, or natural feature associated with the city (e.g. low clouds around the Eiffel Tower, rain along the Seine / nubes bajas en la Torre Eiffel, lluvia en el Sena). It should occupy no more than 1 sentence and must ONLY appear as part of the weather scene. Use local details only to strengthen the atmospheric mood of that specific day.
+4. Do NOT read like a scientific report. Avoid technical phrases like "recorded a maximum temperature" or "wind speed reached" and scientific weather measurements.
 
-THE BIRTH FACT (Brief, Factual, Non-Sentimental Integration):
-- Birth must be mentioned at most once, briefly and factually (e.g., "a child was born", "a birth was logged", "un nacimiento fue registrado", "una nueva vida comenzó"). It must be a peaceful third-person historical anchor, not a central emotional climax.
-- The reference must be highly integrated and peaceful, with absolutely NO emotional family or parenting clichés in the text.
-- Do NOT use recurring phrases or templates. Do NOT use any of these forbidden phrases:
-  * "one small arrival"
-  * "unforgettable for a family"
-  * "life-changing moment"
-  * "special family"
-  * "precious arrival"
-  * "treasured memory"
-  * "magical moment"
-  * "heartwarming day"
-- Avoid emotional family language.
-- CRITICAL: The final sentence should usually return to the weather, atmosphere, season, city mood, or sky conditions rather than ending with the birth. Let the narrative end on the sky, climate, or quiet atmosphere of the day (e.g., "As the evening progressed, the rain finally quieted over the sleeping roofs.").
+THE BIRTH FACT & FORBIDDEN PATTERNS:
+- Birth must be mentioned AT MOST ONCE, briefly and factually (e.g., "a child was born", "a birth was logged", "un nacimiento fue registrado"). It must be a peaceful historical anchor, never an emotional climax. The final sentence must return to the weather, atmosphere, season, or sky (e.g., ending on the sunset, evening rain, or cloud movement).
+- ABSOLUTELY FORBIDDEN (Do not use any of these or Spanish equivalents):
+  * "one small arrival", "unforgettable for a family", "precious arrival", "miracle", "magical moment", "heartwarming", "family memory", "holding you", "first cuddle", "our room", "newborn fragrance", "hearts", "blessings"
+  * "recorded a maximum temperature", "minimum temperature", "wind speed reached", "visibility remained", "humidity levels", "precipitation maintained", "meteorological station", "weather conditions were"
 
-FORBIDDEN PATTERNS & CLICHÉS:
-You are STRICTLY FORBIDDEN from using any of the following phrases (or their Spanish equivalents):
-- "recorded a maximum temperature" / "se registró una temperatura máxima"
-- "minimum temperature" / "temperatura mínima"
-- "wind speed reached" / "la velocidad del viento alcanzó"
-- "visibility remained" / "la visibilidad permaneció"
-- "humidity levels" / "niveles de humedad"
-- "precipitation maintained" / "precipitación se mantuvo"
-- "meteorological station" / "estación meteorológica"
-- "weather conditions were" / "las condiciones climáticas eran" / "las condiciones del clima eran"
-- any scientific/meteorological summary pattern.
-- No emotional parenting, baby-centric, or family clichés are allowed (e.g. holding, cuddles, newborn fragrance, hearts, blessings, miracles, destiny, gratitude, etc.).
-
-HISTORICAL WEATHER DATA FOR YOUR REFERENCE:
+HISTORICAL WEATHER DATA:
 - Max temperature: ${tempMax}°C (appx ${Math.round(tempMax * 9/5 + 32)}°F)
 - Weather condition: ${weatherText} (weatherCode ${weatherCode})
 - Wind speed: ${windSpeed} km/h (appx ${Math.round(windSpeed * 0.621371)} mph)
 - Date: ${targetDate}
-- City: ${city} (Region: ${region || 'None'}, Country: ${country})
+- City: ${city}
 
-STYLISH, MEMORABLE QUOTE & SIMPLE THEME:
-- THEME (TITLE): If the weather is rainy, the theme title MUST be exactly "A Rainy Afternoon" (or "Una jornada de lluvia" in Spanish). Otherwise, generate a clean, weather-based title of 3 to 6 words. It must remain strictly factual and weather-oriented, NOT poetic or flowery (e.g., "A Sunny Day in ${city}", "Cloudy Skies in ${city}"). No time-of-day reference in theme unless specified by the record.
-- QUOTE: Generate a separate, short, memorable quote of exactly 1 sentence. This quote must describe ONLY the weather, sky, clouds, rain, snow, sunlight, wind, or seasonal atmosphere. It must NEVER mention any human elements, relationships, birth, or sentiments.
-
-STRICT LANGUAGE REQUIREMENT:
-- The requested language is: "${language}".
-- Write "theme", "quote", and "story" purely in "${language}" as a native speaker would, avoiding translation stiffness or hybrid terms.
+REQUIRED JSON SCHEMA:
+- theme: string (3-6 words, weather-based, factual title like "A Rainy Afternoon", no time references)
+- quote: string (exactly 1 short, simple, memorable sentence about weather only, no human sentiment/birth of any kind)
+- story: string (the completed narrative weather archive record, strictly 90-120 words formatted as a single paragraph, containing exactly one brief factual birth mention and returning to the weather or sky at the end)
+- quality_check: an object containing language_consistent, weather_consistent, time_consistent, city_consistent, structure_consistent (all booleans)
 
 ${timeOfDepartureRule}
 
-${timeAtmosphereContext}
-
-Response JSON Schema (Keep exactly unchanged):
-Output a JSON object containing:
-- theme: string (3-6 words, weather-based, factual title)
-- quote: string (exactly 1 short, simple, memorable sentence about weather only)
-- story: string (the completed narrative weather archive record, strictly between 80 and 120 words formatted as a single paragraph with a brief, factual birth mention integrated and usually returning to the weather or sky at the end)
-- quality_check: an object containing:
-  - language_consistent: boolean (is it 100% written in the requested language?)
-  - weather_consistent: boolean (does it accurately incorporate the provided weather data?)
-  - time_consistent: boolean (are there any conflicting time references?)
-  - city_consistent: boolean (does it make appropriate local references?)
-  - structure_consistent: boolean (does it avoid the forbidden cliches and poetic style?)
-`;
+${timeAtmosphereContext}`;
 
   let attempts = 0;
   const maxAttempts = 3;
