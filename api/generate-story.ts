@@ -670,35 +670,52 @@ Output a JSON object containing:
   while (attempts < maxAttempts) {
     try {
       console.log(`Querying Gemini (Attempt ${attempts + 1}) for story in ${language}...`);
-      const response = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
-        contents: `Generate an atmospheric historical weather archive record centered 80-90% on weather conditions, seasonal details, and city atmosphere, with only the allowed factual birth mention. Ensure it is third-person factual and has absolutely zero emotional words or family mentions. Follow the system instruction for ${city}, ${country} (${region || ""}) on ${targetDate}.`,
-        config: {
-          systemInstruction: systemInstruction,
-          responseMimeType: "application/json",
-          responseSchema: {
-            type: Type.OBJECT,
-            properties: {
-              theme: { type: Type.STRING },
-              quote: { type: Type.STRING },
-              story: { type: Type.STRING },
-              quality_check: {
+      let timeoutId: any;
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(() => {
+          const err = new Error("Gemini API request timed out (6000ms deadline exceeded)");
+          (err as any).status = 503;
+          reject(err);
+        }, 6000);
+      });
+
+      let response: any;
+      try {
+        response = await Promise.race([
+          ai.models.generateContent({
+            model: "gemini-3.5-flash",
+            contents: `Generate an atmospheric historical weather archive record centered 80-90% on weather conditions, seasonal details, and city atmosphere, with only the allowed factual birth mention. Ensure it is third-person factual and has absolutely zero emotional words or family mentions. Follow the system instruction for ${city}, ${country} (${region || ""}) on ${targetDate}.`,
+            config: {
+              systemInstruction: systemInstruction,
+              responseMimeType: "application/json",
+              responseSchema: {
                 type: Type.OBJECT,
                 properties: {
-                  language_consistent: { type: Type.BOOLEAN },
-                  weather_consistent: { type: Type.BOOLEAN },
-                  time_consistent: { type: Type.BOOLEAN },
-                  city_consistent: { type: Type.BOOLEAN },
-                  structure_consistent: { type: Type.BOOLEAN },
+                  theme: { type: Type.STRING },
+                  quote: { type: Type.STRING },
+                  story: { type: Type.STRING },
+                  quality_check: {
+                    type: Type.OBJECT,
+                    properties: {
+                      language_consistent: { type: Type.BOOLEAN },
+                      weather_consistent: { type: Type.BOOLEAN },
+                      time_consistent: { type: Type.BOOLEAN },
+                      city_consistent: { type: Type.BOOLEAN },
+                      structure_consistent: { type: Type.BOOLEAN },
+                    },
+                    required: ["language_consistent", "weather_consistent", "time_consistent", "city_consistent", "structure_consistent"],
+                  }
                 },
-                required: ["language_consistent", "weather_consistent", "time_consistent", "city_consistent", "structure_consistent"],
-              }
+                required: ["theme", "quote", "story", "quality_check"]
+              },
+              temperature: 0.2,
             },
-            required: ["theme", "quote", "story", "quality_check"]
-          },
-          temperature: 0.2,
-        },
-      });
+          }),
+          timeoutPromise
+        ]);
+      } finally {
+        clearTimeout(timeoutId);
+      }
 
       const parsed = JSON.parse(response.text || "{}");
       if (parsed.theme && parsed.quote && parsed.story) {
