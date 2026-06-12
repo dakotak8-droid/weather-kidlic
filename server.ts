@@ -618,19 +618,22 @@ ${atmosDetails}
 Write a soft, highly atmospheric reminiscence in ${language} documenting the look, draft, light, and sensory feelings of the city environment of ${city}, ${country} (${region || "None"}) on ${birthDate}.
 
 STRICT WRITING & STYLE PRINCIPLES:
-1. Weather, sky, season, and city atmosphere are the primary subject (80-90% of the narrative). Focus on quality of light, clouds, cold drafts, wet cobblestones, seasonal mood, or quiet sky.
-2. The story must read like a weather memory, not a birth announcement, family story, or tourist guide. No sightseeing lists or tourist attraction descriptions.
-3. When appropriate, include ONE recognizable local landmark, river, bridge, square, or natural feature associated with the city (e.g. low clouds around Eiffel Tower, rain along Seine / nubes bajas en la Torre Eiffel, lluvia en el Sena) in max 1 sentence, strictly as part of the weather scene. Use local details only to strengthen the atmospheric mood of that specific day.
-4. Do NOT read like a scientific report. Avoid technical phrases like "recorded a temperature" or "wind speed reached" and scientific weather measurements.
-5. Birth must be mentioned AT MOST ONCE, briefly and factually (e.g., "a child was born", "a birth was logged", "un nacimiento fue registrado"). It is a peaceful historical anchor, never an emotional climax. No emotional family, parenting, or baby clichés. The final sentence must return to the weather/sky atmosphere (e.g., ending on the evening rain or quiet dusk).
-6. Forbidden (Do NOT use these or Spanish equivalents): "recorded a temperature", "minimum temperature", "wind speed reached", "visibility remained", "meteorological station", "weather conditions", "small arrival", "unforgettable for a family", "precious arrival", "miracle", "magical moment", "heartwarming", "family memory", "first cuddle", "newborn fragrance", "hearts", "blessings".
+1. GEOGRAPHIC UNIQUENESS & LOCAL FEATURES: Every city must feel distinct, geographically authentic, and unique. Naturally blend one or two realistic local landmarks, districts, rivers, water bodies, coastlines, microclimates, hills, streets, or public squares associated with the city (e.g., Warsaw → Vistula River, Old Town; Paris → Seine, Eiffel Tower, boulevards; Lisbon → Tagus River, Alfama, steep hills; Toronto → Lake Ontario; Sydney → Circular Quay, Harbour; New York → Central Park, Hudson River) in up to 2 sentences. Avoid generic city statements; the selected landmarks must directly interact with and be part of the active weather scene (e.g., fog rolling across the bay, rain pooling on cobblestones of a historic district, cold breeze off the lake).
+2. WEATHER FOCUS: Weather, sky, and season must remain the primary subject (80-90% of the narrative). Focus on quality of light, clouds, drafts, dampness, seasonal mood, or quiet sky.
+3. EXTREMELY HIGH VOCABULARY VARIETY (NO CLICHÉS): Do NOT repeat the same cloud or atmospheric phrases across different cities.
+   - STRICTLY FORBIDDEN PHRASES (and their Spanish equivalents): "quiet canopy of clouds", "blanket of clouds", "slate-grey sky", "softening the city", "quiet hours", "muted atmosphere".
+   - Employ extremely varied vocabulary for clouds (e.g., leaden vault, vaporous haze, layered charcoal sails, high milky gauze, billowing slate), wind (shivering current, persistent draft, gusty weight, still dampness), and season.
+4. NO COMMERCIAL OR TOURIST STYLE: Do NOT write tourist-guide style descriptions or lists of sightseeing attractions.
+5. NO SCIENTIFIC TALK: Do NOT read like a scientific report. Avoid technical phrases like "recorded a temperature", "minimum temperature", "wind speed reached", "visibility remained", "meteorological station" or scientific measurements.
+6. BRIEF FACTUAL BIRTH FACT: Birth must be mentioned AT MOST ONCE, briefly and factually (e.g., "a child was born", "a birth was logged", "un nacimiento fue registrado"). It is a peaceful, integrated historical anchor, never an emotional or parenting climax. ABSOLUTELY FORBIDDEN CLICHÉS (and Spanish equivalents): "one small arrival", "unforgettable for a family", "precious arrival", "miracle", "magical moment", "heartwarming", "family memory", "first cuddle", "newborn fragrance", "hearts", "blessings".
+7. END ON ATMOSPHERE: The final sentence must return to the weather/sky/landscape atmosphere (e.g., ending on the sunset glow, damp twilight, or slow movement of clouds over rooftops).
 
 HISTORICAL WEATHER DATA: Max ${tempMax}°C, ${weatherText}, Wind ${windSpeed} km/h.
 
 REQUIRED JSON SCHEMA:
 - theme: string (3-6 words, weather-based title like "A Rainy Afternoon", no time references)
 - quote: string (exactly 1 short weather-only sentence, no human sentiment/birth of any kind)
-- story: string (strictly 90-120 words formatted as a single paragraph, ending with the weather/sky/atmosphere)
+- story: string (strictly 90-120 words formatted as a single paragraph, ending with the weather/sky/atmosphere, containing exactly one brief factual birth mention)
 - quality_check: an object containing language_consistent, weather_consistent, time_consistent, city_consistent, structure_consistent (all booleans)
 
 ${timeOfDepartureRule}
