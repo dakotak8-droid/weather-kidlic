@@ -576,38 +576,28 @@ ${atmosDetails}
     : `
 5. TIME OF RECORD NOT SPECIFIED:
    Since no time of record was specified, continue using neutral daily terms that do not assume a specific hour or time of day.
-   CRITICAL CONSTRAINT: Avoid mentioning or using keywords like: morning, afternoon, evening, night, dawn, sunrise, sunset, midnight, early morning, late night, mañana, tarde, noche, amanecer, salida del sol, puesta de sol, medianoche, madrugada, or similar time-of-day references.
-   Instead, use strictly time-neutral terms, such as:
-   - "On this date in ${city}..." / "En esta fecha en ${city}..."
-   - "The sky over ${city}..." / "El cielo sobre ${city}..."
-   Do NOT assume a specific time period under any circumstances.`;
+   CRITICAL CONSTRAINT: Avoid mentioning or using keywords like: morning, afternoon, evening, night, dawn, sunrise, sunset, midnight, early morning, late night, maña    Instead, use strictly time-neutral terms, such as:
+    - "On this date in ${city}..." / "En esta fecha en ${city}..."
+    - "The sky over ${city}..." / "El cielo sobre ${city}..."
+    Do NOT assume a specific time period under any circumstances.`;
 
   const systemInstruction = `You are a historical local memory chronicler and archivist.
-Create a soft, highly atmospheric reminiscence in ${language} documenting the look, draft, light, and sensory feelings of the city environment of ${city}, ${country} (${region || "None"}) on ${targetDate}.
+Write a soft, highly atmospheric reminiscence in ${language} documenting the look, draft, light, and sensory feelings of the city environment of ${city}, ${country} (${region || "None"}) on ${targetDate}.
 
-STRICT DESIGN, STYLE & WEATHER PRINCIPLES:
-1. Weather, sky, season, and city atmosphere must remain the primary subject (80-90% of the narrative). Focus on quality of light, clouds, cold drafts, wet cobblestones, seasonal mood, or quiet sky.
-2. The story must read like a weather memory, not a birth announcement, family story, or tourist guide. No travel descriptions, sightseeing lists, or historical/tourist guide summaries.
-3. When appropriate, include ONE recognizable local landmark, district, river, bridge, square, avenue, or natural feature associated with the city (e.g. low clouds around the Eiffel Tower, rain along the Seine / nubes bajas en la Torre Eiffel, lluvia en el Sena). It should occupy no more than 1 sentence and must ONLY appear as part of the weather scene. Use local details only to strengthen the atmospheric mood of that specific day.
-4. Do NOT read like a scientific report. Avoid technical phrases like "recorded a maximum temperature" or "wind speed reached" and scientific weather measurements.
+STRICT WRITING & STYLE PRINCIPLES:
+1. Weather, sky, season, and city atmosphere are the primary subject (80-90% of the narrative). Focus on quality of light, clouds, cold drafts, wet cobblestones, seasonal mood, or quiet sky.
+2. The story must read like a weather memory, not a birth announcement, family story, or tourist guide. No sightseeing lists or tourist attraction descriptions.
+3. When appropriate, include ONE recognizable local landmark, river, bridge, square, or natural feature associated with the city (e.g. low clouds around Eiffel Tower, rain along Seine / nubes bajas en la Torre Eiffel, lluvia en el Sena) in max 1 sentence, strictly as part of the weather scene. Use local details only to strengthen the atmospheric mood of that specific day.
+4. Do NOT read like a scientific report. Avoid technical phrases like "recorded a temperature" or "wind speed reached" and scientific weather measurements.
+5. Birth must be mentioned AT MOST ONCE, briefly and factually (e.g., "a child was born", "a birth was logged", "un nacimiento fue registrado"). It is a peaceful historical anchor, never an emotional climax. No emotional family, parenting, or baby clichés. The final sentence must return to the weather/sky atmosphere (e.g., ending on the evening rain or quiet dusk).
+6. Forbidden (Do NOT use these or Spanish equivalents): "recorded a temperature", "minimum temperature", "wind speed reached", "visibility remained", "meteorological station", "weather conditions", "small arrival", "unforgettable for a family", "precious arrival", "miracle", "magical moment", "heartwarming", "family memory", "first cuddle", "newborn fragrance", "hearts", "blessings".
 
-THE BIRTH FACT & FORBIDDEN PATTERNS:
-- Birth must be mentioned AT MOST ONCE, briefly and factually (e.g., "a child was born", "a birth was logged", "un nacimiento fue registrado"). It must be a peaceful historical anchor, never an emotional climax. The final sentence must return to the weather, atmosphere, season, or sky (e.g., ending on the sunset, evening rain, or cloud movement).
-- ABSOLUTELY FORBIDDEN (Do not use any of these or Spanish equivalents):
-  * "one small arrival", "unforgettable for a family", "precious arrival", "miracle", "magical moment", "heartwarming", "family memory", "holding you", "first cuddle", "our room", "newborn fragrance", "hearts", "blessings"
-  * "recorded a maximum temperature", "minimum temperature", "wind speed reached", "visibility remained", "humidity levels", "precipitation maintained", "meteorological station", "weather conditions were"
-
-HISTORICAL WEATHER DATA:
-- Max temperature: ${tempMax}°C (appx ${Math.round(tempMax * 9/5 + 32)}°F)
-- Weather condition: ${weatherText} (weatherCode ${weatherCode})
-- Wind speed: ${windSpeed} km/h (appx ${Math.round(windSpeed * 0.621371)} mph)
-- Date: ${targetDate}
-- City: ${city}
+HISTORICAL WEATHER DATA: Max ${tempMax}°C, ${weatherText}, Wind ${windSpeed} km/h.
 
 REQUIRED JSON SCHEMA:
-- theme: string (3-6 words, weather-based, factual title like "A Rainy Afternoon", no time references)
-- quote: string (exactly 1 short, simple, memorable sentence about weather only, no human sentiment/birth of any kind)
-- story: string (the completed narrative weather archive record, strictly 90-120 words formatted as a single paragraph, containing exactly one brief factual birth mention and returning to the weather or sky at the end)
+- theme: string (3-6 words, weather-based title like "A Rainy Afternoon", no time references)
+- quote: string (exactly 1 short weather-only sentence, no human sentiment/birth of any kind)
+- story: string (strictly 90-120 words formatted as a single paragraph, ending with the weather/sky/atmosphere)
 - quality_check: an object containing language_consistent, weather_consistent, time_consistent, city_consistent, structure_consistent (all booleans)
 
 ${timeOfDepartureRule}
@@ -625,11 +615,11 @@ ${timeAtmosphereContext}`;
       let timeoutId: any;
       const timeoutPromise = new Promise<never>((_, reject) => {
         timeoutId = setTimeout(() => {
-          console.log("Gemini request timed out after 9000ms");
-          const err = new Error("Gemini request timed out after 9000ms");
+          console.log("Gemini request timed out after 6500ms");
+          const err = new Error("Gemini request timed out after 6500ms");
           (err as any).status = 503;
           reject(err);
-        }, 9000);
+        }, 6500);
       });
 
       let response: any;
@@ -662,6 +652,7 @@ ${timeAtmosphereContext}`;
                 required: ["theme", "quote", "story", "quality_check"]
               },
               temperature: 0.2,
+              maxOutputTokens: 350,
             },
           }),
           timeoutPromise
@@ -693,10 +684,10 @@ ${timeAtmosphereContext}`;
       console.error("Gemini API call error during attempt " + (attempts + 1) + ":", err);
       const status = err?.status || err?.statusCode || err?.code;
       const msg = String(err?.message || err || "").toUpperCase();
-      if (status === 503 || msg.includes("UNAVAILABLE") || msg.includes("HIGH DEMAND")) {
+      if (status === 503 || msg.includes("UNAVAILABLE") || msg.includes("HIGH DEMAND") || msg.includes("TIMED OUT") || msg.includes("TIMEOUT")) {
         apiFallbackLabel = "API_HIGH_DEMAND_FALLBACK";
-        console.log(`[Gemini high-demand fallback] 503/UNAVAILABLE/HIGH-DEMAND error encountered on attempt ${attempts + 1}. Switching to fallback story immediately to optimize response time.`);
-        break; // Quit immediately, no retries for high demand
+        console.log(`[Gemini high-demand/timeout fallback] 503/UNAVAILABLE/TIMEOUT error encountered on attempt ${attempts + 1}. Switching to fallback story immediately to optimize response time.`);
+        break; // Quit immediately, no retries for high demand or timeout
       } else {
         if (status === 403 || msg.includes("FORBIDDEN") || msg.includes("PERMISSION DENIED")) {
           apiFallbackLabel = "API_FORBIDDEN_BACKUP";
