@@ -312,6 +312,33 @@ function validateGeneratedContent(story: string, quote: string, theme: string): 
   return { valid: true };
 }
 
+function safeParseGeminiJson(raw: string): any {
+  if (!raw || typeof raw !== "string") return null;
+
+  let cleaned = raw.trim();
+
+  cleaned = cleaned
+    .replace(/^```json\s*/i, "")
+    .replace(/^```\s*/i, "")
+    .replace(/```$/i, "")
+    .trim();
+
+  const firstBrace = cleaned.indexOf("{");
+  const lastBrace = cleaned.lastIndexOf("}");
+
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    cleaned = cleaned.slice(firstBrace, lastBrace + 1);
+  }
+
+  try {
+    return JSON.parse(cleaned);
+  } catch (err) {
+    console.error("Failed to parse Gemini JSON. Raw response:", raw);
+    console.error("Cleaned Gemini JSON attempt:", cleaned);
+    throw err;
+  }
+}
+
 // -------------------------------------------------------------
 // SECURE BACKUP STORIES GENERATOR (Meets all rules and avoids clichés)
 // -------------------------------------------------------------
@@ -917,8 +944,8 @@ ${timeAtmosphereContext}`;
         clearTimeout(timeoutId);
       }
 
-      const parsed = JSON.parse(response.text || "{}");
-      if (parsed.theme && parsed.quote && parsed.story) {
+      const parsed = safeParseGeminiJson(response.text || "");
+      if (parsed && parsed.theme && parsed.quote && parsed.story) {
         const validation = validateGeneratedContent(parsed.story, parsed.quote, parsed.theme);
         if (validation.valid) {
           const qCheck = parsed.quality_check || {};
