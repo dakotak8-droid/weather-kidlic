@@ -335,7 +335,7 @@ function safeParseGeminiJson(raw: string): any {
   } catch (err) {
     console.error("Failed to parse Gemini JSON. Raw response:", raw);
     console.error("Cleaned Gemini JSON attempt:", cleaned);
-    throw err;
+    return null;
   }
 }
 
@@ -945,23 +945,28 @@ ${timeAtmosphereContext}`;
       }
 
       const parsed = safeParseGeminiJson(response.text || "");
-      if (parsed && parsed.theme && parsed.quote && parsed.story) {
-        const validation = validateGeneratedContent(parsed.story, parsed.quote, parsed.theme);
-        if (validation.valid) {
-          const qCheck = parsed.quality_check || {};
-          const isPassed = qCheck.language_consistent && qCheck.weather_consistent && qCheck.time_consistent && qCheck.city_consistent && qCheck.structure_consistent;
 
-          if (isPassed) {
-            console.log("[Gemini success] - Gemini self-validation quality check passed on attempt " + (attempts + 1));
-            finalJson = parsed;
-            break;
-          } else {
-            console.log("Quality checks failed on attempt " + (attempts + 1) + ". Detail: ", qCheck);
-            finalJson = parsed; // Store the last valid one in case we run out of retries
-          }
+      if (!parsed || !parsed.theme || !parsed.quote || !parsed.story) {
+        console.warn("Gemini JSON parsing failed. Continue retry loop or fallback.");
+        attempts++;
+        continue;
+      }
+
+      const validation = validateGeneratedContent(parsed.story, parsed.quote, parsed.theme);
+      if (validation.valid) {
+        const qCheck = parsed.quality_check || {};
+        const isPassed = qCheck.language_consistent && qCheck.weather_consistent && qCheck.time_consistent && qCheck.city_consistent && qCheck.structure_consistent;
+
+        if (isPassed) {
+          console.log("[Gemini success] - Gemini self-validation quality check passed on attempt " + (attempts + 1));
+          finalJson = parsed;
+          break;
         } else {
-          console.warn(`Gemini response rejected on attempt ${attempts + 1}: ${validation.reason}`);
+          console.log("Quality checks failed on attempt " + (attempts + 1) + ". Detail: ", qCheck);
+          finalJson = parsed; // Store the last valid one in case we run out of retries
         }
+      } else {
+        console.warn(`Gemini response rejected on attempt ${attempts + 1}: ${validation.reason}`);
       }
     } catch (err: any) {
       console.error("Gemini API call error during attempt " + (attempts + 1) + ":", err);
