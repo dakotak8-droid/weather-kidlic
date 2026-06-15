@@ -891,10 +891,21 @@ ${timeAtmosphereContext}`;
   const maxAttempts = 3;
   let finalJson: any = null;
   let apiFallbackLabel = "API_HIGH_DEMAND_FALLBACK";
+  let lastSelectedModel = "gemini-2.5-flash-lite";
+  let lastGeminiErrorStatus: any = null;
+  let lastAttemptNumber = 0;
+
+  const modelOrder = ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-flash"];
+
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   while (attempts < maxAttempts) {
+    const selectedModel = modelOrder[attempts] || "gemini-2.5-flash";
+    lastSelectedModel = selectedModel;
+    lastAttemptNumber = attempts + 1;
+
     try {
-      console.log(`Querying Gemini (Attempt ${attempts + 1}) for story in ${language}...`);
+      console.log(`Querying Gemini (Attempt ${attempts + 1}) using ${selectedModel} for story in ${language}...`);
       let timeoutId: any;
       const timeoutPromise = new Promise<never>((_, reject) => {
         timeoutId = setTimeout(() => {
@@ -909,7 +920,7 @@ ${timeAtmosphereContext}`;
       try {
         response = await Promise.race([
           ai.models.generateContent({
-            model: "gemini-3.5-flash",
+            model: selectedModel,
             contents: `Generate an atmospheric historical weather archive record centered 80-90% on weather conditions, seasonal details, and city atmosphere, with only the allowed factual birth mention. Ensure it is third-person factual and has absolutely zero emotional words or family mentions. Follow the system instruction for ${city}, ${country} (${region || ""}) on ${targetDate}.`,
             config: {
               systemInstruction: systemInstruction,
@@ -948,6 +959,7 @@ ${timeAtmosphereContext}`;
 
       if (!parsed || !parsed.theme || !parsed.quote || !parsed.story) {
         console.warn("Gemini JSON parsing failed. Continue retry loop or fallback.");
+        lastGeminiErrorStatus = "INVALID_JSON";
         attempts++;
         continue;
       }
@@ -964,21 +976,28 @@ ${timeAtmosphereContext}`;
         } else {
           console.log("Quality checks failed on attempt " + (attempts + 1) + ". Detail: ", qCheck);
           finalJson = parsed; // Store the last valid one in case we run out of retries
+          lastGeminiErrorStatus = "QUALITY_CHECK_FAILED";
         }
       } else {
         console.warn(`Gemini response rejected on attempt ${attempts + 1}: ${validation.reason}`);
+        lastGeminiErrorStatus = `REJECTED_${validation.reason}`;
       }
     } catch (err: any) {
       console.error("Gemini API call error during attempt " + (attempts + 1) + ":", err);
       const status = err?.status || err?.statusCode || err?.code;
       const msg = String(err?.message || err || "").toUpperCase();
+      lastGeminiErrorStatus = status || msg || "ERROR";
+
       if (status === 503 || msg.includes("UNAVAILABLE") || msg.includes("HIGH DEMAND") || msg.includes("TIMED OUT") || msg.includes("TIMEOUT")) {
         apiFallbackLabel = "API_HIGH_DEMAND_FALLBACK";
-        if (attempts >= 1) {
-          console.log(`[Gemini high-demand/timeout fallback] 503/UNAVAILABLE/TIMEOUT error encountered on attempt ${attempts + 1}. Switching to fallback story after 2 attempts to optimize response time.`);
-          break; // Quit retry loop to avoid taking too long in a serverless context
+        if (attempts === 0) {
+          console.log(`[Gemini high-demand/timeout error] 503/UNAVAILABLE/TIMEOUT encountered on attempt 1. Waiting 700ms before retrying...`);
+          await sleep(700);
+        } else if (attempts === 1) {
+          console.log(`[Gemini high-demand/timeout error] 503/UNAVAILABLE/TIMEOUT encountered on attempt 2. Waiting 1500ms before retrying...`);
+          await sleep(1500);
         } else {
-          console.log(`[Gemini high-demand/timeout error] 503/UNAVAILABLE/TIMEOUT encountered on attempt ${attempts + 1}. Retrying...`);
+          console.log(`[Gemini high-demand/timeout error] 503/UNAVAILABLE/TIMEOUT encountered on attempt 3. All attempts failed.`);
         }
       } else {
         if (status === 403 || msg.includes("FORBIDDEN") || msg.includes("PERMISSION DENIED")) {
@@ -1057,7 +1076,10 @@ ${timeAtmosphereContext}`;
         quality_check: finalJson.quality_check,
         debug_source: "api_gemini_clean",
         prompt_version: "historical_archive_v1",
-        generator_path: "api_generate_story"
+        generator_path: "api_generate_story",
+        selected_model: lastSelectedModel,
+        attempt_number: lastAttemptNumber,
+        gemini_error_status: lastGeminiErrorStatus
       };
     } else {
       console.warn("Discarding Gemini story due to forbidden parenting/emotion phrases in final state. Falling back to high-quality offline backup.");
@@ -1095,6 +1117,9 @@ ${timeAtmosphereContext}`;
       debug_source: apiFallbackLabel,
       prompt_version: "historical_archive_v1",
       generator_path: "api_generate_story",
+      selected_model: lastSelectedModel,
+      attempt_number: lastAttemptNumber,
+      gemini_error_status: lastGeminiErrorStatus,
       quality_check: {
         language_consistent: true,
         weather_consistent: true,
