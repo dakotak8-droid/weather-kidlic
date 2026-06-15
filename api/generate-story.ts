@@ -890,7 +890,7 @@ ${timeAtmosphereContext}`;
   let attempts = 0;
   const maxAttempts = 3;
   let finalJson: any = null;
-  let apiFallbackLabel = "API_FORBIDDEN_BACKUP";
+  let apiFallbackLabel = "API_HIGH_DEMAND_FALLBACK";
 
   while (attempts < maxAttempts) {
     try {
@@ -898,11 +898,11 @@ ${timeAtmosphereContext}`;
       let timeoutId: any;
       const timeoutPromise = new Promise<never>((_, reject) => {
         timeoutId = setTimeout(() => {
-          console.log("Gemini request timed out after 6500ms");
-          const err = new Error("Gemini request timed out after 6500ms");
+          console.log("Gemini request timed out after 9000ms");
+          const err = new Error("Gemini request timed out after 9000ms");
           (err as any).status = 503;
           reject(err);
-        }, 6500);
+        }, 9000);
       });
 
       let response: any;
@@ -974,15 +974,17 @@ ${timeAtmosphereContext}`;
       const msg = String(err?.message || err || "").toUpperCase();
       if (status === 503 || msg.includes("UNAVAILABLE") || msg.includes("HIGH DEMAND") || msg.includes("TIMED OUT") || msg.includes("TIMEOUT")) {
         apiFallbackLabel = "API_HIGH_DEMAND_FALLBACK";
-        console.log(`[Gemini high-demand/timeout fallback] 503/UNAVAILABLE/TIMEOUT error encountered on attempt ${attempts + 1}. Switching to fallback story immediately to optimize response time.`);
-        break; // Quit immediately, no retries for high demand or timeout
+        if (attempts >= 1) {
+          console.log(`[Gemini high-demand/timeout fallback] 503/UNAVAILABLE/TIMEOUT error encountered on attempt ${attempts + 1}. Switching to fallback story after 2 attempts to optimize response time.`);
+          break; // Quit retry loop to avoid taking too long in a serverless context
+        } else {
+          console.log(`[Gemini high-demand/timeout error] 503/UNAVAILABLE/TIMEOUT encountered on attempt ${attempts + 1}. Retrying...`);
+        }
       } else {
         if (status === 403 || msg.includes("FORBIDDEN") || msg.includes("PERMISSION DENIED")) {
           apiFallbackLabel = "API_FORBIDDEN_BACKUP";
         } else if (status === 429 || msg.includes("QUOTA")) {
           apiFallbackLabel = "API_QUOTA_FALLBACK";
-        } else {
-          apiFallbackLabel = "API_GEMINI_ERROR_FALLBACK";
         }
         console.log(`[Gemini network retry] Attempt ${attempts + 1} failed with error. Will retry if attempts < maxAttempts. Error detail: ${err?.message || err}`);
       }
