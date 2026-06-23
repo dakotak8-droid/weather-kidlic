@@ -1812,7 +1812,7 @@ export default function BirthWeatherStory() {
         {/* RIGHT COLUMN: Interactive Keepsake displays (Replaces Example with Real seamlessly) */}
         <div className="w-full flex justify-center items-start lg:sticky lg:top-8">
           <AnimatePresence mode="wait">
-            {!revealResult ? (
+            {!revealResult || isLoadingStory ? (
               <motion.div
                 key="example-card"
                 initial={{ opacity: 0, y: 15 }}
