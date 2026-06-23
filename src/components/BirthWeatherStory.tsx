@@ -1812,32 +1812,7 @@ export default function BirthWeatherStory() {
         {/* RIGHT COLUMN: Interactive Keepsake displays (Replaces Example with Real seamlessly) */}
         <div className="w-full flex justify-center items-start lg:sticky lg:top-8">
           <AnimatePresence mode="wait">
-            {isLoadingStory ? (
-              <motion.div
-                key="loading-card"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.3 }}
-                className="w-full max-w-xl relative animate-pulse"
-              >
-                {/* Ambient cozy background circles */}
-                <div className="absolute -top-4 -left-6 w-32 h-32 bg-[#D48D71]/10 rounded-full blur-2xl"></div>
-                <div className="absolute -bottom-4 -right-6 w-32 h-32 bg-[#FFD580]/10 rounded-full blur-3xl"></div>
-
-                <div className="w-full rounded-[36px] p-8 flex flex-col justify-center items-center shadow-xl border border-slate-800 bg-[#0E1321] text-[#FEFAF6] relative overflow-hidden min-h-[450px]">
-                  {/* Premium dark grid pattern decor overlay */}
-                  <div className="absolute inset-0 bg-[radial-gradient(#1e2439_1px,transparent_1px)] [background-size:16px_16px] opacity-20 pointer-events-none"></div>
-
-                  <div className="relative z-10 flex flex-col items-center justify-center text-center">
-                    {/* Existing loading spinner/animation, styled elegantly and enlarged */}
-                    <div className="p-6 bg-white/5 rounded-full border border-white/10 shadow-inner flex items-center justify-center">
-                      <RefreshCw size={44} className="animate-spin text-[#E89E82]" />
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ) : !revealResult ? (
+            {!revealResult ? (
               <motion.div
                 key="example-card"
                 initial={{ opacity: 0, y: 15 }}
