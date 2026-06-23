@@ -9,13 +9,25 @@ import BirthWeatherStory from "./components/BirthWeatherStory";
 
 export default function App() {
   const [isDark, setIsDark] = useState<boolean>(() => {
-    const saved = localStorage.getItem("keepsake_weather_theme_dark");
-    if (saved) return saved === "true";
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    try {
+      const saved = localStorage.getItem("keepsake_weather_theme_dark");
+      if (saved) return saved === "true";
+    } catch (e) {
+      console.warn("Storage access denied. Falling back to default theme preference.", e);
+    }
+    try {
+      return window.matchMedia("(prefers-color-scheme: dark)").matches;
+    } catch (e) {
+      return false;
+    }
   });
 
   useEffect(() => {
-    localStorage.setItem("keepsake_weather_theme_dark", isDark.toString());
+    try {
+      localStorage.setItem("keepsake_weather_theme_dark", isDark.toString());
+    } catch (e) {
+      console.warn("Could not save theme to localStorage", e);
+    }
     const root = document.documentElement;
     if (isDark) {
       root.classList.add("dark");
