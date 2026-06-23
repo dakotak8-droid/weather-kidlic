@@ -1829,21 +1829,10 @@ export default function BirthWeatherStory() {
                   {/* Premium dark grid pattern decor overlay */}
                   <div className="absolute inset-0 bg-[radial-gradient(#1e2439_1px,transparent_1px)] [background-size:16px_16px] opacity-20 pointer-events-none"></div>
 
-                  <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-6">
+                  <div className="relative z-10 flex flex-col items-center justify-center text-center">
                     {/* Existing loading spinner/animation, styled elegantly and enlarged */}
-                    <div className="p-5 bg-white/5 rounded-full border border-white/10 shadow-inner flex items-center justify-center">
-                      <RefreshCw size={36} className="animate-spin text-[#E89E82]" />
-                    </div>
-
-                    <div className="space-y-4 max-w-md">
-                      {/* Rotating atmospheric messages */}
-                      <p className="text-base sm:text-lg font-medium text-white/90 tracking-wide font-sans min-h-[3.5rem] flex items-center justify-center">
-                        {currentMessages[currentMessageIndex]}
-                      </p>
-                      
-                      <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-2">
-                        {t.certificateHeader}
-                      </p>
+                    <div className="p-6 bg-white/5 rounded-full border border-white/10 shadow-inner flex items-center justify-center">
+                      <RefreshCw size={44} className="animate-spin text-[#E89E82]" />
                     </div>
                   </div>
                 </div>
