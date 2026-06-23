@@ -38,7 +38,6 @@ interface Dictionary {
   fieldBirthCity: string;
   cityPlaceholder: string;
   cityHelper: string;
-  btnRevealLoading: string;
   btnRevealNormal: string;
   trustLine: string;
 
@@ -119,7 +118,6 @@ const LOCALES: { [key: string]: Dictionary } = {
     fieldBirthCity: "City & Country (in English)",
     cityPlaceholder: "Examples: New York, United States • Warsaw, Poland • Paris, France",
     cityHelper: "Please enter city and country names in English. Local spellings such as Polska, Deutschland, España, or Italia may not be recognized.",
-    btnRevealLoading: "Scanning the heavens...",
     btnRevealNormal: "Reveal the weather story",
     trustLine: "Powered by historical weather archives and location data.",
 
@@ -199,7 +197,6 @@ const LOCALES: { [key: string]: Dictionary } = {
     fieldBirthCity: "Ciudad y país (en inglés)",
     cityPlaceholder: "Ejemplos: New York, United States • Warsaw, Poland • Paris, France",
     cityHelper: "Por favor, ingresa los nombres de la ciudad y el país en inglés. Es posible que no se reconozcan las grafías locales como Polska, Deutschland, España o Italia.",
-    btnRevealLoading: "Escaneando los cielos...",
     btnRevealNormal: "Descubrir la historia del clima",
     trustLine: "Desarrollado con archivos climáticos históricos y datos de ubicación.",
 
@@ -600,6 +597,16 @@ export default function BirthWeatherStory() {
     "Reconstructing the atmosphere of the day...",
     "The weather story is almost ready..."
   ];
+
+  const loadingMessagesEs = [
+    "Buscando en los archivos meteorológicos históricos...",
+    "Trazando las nubes sobre la ciudad...",
+    "Escuchando lo que el viento recuerda...",
+    "Reconstruyendo la atmósfera del día...",
+    "La historia del clima está casi lista..."
+  ];
+
+  const currentMessages = lang === "es" ? loadingMessagesEs : loadingMessages;
 
   useEffect(() => {
     let interval: any;
@@ -1780,12 +1787,12 @@ export default function BirthWeatherStory() {
               <button
                 type="submit"
                 disabled={isLoadingStory}
-                className="w-full bg-[#3D2C2E] hover:bg-[#261B1C] dark:bg-[#E89E82] dark:hover:bg-[#D48D71] text-white dark:text-[#2B1D1F] py-3.5 rounded-xl font-mono text-xs uppercase tracking-widest font-bold shadow-sm transition hover:shadow flex items-center justify-center gap-2 disabled:opacity-75 cursor-pointer"
+                className={`w-full bg-[#3D2C2E] hover:bg-[#261B1C] dark:bg-[#E89E82] dark:hover:bg-[#D48D71] text-white dark:text-[#2B1D1F] py-3.5 rounded-xl font-mono ${isLoadingStory ? "text-[10px] md:text-xs px-2" : "text-xs"} uppercase tracking-wider md:tracking-widest font-bold shadow-sm transition hover:shadow flex items-center justify-center gap-2 disabled:opacity-75 cursor-pointer`}
               >
                 {isLoadingStory ? (
                   <>
                     <RefreshCw size={14} className="animate-spin text-[#D48D71] dark:text-[#2B1D1F]" />
-                    <span>{t.btnRevealLoading}</span>
+                    <span>{currentMessages[currentMessageIndex]}</span>
                   </>
                 ) : (
                   <>
@@ -1831,7 +1838,7 @@ export default function BirthWeatherStory() {
                     <div className="space-y-4 max-w-md">
                       {/* Rotating atmospheric messages */}
                       <p className="text-base sm:text-lg font-medium text-white/90 tracking-wide font-sans min-h-[3.5rem] flex items-center justify-center">
-                        {loadingMessages[currentMessageIndex]}
+                        {currentMessages[currentMessageIndex]}
                       </p>
                       
                       <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest mt-2">
