@@ -639,6 +639,9 @@ export default function BirthWeatherStory() {
     story: HistoricalStory;
   } | null>(null);
 
+  const [cityPhotoUrl, setCityPhotoUrl] = useState<string | null>(null);
+  const [isPhotoLoading, setIsPhotoLoading] = useState(false);
+
   // Auto-suggestion dropdown click-outside listener
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -976,6 +979,22 @@ export default function BirthWeatherStory() {
     e.preventDefault();
     setErrorMessage(null);
 
+    const calculateTimePeriod = (timeStr?: string): string | undefined => {
+      if (!timeStr) return undefined;
+      const parts = timeStr.split(":");
+      if (parts.length < 2) return undefined;
+      const hours = parseInt(parts[0], 10);
+      const minutes = parseInt(parts[1], 10);
+      if (isNaN(hours) || isNaN(minutes)) return undefined;
+
+      if (hours >= 0 && hours < 6) return "Early Morning";
+      if (hours >= 6 && hours < 12) return "Morning";
+      if (hours >= 12 && hours < 17) return "Afternoon";
+      if (hours >= 17 && hours < 21) return "Evening";
+      if (hours >= 21 && hours < 24) return "Night";
+      return undefined;
+    };
+
     if (!birthDate) {
       setErrorMessage(t.errNoDate);
       return;
@@ -1200,22 +1219,6 @@ export default function BirthWeatherStory() {
       // Ask server to generate the birth story (with fallback to the custom backup generator)
       let generatedStory;
       try {
-        const calculateTimePeriod = (timeStr?: string): string | undefined => {
-          if (!timeStr) return undefined;
-          const parts = timeStr.split(":");
-          if (parts.length < 2) return undefined;
-          const hours = parseInt(parts[0], 10);
-          const minutes = parseInt(parts[1], 10);
-          if (isNaN(hours) || isNaN(minutes)) return undefined;
-
-          if (hours >= 0 && hours < 6) return "Early Morning";
-          if (hours >= 6 && hours < 12) return "Morning";
-          if (hours >= 12 && hours < 17) return "Afternoon";
-          if (hours >= 17 && hours < 21) return "Evening";
-          if (hours >= 21 && hours < 24) return "Night";
-          return undefined;
-        };
-
         console.log(`Fetching generated story from API route for ${cityName}, ${admin1Name}, ${countryName}...`);
         const storyResponse = await fetch("/api/generate-story", {
           method: "POST",
@@ -1286,6 +1289,25 @@ export default function BirthWeatherStory() {
         setIsLoadingStory(false);
         return;
       }
+
+      // Asynchronously fetch matching city photograph from our search API (non-blocking)
+      setIsPhotoLoading(true);
+      setCityPhotoUrl(null);
+      
+      const tpVal = birthTime ? calculateTimePeriod(birthTime) : "";
+      fetch(`/api/city-photo?city=${encodeURIComponent(cityName)}&weatherCode=${finalWeatherCode}&birthDate=${dateStr}&birthTime=${birthTime || ""}&timePeriod=${tpVal || ""}`)
+        .then(res => res.json())
+        .then(photoData => {
+          if (photoData.url) {
+            setCityPhotoUrl(photoData.url);
+          }
+        })
+        .catch(err => {
+          console.error("Failed to fetch city photo:", err);
+        })
+        .finally(() => {
+          setIsPhotoLoading(false);
+        });
 
       setRevealResult({
         city: cityName,
@@ -1857,6 +1879,18 @@ export default function BirthWeatherStory() {
                       </div>
                     </div>
 
+                    {/* Atmospheric Example City Photograph */}
+                    <div className="w-full h-48 sm:h-56 rounded-2xl overflow-hidden relative border border-white/10 shadow-inner group bg-slate-900/50">
+                      <img
+                        src="https://images.unsplash.com/photo-1607427293702-036933bbf746?auto=format&fit=crop&w=1200&q=80"
+                        alt="Warsaw landscape example"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        referrerPolicy="no-referrer"
+                      />
+                      {/* Delicate darkening gradient overlay at the bottom for atmospheric framing */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent pointer-events-none"></div>
+                    </div>
+
                     {/* Compact Weather Snapshot Block */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-white/[0.03] border border-white/10 rounded-2xl p-3.5 text-center my-1 select-none">
                       <div className="flex flex-col items-center justify-center border-r border-[#E89E82]/10 py-1 last:border-0 sm:border-r">
@@ -1961,6 +1995,32 @@ export default function BirthWeatherStory() {
                         </div>
                       </div>
                     </div>
+
+                    {/* Atmospheric Dynamic City Photograph */}
+                    {(isPhotoLoading || cityPhotoUrl) && (
+                      <div className="w-full h-48 sm:h-56 rounded-2xl overflow-hidden relative border border-white/10 shadow-inner group bg-slate-900/50">
+                        {isPhotoLoading ? (
+                          <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/40 animate-pulse gap-2.5">
+                            <div className="w-8 h-8 border-2 border-[#E89E82] border-t-transparent rounded-full animate-spin"></div>
+                            <span className="text-[10px] font-mono text-[#E89E82] uppercase tracking-wider">Finding atmospheric view...</span>
+                          </div>
+                        ) : (
+                          <>
+                            <img
+                              src={cityPhotoUrl || ""}
+                              alt={`${revealResult.city} landscape`}
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                              referrerPolicy="no-referrer"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                            {/* Delicate darkening gradient overlay at the bottom for atmospheric framing */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/50 via-transparent to-transparent pointer-events-none"></div>
+                          </>
+                        )}
+                      </div>
+                    )}
 
                     {/* Compact Weather Snapshot Block */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 bg-white/[0.03] border border-white/10 rounded-2xl p-3.5 text-center my-1 select-none">

@@ -745,6 +745,172 @@ app.get("/api/version", (req, res) => {
   });
 });
 
+// --- City Photo API Helpers ---
+
+const LANDMARKS: Record<string, string> = {
+  "lodz": "Piotrkowska Street Lodz",
+  "łódź": "Piotrkowska Street Lodz",
+  "paris": "Eiffel Tower Paris",
+  "london": "Tower Bridge London",
+  "new york": "Central Park New York",
+  "rome": "Colosseum Rome",
+  "barcelona": "Sagrada Familia Barcelona",
+  "tokyo": "Shibuya Crossing Tokyo",
+  "sydney": "Opera House Sydney",
+  "lisbon": "Alfama Lisbon",
+  "amsterdam": "Canals Amsterdam",
+  "berlin": "Brandenburg Gate Berlin",
+  "chicago": "Millennium Park Chicago",
+  "san francisco": "Golden Gate Bridge San Francisco",
+  "warsaw": "Old Town Warsaw",
+  "warszawa": "Old Town Warsaw",
+  "madrid": "Gran Via Madrid"
+};
+
+function getCitySearchTerm(city: string): string {
+  const norm = city.trim().toLowerCase();
+  return LANDMARKS[norm] || `${city}`;
+}
+
+function getEnglishWeatherKeyword(code: number): string {
+  if (code === 0) return "clear sky sunny";
+  if (code === 1) return "sunny sunshine";
+  if (code === 2) return "partly cloudy";
+  if (code === 3) return "cloudy overcast";
+  if ([45, 48].includes(code)) return "misty foggy mist";
+  if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) return "rainy rain wet";
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return "snowy snow winter";
+  if ([95, 96, 99].includes(code)) return "stormy storm lightning thunder";
+  return "scenic atmospheric";
+}
+
+function getSeason(dateStr?: string): string {
+  if (!dateStr) return "";
+  try {
+    const lower = dateStr.toLowerCase();
+    if (lower.includes("jan") || lower.includes("feb") || lower.includes("dec") || lower.includes("ene") || lower.includes("dic")) return "winter";
+    if (lower.includes("mar") || lower.includes("apr") || lower.includes("may") || lower.includes("abr")) return "spring";
+    if (lower.includes("jun") || lower.includes("jul") || lower.includes("aug") || lower.includes("ago")) return "summer";
+    if (lower.includes("sep") || lower.includes("oct") || lower.includes("nov") || lower.includes("oct")) return "autumn fall";
+
+    const parts = dateStr.split("-");
+    if (parts.length >= 2) {
+      const month = parseInt(parts[1], 10);
+      if (month >= 3 && month <= 5) return "spring";
+      if (month >= 6 && month <= 8) return "summer";
+      if (month >= 9 && month <= 11) return "autumn fall";
+      return "winter";
+    }
+  } catch (e) {
+    // Ignore
+  }
+  return "";
+}
+
+function getTimeOfDayKeyword(timeStr?: string, timePeriod?: string): string {
+  if (timePeriod) {
+    const tp = timePeriod.toLowerCase();
+    if (tp.includes("morning") || tp.includes("mañana")) return "morning";
+    if (tp.includes("afternoon") || tp.includes("tarde")) return "afternoon";
+    if (tp.includes("evening") || tp.includes("atardecer") || tp.includes("dusk")) return "evening sunset dusk";
+    if (tp.includes("night") || tp.includes("noche") || tp.includes("midnight") || tp.includes("madrugada")) return "night dark";
+  }
+  if (timeStr) {
+    try {
+      const hours = parseInt(timeStr.split(":")[0], 10);
+      if (hours >= 6 && hours < 12) return "morning";
+      if (hours >= 12 && hours < 17) return "afternoon";
+      if (hours >= 17 && hours < 20) return "evening sunset dusk";
+      return "night dark";
+    } catch (e) {}
+  }
+  return "";
+}
+
+async function fetchCityPhoto(query: string): Promise<string | null> {
+  try {
+    const url = `https://unsplash.com/s/photos/${encodeURIComponent(query)}`;
+    const res = await fetch(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.9",
+      }
+    });
+    if (!res.ok) {
+      console.error(`Unsplash photo fetch failed with status ${res.status}`);
+      return null;
+    }
+    const html = await res.text();
+    const regex = /https:\/\/images\.unsplash\.com\/photo-[A-Za-z0-9?&%=._-]+/g;
+    const matches = html.match(regex);
+    if (!matches || matches.length === 0) {
+      return null;
+    }
+    
+    const urls = [...new Set(matches)]
+      .map(imgUrl => {
+        const base = imgUrl.split("?")[0];
+        if (imgUrl.includes("profile") || imgUrl.includes("avatar") || imgUrl.includes("placeholder") || base.endsWith(".png")) {
+          return null;
+        }
+        return `${base}?auto=format&fit=crop&w=1200&q=80`;
+      })
+      .filter(Boolean) as string[];
+      
+    if (urls.length > 0) {
+      return urls[0];
+    }
+    return null;
+  } catch (err) {
+    console.error("Error fetching photo from Unsplash:", err);
+    return null;
+  }
+}
+
+app.get("/api/city-photo", async (req, res) => {
+  try {
+    const { city, weatherCode, birthDate, birthTime, timePeriod } = req.query;
+    if (!city || typeof city !== "string") {
+      res.status(400).json({ error: "Missing required parameter: city" });
+      return;
+    }
+    
+    const code = typeof weatherCode === "string" ? parseInt(weatherCode, 10) : 0;
+    const qCity = getCitySearchTerm(city);
+    const qWeather = getEnglishWeatherKeyword(code);
+    const qSeason = getSeason(birthDate as string);
+    const qTime = getTimeOfDayKeyword(birthTime as string, timePeriod as string);
+    
+    const query = [qCity, qWeather, qSeason, qTime].filter(Boolean).join(" ");
+    console.log(`[CITY PHOTO QUERY] Searching Unsplash for: "${query}"`);
+    
+    let photoUrl = await fetchCityPhoto(query);
+    if (!photoUrl) {
+      const fallbackQuery1 = [qCity, qWeather].filter(Boolean).join(" ");
+      console.log(`[CITY PHOTO FALLBACK 1] Searching for: "${fallbackQuery1}"`);
+      photoUrl = await fetchCityPhoto(fallbackQuery1);
+    }
+    if (!photoUrl) {
+      const fallbackQuery2 = [qCity, qSeason].filter(Boolean).join(" ");
+      console.log(`[CITY PHOTO FALLBACK 2] Searching for: "${fallbackQuery2}"`);
+      photoUrl = await fetchCityPhoto(fallbackQuery2);
+    }
+    if (!photoUrl) {
+      console.log(`[CITY PHOTO FALLBACK 3] Searching for: "${qCity}"`);
+      photoUrl = await fetchCityPhoto(qCity);
+    }
+    
+    if (photoUrl) {
+      res.json({ url: photoUrl });
+    } else {
+      res.status(404).json({ error: "No photo found for the city" });
+    }
+  } catch (error) {
+    console.error("API /api/city-photo error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 app.post("/api/generate-story", async (req, res) => {
   const {
     city,
